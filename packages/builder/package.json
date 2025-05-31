@@ -1,0 +1,46 @@
+{
+  "name": "@usex/rule-engine-builder",
+  "description": "A React builder library for rule engine applications. It provides a set of components and utilities to build rule engine interfaces.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-master/rule-engine.git",
+    "directory": "packages/builder"
+  },
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "check-types": "tsc --noEmit",
+    "lint:fix": "eslint . --fix",
+    "format:check": "prettier --check \"**/*.{ts,tsx}\" --cache",
+    "format:write": "prettier --write \"**/*.{ts,tsx}\" --cache",
+    "publish:release": "pnpm build && pnpm publish --access public"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.8",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@vitejs/plugin-react-swc": "^3.10.0",
+    "tailwindcss": "^4.1.8",
+    "vite": "^6.3.5"
+  },
+  "keywords": [
+    "react",
+    "rule engine",
+    "builder",
+    "ui components",
+    "rule engine builder"
+  ],
+  "peerDependencies": {
+    "react": "^17 | ^18 | ^19",
+    "react-dom": "^17 | ^18 | ^19"
+  }
+}

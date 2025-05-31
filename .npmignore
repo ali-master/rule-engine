@@ -1,0 +1,13 @@
+# Ignore everything by default
+*
+
+# Include the dist folder and its contents
+!dist
+!dist/**
+
+# Exclude .tsbuildinfo files (not needed in published package)
+dist/**/*.tsbuildinfo
+
+# Include the assets folder and its contents
+!assets
+!assets/**

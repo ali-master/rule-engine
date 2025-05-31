@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "es2022",
+      "esnext"
+    ],
+    "moduleDetection": "force",
+    "module": "preserve",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noUnusedLocals": false,
+    "strictBindCallApply": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "sourceMap": true
+  }
+}

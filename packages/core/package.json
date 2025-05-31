@@ -1,0 +1,74 @@
+{
+  "name": "@usex/rule-engine",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "A simple and powerful rule engine for Node.js and the browser.",
+  "author": {
+    "name": "Ali Torki",
+    "email": "ali_4286@live.com",
+    "url": "https://github.com/ali-master"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-master/rule-engine.git",
+    "directory": "packages/core"
+  },
+  "keywords": [
+    "rules",
+    "ruleset",
+    "rules engine",
+    "rules processor",
+    "rules parser",
+    "rule engine",
+    "rule processor",
+    "rule parser",
+    "json rules"
+  ],
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "module": "dist/esm/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.12.0"
+  },
+  "scripts": {
+    "start": "nodemon ./dist/index.js --watch",
+    "dev": "tsup-node --watch",
+    "build": "tsup-node",
+    "test": "cross-env CI=true vitest --typecheck",
+    "test:watch": "pnpm run test --watch",
+    "test:ui": "pnpm run test:watch --ui --coverage.enabled=true",
+    "test:bench": "pnpm run test bench",
+    "test:coverage": "pnpm run test run --coverage",
+    "test:debug": "vitest --inspect-brk --pool forks --poolOptions.forks.singleFork",
+    "test:debug:watch": "pnpm run test:debug --watch --poolOptions.threads.isolate false",
+    "inspect": "node-modules-inspector",
+    "knip": "knip",
+    "knip:fix": "knip --fix",
+    "lint": "eslint .",
+    "prepublishOnly": "pnpm lint && pnpm test",
+    "release": "pnpm test && bumpp && pnpm publish"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "eventemitter3": "^5.0.1",
+    "jsonpath-plus": "^10.3.0"
+  },
+  "peerDependencies": {
+    "@persian-tools/persian-tools": "^3.6.0",
+    "date-fns-jalali": "^4.1.0-0",
+    "eventemitter3": "^5.0.1",
+    "ramda": "^0.30.1"
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.30.2",
+    "tsup": "^8.5.0"
+  },
+  "packageManager": "pnpm@10.11.0"
+}
