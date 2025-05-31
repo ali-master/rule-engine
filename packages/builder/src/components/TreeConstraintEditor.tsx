@@ -4,8 +4,9 @@ import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Trash2, Copy, Info, AlertCircle } from "lucide-react";
+import { Trash2, Copy, Info, AlertCircle, Layers, Code2 } from "lucide-react";
 import { DynamicFieldSelector } from "./DynamicFieldSelector";
+import { VisualFieldSelector } from "./VisualFieldSelector";
 import { OperatorSelector } from "./OperatorSelector";
 import { SmartValueInput } from "./inputs/SmartValueInput";
 import {
@@ -14,6 +15,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "./ui/tabs";
 import type { Constraint } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
 import { getOperatorConfig } from "../utils/operators";
@@ -45,6 +51,7 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
   const [localConstraint, setLocalConstraint] = useState(constraint);
   const [isFieldValid, setIsFieldValid] = useState(true);
   const [isValueValid, setIsValueValid] = useState(true);
+  const [fieldSelectorMode, setFieldSelectorMode] = useState<'dynamic' | 'visual'>('dynamic');
 
   // Update local state when constraint prop changes
   useEffect(() => {
@@ -104,32 +111,60 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
         {/* Field and Operator Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Label className="text-sm font-medium">
-                Field
-              </Label>
-              {selectedField?.description && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <Info className="h-3 w-3 text-muted-foreground" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">{selectedField.description}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Label className="text-sm font-medium">
+                  Field
+                </Label>
+                {selectedField?.description && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info className="h-3 w-3 text-muted-foreground" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">{selectedField.description}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
+              </div>
+              {sampleData && (
+                <Tabs value={fieldSelectorMode} onValueChange={(v) => setFieldSelectorMode(v as 'dynamic' | 'visual')}>
+                  <TabsList className="h-7">
+                    <TabsTrigger value="dynamic" className="h-6 px-2 text-xs">
+                      <Code2 className="h-3 w-3 mr-1" />
+                      List
+                    </TabsTrigger>
+                    <TabsTrigger value="visual" className="h-6 px-2 text-xs">
+                      <Layers className="h-3 w-3 mr-1" />
+                      Visual
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               )}
             </div>
-            <DynamicFieldSelector
-              value={localConstraint.field}
-              onChange={handleFieldChange}
-              fields={fields}
-              sampleData={sampleData}
-              disabled={readOnly}
-              allowCustom={true}
-              showJsonPath={true}
-            />
+            {fieldSelectorMode === 'dynamic' ? (
+              <DynamicFieldSelector
+                value={localConstraint.field}
+                onChange={handleFieldChange}
+                fields={fields}
+                sampleData={sampleData}
+                disabled={readOnly}
+                allowCustom={true}
+                showJsonPath={true}
+              />
+            ) : (
+              <VisualFieldSelector
+                value={localConstraint.field}
+                onChange={handleFieldChange}
+                fields={fields}
+                sampleData={sampleData}
+                disabled={readOnly}
+                allowJsonPath={true}
+                showPreview={true}
+              />
+            )}
             {!isFieldValid && (
               <p className="text-xs text-destructive">Field is required</p>
             )}

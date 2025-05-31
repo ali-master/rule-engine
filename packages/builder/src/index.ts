@@ -1,34 +1,35 @@
 // Import styles
 import "./styles/globals.css";
 
+// Sub-components (for advanced usage)
+export { DraggableConditionGroup } from "./components/DraggableConditionGroup";
+export { DynamicFieldSelector } from "./components/DynamicFieldSelector";
+export { FieldSelector } from "./components/FieldSelector";
+export { ArrayInput } from "./components/inputs/ArrayInput";
+export { BooleanInput } from "./components/inputs/BooleanInput";
+
+export { DateInput } from "./components/inputs/DateInput";
+export { NumberInput } from "./components/inputs/NumberInput";
+// Input components
+export { SmartValueInput } from "./components/inputs/SmartValueInput";
+export { JsonViewer } from "./components/JsonViewer";
+export { JsonViewer as RuleViewer } from "./components/JsonViewer";
+export { ModernConstraintEditor } from "./components/ModernConstraintEditor";
 // Main components
 export { ModernRuleBuilder } from "./components/ModernRuleBuilder";
 export { ModernRuleBuilder as RuleBuilder } from "./components/ModernRuleBuilder";
-export { TreeRuleBuilder } from "./components/TreeRuleBuilder";
-export { JsonViewer } from "./components/JsonViewer";
-export { JsonViewer as RuleViewer } from "./components/JsonViewer";
+export { OperatorSelector } from "./components/OperatorSelector";
 
-// Sub-components (for advanced usage)
-export { DraggableConditionGroup } from "./components/DraggableConditionGroup";
-export { ModernConstraintEditor } from "./components/ModernConstraintEditor";
+export { ThemeToggle } from "./components/ThemeToggle";
 export { TreeConditionGroup } from "./components/TreeConditionGroup";
 export { TreeConstraintEditor } from "./components/TreeConstraintEditor";
-export { DynamicFieldSelector } from "./components/DynamicFieldSelector";
-export { FieldSelector } from "./components/FieldSelector";
-export { OperatorSelector } from "./components/OperatorSelector";
-export { ThemeToggle } from "./components/ThemeToggle";
+export { TreeRuleBuilder } from "./components/TreeRuleBuilder";
+export { VisualFieldSelector } from "./components/VisualFieldSelector";
 
-// Input components
-export { SmartValueInput } from "./components/inputs/SmartValueInput";
-export { DateInput } from "./components/inputs/DateInput";
-export { NumberInput } from "./components/inputs/NumberInput";
-export { BooleanInput } from "./components/inputs/BooleanInput";
-export { ArrayInput } from "./components/inputs/ArrayInput";
-
+export { useFieldDiscovery } from "./hooks/use-field-discovery";
+export { useTheme } from "./hooks/use-theme";
 // Stores and hooks
 export { useRuleStore } from "./stores/rule-store";
-export { useTheme } from "./hooks/use-theme";
-export { useFieldDiscovery } from "./hooks/use-field-discovery";
 
 // Types
 export type {
@@ -37,20 +38,30 @@ export type {
   ThemeConfig,
 } from "./types";
 
+export {
+  buildJsonPath,
+  buildPath,
+  fieldToJsonPath,
+  getAllPaths,
+  getValueByPath,
+  jsonPathToField,
+  parseJsonPath,
+  validateJsonPath,
+} from "./utils/json-path";
 // Utils
-export { operatorConfigs, operatorCategories, getOperatorConfig, getOperatorsByCategory, getOperatorsForFieldType } from "./utils/operators";
+export { getOperatorConfig, getOperatorsByCategory, getOperatorsForFieldType, operatorCategories, operatorConfigs } from "./utils/operators";
 
 // Re-export from rule engine
 export {
-  Operators,
   ConditionTypes,
+  Operators,
 } from "@usex/rule-engine";
 
 export type {
-  RuleType,
   Condition,
+  ConditionType,
   Constraint,
   EngineResult,
   OperatorsType,
-  ConditionType,
+  RuleType,
 } from "@usex/rule-engine";

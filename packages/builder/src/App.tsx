@@ -2,6 +2,8 @@ import { RuleEngine } from "@usex/rule-engine";
 import { AlertCircle, PlayCircle, TestTube } from "lucide-react";
 import React, { useState } from "react";
 import { toast, Toaster } from "sonner";
+import { ThemeProvider } from "./components/theme-provider";
+import { ThemeToggle } from "./components/theme-toggle";
 import { TreeRuleBuilder } from "./components/TreeRuleBuilder";
 import { Alert, AlertDescription } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
@@ -51,7 +53,7 @@ const sampleData = {
   },
 };
 
-export function App() {
+function AppContent() {
   const { rule } = useRuleStore();
   const [testData, setTestData] = useState(JSON.stringify(sampleData, null, 2));
   const [testResult, setTestResult] = useState<any>(null);
@@ -67,14 +69,19 @@ export function App() {
       const engine = new RuleEngine();
       const result = await engine.evaluate(rule, data);
 
+      // Handle single result or array of results
+      const isPassed = Array.isArray(result)
+        ? result.every((r) => r.isPassed)
+        : result.isPassed;
+
       setTestResult({
         success: true,
         result,
-        passed: result.isPassed,
+        passed: isPassed,
       });
 
       toast.success(
-        result.isPassed ? "Rule evaluation passed!" : "Rule evaluation failed!",
+        isPassed ? "Rule evaluation passed!" : "Rule evaluation failed!",
       );
     } catch (error: any) {
       setTestResult({
@@ -102,87 +109,93 @@ export function App() {
               </p>
             </div>
 
-            {/* Evaluate Button */}
-            <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <Button size="lg">
-                  <TestTube className="h-5 w-5 mr-2" />
-                  Evaluate Rule
-                </Button>
-              </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px]">
-                <SheetHeader>
-                  <SheetTitle>Evaluate Rule</SheetTitle>
-                  <SheetDescription>
-                    Test your rule against sample data
-                  </SheetDescription>
-                </SheetHeader>
+            <div className="flex items-center gap-4">
+              <ThemeToggle />
 
-                <div className="mt-6 space-y-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">
-                      Test Data (JSON)
-                    </label>
-                    <Textarea
-                      value={testData}
-                      onChange={(e) => setTestData(e.target.value)}
-                      className="font-mono text-sm min-h-[300px]"
-                      placeholder="Enter test data in JSON format"
-                    />
-                  </div>
-
-                  <Button
-                    onClick={handleTestRule}
-                    disabled={isTestRunning}
-                    className="w-full"
-                  >
-                    <PlayCircle className="h-4 w-4 mr-2" />
-                    {isTestRunning ? "Running..." : "Run Evaluation"}
+              {/* Evaluate Button */}
+              <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+                <SheetTrigger asChild>
+                  <Button size="lg">
+                    <TestTube className="h-5 w-5 mr-2" />
+                    Evaluate Rule
                   </Button>
+                </SheetTrigger>
+                <SheetContent className="w-[400px] sm:w-[540px]">
+                  <SheetHeader>
+                    <SheetTitle>Evaluate Rule</SheetTitle>
+                    <SheetDescription>
+                      Test your rule against sample data
+                    </SheetDescription>
+                  </SheetHeader>
 
-                  {testResult && (
-                    <div className="space-y-3">
-                      <Alert
-                        variant={
-                          testResult.success
-                            ? testResult.passed
-                              ? "default"
-                              : "destructive"
-                            : "destructive"
-                        }
-                      >
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                          {testResult.success
-                            ? testResult.passed
-                              ? "✅ Rule evaluation passed"
-                              : "❌ Rule evaluation failed"
-                            : "⚠️ Error during evaluation"}
-                        </AlertDescription>
-                      </Alert>
-
-                      {testResult.success && (
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Result</label>
-                          <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-                            {JSON.stringify(testResult.result, null, 2)}
-                          </pre>
-                        </div>
-                      )}
-
-                      {testResult.error && (
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium">Error</label>
-                          <pre className="text-xs bg-destructive/10 text-destructive p-3 rounded-md">
-                            {testResult.error}
-                          </pre>
-                        </div>
-                      )}
+                  <div className="mt-6 space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">
+                        Test Data (JSON)
+                      </label>
+                      <Textarea
+                        value={testData}
+                        onChange={(e) => setTestData(e.target.value)}
+                        className="font-mono text-sm min-h-[300px]"
+                        placeholder="Enter test data in JSON format"
+                      />
                     </div>
-                  )}
-                </div>
-              </SheetContent>
-            </Sheet>
+
+                    <Button
+                      onClick={handleTestRule}
+                      disabled={isTestRunning}
+                      className="w-full"
+                    >
+                      <PlayCircle className="h-4 w-4 mr-2" />
+                      {isTestRunning ? "Running..." : "Run Evaluation"}
+                    </Button>
+
+                    {testResult && (
+                      <div className="space-y-3">
+                        <Alert
+                          variant={
+                            testResult.success
+                              ? testResult.passed
+                                ? "default"
+                                : "destructive"
+                              : "destructive"
+                          }
+                        >
+                          <AlertCircle className="h-4 w-4" />
+                          <AlertDescription>
+                            {testResult.success
+                              ? testResult.passed
+                                ? "✅ Rule evaluation passed"
+                                : "❌ Rule evaluation failed"
+                              : "⚠️ Error during evaluation"}
+                          </AlertDescription>
+                        </Alert>
+
+                        {testResult.success && (
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">
+                              Result
+                            </label>
+                            <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
+                              {JSON.stringify(testResult.result, null, 2)}
+                            </pre>
+                          </div>
+                        )}
+
+                        {testResult.error && (
+                          <div className="space-y-2">
+                            <label className="text-sm font-medium">Error</label>
+                            <pre className="text-xs bg-destructive/10 text-destructive p-3 rounded-md">
+                              {testResult.error}
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
       </header>
@@ -201,18 +214,10 @@ export function App() {
   );
 }
 
-// Initialize theme
-if (typeof window !== "undefined") {
-  const root = document.documentElement;
-  const theme = localStorage.getItem("rule-builder-theme") || "system";
-
-  if (theme === "system") {
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-      .matches
-      ? "dark"
-      : "light";
-    root.classList.add(systemTheme);
-  } else {
-    root.classList.add(theme);
-  }
+export function App() {
+  return (
+    <ThemeProvider defaultTheme="system" storageKey="rule-builder-theme">
+      <AppContent />
+    </ThemeProvider>
+  );
 }

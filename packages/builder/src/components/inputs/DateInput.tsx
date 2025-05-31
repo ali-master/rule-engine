@@ -25,7 +25,20 @@ export const DateInput: React.FC<DateInputProps> = ({
   disabled = false,
   className,
 }) => {
-  const date = value ? new Date(value) : undefined;
+  const date = React.useMemo(() => {
+    if (!value) return undefined;
+    
+    try {
+      const parsed = new Date(value);
+      // Check if date is valid
+      if (isNaN(parsed.getTime())) {
+        return undefined;
+      }
+      return parsed;
+    } catch {
+      return undefined;
+    }
+  }, [value]);
 
   return (
     <Popover>

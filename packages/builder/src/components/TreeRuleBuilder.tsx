@@ -26,6 +26,7 @@ import {
   PlayCircle,
   AlertCircle,
   TestTube2,
+  GitBranch,
 } from "lucide-react";
 import { useRuleStore } from "../stores/rule-store";
 import { RuleEngine } from "@usex/rule-engine";
@@ -375,26 +376,38 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
         {/* Builder Area */}
         <div className="lg:col-span-2 space-y-4">
           {conditions.length === 0 ? (
-            <Card className="border-dashed">
-              <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground mb-4">
-                  {mergedLabels.noRules}
-                </p>
-                {!readOnly && (
-                  <div className="flex justify-center gap-2">
-                    <Button onClick={() => addRootConditionGroup("or")}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add {mergedLabels.or} Group
-                    </Button>
-                    <Button
-                      onClick={() => addRootConditionGroup("and")}
-                      variant="outline"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add {mergedLabels.and} Group
-                    </Button>
+            <Card className="border-2 border-dashed border-muted-foreground/25 bg-muted/10">
+              <CardContent className="py-16">
+                <div className="text-center">
+                  <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+                    <GitBranch className="h-6 w-6 text-muted-foreground" />
                   </div>
-                )}
+                  <h3 className="text-lg font-medium mb-2">No rules defined</h3>
+                  <p className="text-sm text-muted-foreground mb-6 max-w-sm mx-auto">
+                    {mergedLabels.noRules}
+                  </p>
+                  {!readOnly && (
+                    <div className="flex justify-center gap-3">
+                      <Button 
+                        onClick={() => addRootConditionGroup("or")}
+                        size="default"
+                        className="gap-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add {mergedLabels.or} Group
+                      </Button>
+                      <Button
+                        onClick={() => addRootConditionGroup("and")}
+                        variant="secondary"
+                        size="default"
+                        className="gap-2"
+                      >
+                        <Plus className="h-4 w-4" />
+                        Add {mergedLabels.and} Group
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           ) : (

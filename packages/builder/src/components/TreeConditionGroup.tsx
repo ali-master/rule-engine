@@ -80,9 +80,9 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
   };
 
   const typeColors = {
-    or: colors.or || "text-blue-600 bg-blue-50 border-blue-200",
-    and: colors.and || "text-green-600 bg-green-50 border-green-200",
-    none: colors.none || "text-purple-600 bg-purple-50 border-purple-200",
+    or: colors.or || "border-rule-or/40 bg-rule-or-bg/50",
+    and: colors.and || "border-rule-and/40 bg-rule-and-bg/50",
+    none: colors.none || "border-rule-none/40 bg-rule-none-bg/50",
   };
 
   const typeLabels = {
@@ -164,9 +164,9 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
 
       <Card
         className={cn(
-          "transition-all",
-          "hover:shadow-md",
-          depth === 0 && "border-2",
+          "transition-all duration-200",
+          "hover:shadow-sm",
+          depth === 0 ? "border-2" : "border",
           depth === 0 && typeColors[conditionType]
         )}
       >
@@ -221,23 +221,25 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
               {!readOnly && (
                 <>
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     size="sm"
                     onClick={addConstraint}
                     title="Add rule"
+                    className="h-8"
                   >
-                    <Plus className="h-4 w-4" />
-                    <span className="ml-1 hidden sm:inline">Rule</span>
+                    <Plus className="h-3.5 w-3.5" />
+                    <span className="ml-1.5 hidden sm:inline">Rule</span>
                   </Button>
                   {depth < maxNestingDepth && (
                     <Button
-                      variant="ghost"
+                      variant="outline"
                       size="sm"
                       onClick={addNestedGroup}
                       title="Add nested group"
+                      className="h-8"
                     >
-                      <GitBranch className="h-4 w-4" />
-                      <span className="ml-1 hidden sm:inline">Group</span>
+                      <GitBranch className="h-3.5 w-3.5" />
+                      <span className="ml-1.5 hidden sm:inline">Group</span>
                     </Button>
                   )}
                   <Button
@@ -266,30 +268,36 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
           {isExpanded && (
             <div className="space-y-3">
               {items.length === 0 ? (
-                <div className="text-center py-6 text-sm text-muted-foreground">
-                  No conditions yet.
-                  {!readOnly && (
-                    <div className="mt-2 flex justify-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={addConstraint}
-                      >
-                        <Plus className="h-4 w-4 mr-1" />
-                        Add Rule
-                      </Button>
-                      {depth < maxNestingDepth && (
+                <div className="rounded-lg border-2 border-dashed border-muted-foreground/25 bg-muted/30 py-8">
+                  <div className="text-center">
+                    <p className="text-sm text-muted-foreground mb-4">
+                      No conditions yet. Start by adding a rule or group.
+                    </p>
+                    {!readOnly && (
+                      <div className="flex justify-center gap-3">
                         <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={addNestedGroup}
+                          variant="secondary"
+                          size="default"
+                          onClick={addConstraint}
+                          className="gap-2"
                         >
-                          <Layers className="h-4 w-4 mr-1" />
-                          Add Group
+                          <Plus className="h-4 w-4" />
+                          Add Rule
                         </Button>
-                      )}
-                    </div>
-                  )}
+                        {depth < maxNestingDepth && (
+                          <Button
+                            variant="secondary"
+                            size="default"
+                            onClick={addNestedGroup}
+                            className="gap-2"
+                          >
+                            <Layers className="h-4 w-4" />
+                            Add Group
+                          </Button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ) : (
                 items.map((item, index) => (
