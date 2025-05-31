@@ -17,9 +17,8 @@ export default antfu({
     indent: 2,
     quotes: "double",
     semi: true,
-    arrowParens: "as-needed",
+    arrowParens: "always",
   },
-  type: "lib",
   typescript: true,
   name: "rule-engine",
   react: true,
@@ -28,6 +27,7 @@ export default antfu({
   ignores: ["README.md", "packages/*/README.md"],
   files: ["./packages/**/*.ts"],
   rules: {
+    "antfu/top-level-function": "off",
     "style/indent": "off",
     "style/brace-style": "off",
     "style/arrow-parens": "off",
@@ -42,6 +42,7 @@ export default antfu({
     "no-throw-literal": "off",
     "ts/ban-ts-comment": "off",
     "ts/no-non-null-asserted-optional-chain": "off",
+    "react-hooks-extra/no-direct-set-state-in-use-effect": "off",
     "perfectionist/sort-named-imports": ["error", { order: "desc" }],
     "react-refresh/only-export-components": [
       "warn",

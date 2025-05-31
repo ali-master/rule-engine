@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+:root {
+  /* Colors */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+  --primary: 240 5.9% 10%;
+  --primary-foreground: 0 0% 98%;
+  --secondary: 240 4.8% 95.9%;
+  --secondary-foreground: 240 5.9% 10%;
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 5.9% 10%;
+  --radius: 0.5rem;
+  
+  /* Rule Engine Specific */
+  --rule-or: 217 91% 60%;
+  --rule-or-bg: 217 91% 96%;
+  --rule-and: 142 71% 45%;
+  --rule-and-bg: 142 71% 95%;
+  --rule-none: 0 84% 60%;
+  --rule-none-bg: 0 84% 95%;
+}
+
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+  
+  /* Rule Engine Specific */
+  --rule-or: 217 91% 60%;
+  --rule-or-bg: 217 91% 15%;
+  --rule-and: 142 71% 45%;
+  --rule-and-bg: 142 71% 15%;
+  --rule-none: 0 84% 60%;
+  --rule-none-bg: 0 84% 15%;
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--secondary));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Fix for Radix UI popover/select backgrounds */
+[data-radix-popper-content-wrapper] {
+  z-index: 50;
+}
+
+/* Select dropdown specific fixes */
+[role="listbox"] {
+  background-color: hsl(var(--popover)) !important;
+}
+
+[data-radix-select-content] {
+  background-color: hsl(var(--popover)) !important;
+}
+
+[data-radix-select-viewport] {
+  background-color: transparent !important;
+}
+
+[data-radix-select-item] {
+  background-color: transparent;
+}
+
+[data-radix-select-item][data-highlighted] {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Command palette styles */
+[cmdk-root] {
+  background: hsl(var(--popover));
+}
+
+[cmdk-input] {
+  background: transparent;
+}
+
+[cmdk-item] {
+  background: transparent;
+}
+
+[cmdk-item][data-selected="true"] {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Rule builder specific styles */
+.rule-depth-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    to bottom,
+    hsl(var(--primary) / 0.8),
+    hsl(var(--primary) / 0.2)
+  );
+}
+
+.rule-path {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Nested rule indentation */
+.rule-indent-1 { padding-left: 1rem; }
+.rule-indent-2 { padding-left: 2rem; }
+.rule-indent-3 { padding-left: 3rem; }
+.rule-indent-4 { padding-left: 4rem; }
+.rule-indent-5 { padding-left: 5rem; }
+.rule-indent-deep { 
+  padding-left: 6rem; 
+  border-left: 2px dashed hsl(var(--border));
+}
