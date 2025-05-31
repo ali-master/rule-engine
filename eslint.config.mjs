@@ -23,7 +23,6 @@ export default antfu({
   typescript: true,
   name: "rule-engine",
   react: true,
-  pnpm: true,
   gitignore: true,
 }).append({
   ignores: ["README.md", "packages/*/README.md"],
