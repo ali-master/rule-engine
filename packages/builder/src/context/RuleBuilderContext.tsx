@@ -157,29 +157,49 @@ export const RuleBuilderProvider: React.FC<RuleBuilderProviderProps> = ({
         if (current === "or" && condition.or) {
           // Handle mixed arrays of Conditions and Constraints
           const orItems = condition.or;
-          const filteredConditions = orItems.filter((item): item is Condition => 
-            !('field' in item && 'operator' in item)
+          const filteredConditions = orItems.filter(
+            (item): item is Condition =>
+              !("field" in item && "operator" in item),
           );
-          newCond.or = [...orItems.filter(item => 'field' in item && 'operator' in item), 
-            ...updateConditionAtPath(filteredConditions, rest, newCondition) as Condition[]
+          newCond.or = [
+            ...orItems.filter((item) => "field" in item && "operator" in item),
+            ...(updateConditionAtPath(
+              filteredConditions,
+              rest,
+              newCondition,
+            ) as Condition[]),
           ];
         } else if (current === "and" && condition.and) {
           // Handle mixed arrays of Conditions and Constraints
           const andItems = condition.and;
-          const filteredConditions = andItems.filter((item): item is Condition => 
-            !('field' in item && 'operator' in item)
+          const filteredConditions = andItems.filter(
+            (item): item is Condition =>
+              !("field" in item && "operator" in item),
           );
-          newCond.and = [...andItems.filter(item => 'field' in item && 'operator' in item), 
-            ...updateConditionAtPath(filteredConditions, rest, newCondition) as Condition[]
+          newCond.and = [
+            ...andItems.filter((item) => "field" in item && "operator" in item),
+            ...(updateConditionAtPath(
+              filteredConditions,
+              rest,
+              newCondition,
+            ) as Condition[]),
           ];
         } else if (current === "none" && condition.none) {
           // Handle mixed arrays of Conditions and Constraints
           const noneItems = condition.none;
-          const filteredConditions = noneItems.filter((item): item is Condition => 
-            !('field' in item && 'operator' in item)
+          const filteredConditions = noneItems.filter(
+            (item): item is Condition =>
+              !("field" in item && "operator" in item),
           );
-          newCond.none = [...noneItems.filter(item => 'field' in item && 'operator' in item), 
-            ...updateConditionAtPath(filteredConditions, rest, newCondition) as Condition[]
+          newCond.none = [
+            ...noneItems.filter(
+              (item) => "field" in item && "operator" in item,
+            ),
+            ...(updateConditionAtPath(
+              filteredConditions,
+              rest,
+              newCondition,
+            ) as Condition[]),
           ];
         }
         return newCond;
