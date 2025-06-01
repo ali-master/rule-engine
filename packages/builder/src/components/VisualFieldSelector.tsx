@@ -440,10 +440,10 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
               </Card>
 
               {showValuePreview && showPreview && (
-                <Card className="w-96 h-full flex flex-col p-4">
+                <Card className="w-96 flex flex-col p-4" style={{ maxHeight: '500px' }}>
                   <h4 className="font-medium mb-2">Preview</h4>
-                  <div className="flex-1 flex flex-col gap-3 min-h-0">
-                    <div>
+                  <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
+                    <div className="flex-shrink-0">
                       <Label className="text-xs text-muted-foreground">
                         Path
                       </Label>
@@ -467,12 +467,12 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                     </div>
 
                     {previewValue !== null && (
-                      <div className="flex-1 flex flex-col min-h-0">
-                        <Label className="text-xs text-muted-foreground mb-1">
+                      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+                        <Label className="text-xs text-muted-foreground mb-1 flex-shrink-0">
                           Value
                         </Label>
                         <Card className="flex-1 overflow-hidden border-muted">
-                          <ScrollArea className="h-full">
+                          <div className="h-full overflow-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                             <div className="p-3">
                               <JsonViewer
                                 data={previewValue}
@@ -481,7 +481,7 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                                 className="text-xs"
                               />
                             </div>
-                          </ScrollArea>
+                          </div>
                         </Card>
                       </div>
                     )}

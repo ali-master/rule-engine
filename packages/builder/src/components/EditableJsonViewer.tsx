@@ -275,6 +275,7 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
                 rootName="rule"
                 defaultExpanded={true}
                 className="max-w-full"
+                highlightLogicalOperators={true}
               />
             </div>
           )}

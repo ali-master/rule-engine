@@ -10,13 +10,14 @@ type JsonViewerProps = {
   rootName?: string
   defaultExpanded?: boolean
   className?: string
+  highlightLogicalOperators?: boolean
 }
 
-export function JsonViewer({ data, rootName = "root", defaultExpanded = true, className }: JsonViewerProps) {
+export function JsonViewer({ data, rootName = "root", defaultExpanded = true, className, highlightLogicalOperators = false }: JsonViewerProps) {
   return (
     <TooltipProvider>
       <div className={cn("font-mono text-sm", className)}>
-        <JsonNode name={rootName} data={data} isRoot={true} defaultExpanded={defaultExpanded} />
+        <JsonNode name={rootName} data={data} isRoot={true} defaultExpanded={defaultExpanded} highlightLogicalOperators={highlightLogicalOperators} />
       </div>
     </TooltipProvider>
   )
@@ -28,9 +29,10 @@ type JsonNodeProps = {
   isRoot?: boolean
   defaultExpanded?: boolean
   level?: number
+  highlightLogicalOperators?: boolean
 }
 
-function JsonNode({ name, data, isRoot = false, defaultExpanded = true, level = 0 }: JsonNodeProps) {
+function JsonNode({ name, data, isRoot = false, defaultExpanded = true, level = 0, highlightLogicalOperators = false }: JsonNodeProps) {
   const [isExpanded, setIsExpanded] = React.useState(defaultExpanded)
   const [isCopied, setIsCopied] = React.useState(false)
 
@@ -48,13 +50,22 @@ function JsonNode({ name, data, isRoot = false, defaultExpanded = true, level = 
   const dataType = data === null ? "null" : Array.isArray(data) ? "array" : typeof data
   const isExpandable = data !== null && data !== undefined && !(data instanceof Date) && (dataType === "object" || dataType === "array")
   const itemCount = isExpandable && data !== null && data !== undefined ? Object.keys(data).length : 0
+  
+  // Check if this is a logical operator node (or, and, none)
+  const isLogicalOperator = highlightLogicalOperators && (name === "or" || name === "and" || name === "none")
+  const isRootOperator = highlightLogicalOperators && isRoot && data && typeof data === "object" && ("or" in data || "and" in data || "none" in data)
 
   return (
     <div className={cn("pl-4 group/object", level > 0 && "border-l border-border")}>
       <div
         className={cn(
-          "flex items-center gap-1 py-1 hover:bg-muted/50 rounded px-1 -ml-4 cursor-pointer group/property",
-          isRoot && "text-primary font-semibold",
+          "flex items-center gap-1 py-1 rounded px-1 -ml-4 cursor-pointer group/property transition-colors",
+          isRoot && !isRootOperator && "text-primary font-semibold",
+          isLogicalOperator && name === "or" && "bg-blue-500/10 hover:bg-blue-500/20",
+          isLogicalOperator && name === "and" && "bg-green-500/10 hover:bg-green-500/20",
+          isLogicalOperator && name === "none" && "bg-red-500/10 hover:bg-red-500/20",
+          isRootOperator && "bg-primary/5 hover:bg-primary/10",
+          !isLogicalOperator && !isRootOperator && "hover:bg-muted/50",
         )}
         onClick={isExpandable ? handleToggle : undefined}
       >
@@ -70,7 +81,15 @@ function JsonNode({ name, data, isRoot = false, defaultExpanded = true, level = 
           <div className="w-4" />
         )}
 
-        <span className="text-primary">{name}</span>
+        <span className={cn(
+          "font-medium",
+          isLogicalOperator && name === "or" && "text-blue-600 dark:text-blue-400",
+          isLogicalOperator && name === "and" && "text-green-600 dark:text-green-400",
+          isLogicalOperator && name === "none" && "text-red-600 dark:text-red-400",
+          !isLogicalOperator && "text-primary"
+        )}>
+          {isLogicalOperator ? name.toUpperCase() : name}
+        </span>
 
         <span className="text-muted-foreground">
           {isExpandable ? (
@@ -114,6 +133,7 @@ function JsonNode({ name, data, isRoot = false, defaultExpanded = true, level = 
               data={data[key]}
               level={level + 1}
               defaultExpanded={level < 1}
+              highlightLogicalOperators={highlightLogicalOperators}
             />
           ))}
           <div className="text-muted-foreground pl-4 py-1">{dataType === "array" ? "]" : "}"}</div>

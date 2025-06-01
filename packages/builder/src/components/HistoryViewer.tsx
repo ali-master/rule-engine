@@ -362,6 +362,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                                   rootName="rule"
                                   defaultExpanded={true}
                                   className="max-w-full"
+                                  highlightLogicalOperators={true}
                                 />
                               </CardContent>
                             </Card>

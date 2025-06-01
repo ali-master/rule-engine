@@ -197,6 +197,20 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Scrollbar hiding utility */
+@utility scrollbar-none {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+}
+
 @utility animate-slideIn {
   animation: slideIn 0.3s ease-out;
 }

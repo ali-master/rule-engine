@@ -400,6 +400,7 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                                       rootName="result"
                                       defaultExpanded={true}
                                       className="max-w-full"
+                                      highlightLogicalOperators={true}
                                     />
                                   </CardContent>
                                 </Card>
