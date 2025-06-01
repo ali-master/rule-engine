@@ -117,15 +117,15 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
       </Button>
 
       <ZoomDialog open={open} onOpenChange={setOpen}>
-        <ZoomDialogContent className="max-w-6xl h-[80vh]">
-          <ZoomDialogHeader>
+        <ZoomDialogContent className="max-w-6xl h-[90vh] flex flex-col overflow-hidden">
+          <ZoomDialogHeader className="shrink-0">
             <ZoomDialogTitle>Version History</ZoomDialogTitle>
             <ZoomDialogDescription>
               View and manage the history of changes to your rule
             </ZoomDialogDescription>
           </ZoomDialogHeader>
 
-          <div className="flex-1 flex flex-col gap-4">
+          <div className="flex-1 flex flex-col gap-4 overflow-hidden">
             {/* Controls */}
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
@@ -171,15 +171,15 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
             </div>
 
             {/* History List and Details */}
-            <div className="flex-1 grid grid-cols-2 gap-4 min-h-0">
+            <div className="flex-1 grid grid-cols-2 gap-4 min-h-0 overflow-hidden">
               {/* History List */}
-              <Card className="flex flex-col">
-                <CardHeader className="py-3">
+              <Card className="flex flex-col overflow-hidden">
+                <CardHeader className="py-3 shrink-0">
                   <CardTitle className="text-sm">
                     History ({filteredHistory.length} entries)
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-1 p-0">
+                <CardContent className="flex-1 p-0 overflow-hidden">
                   <ScrollArea className="h-full">
                     <div className="p-4 space-y-2">
                       {filteredHistory.map((entry) => {
@@ -269,17 +269,17 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
               </Card>
 
               {/* Details/Diff View */}
-              <Card className="flex flex-col">
-                <CardHeader className="py-3">
+              <Card className="flex flex-col overflow-hidden">
+                <CardHeader className="py-3 shrink-0">
                   <CardTitle className="text-sm">Details</CardTitle>
                 </CardHeader>
-                <CardContent className="flex-1 p-0">
+                <CardContent className="flex-1 p-0 overflow-hidden">
                   {selectedEntry ? (
                     <Tabs
                       defaultValue="details"
-                      className="h-full flex flex-col"
+                      className="h-full flex flex-col overflow-hidden"
                     >
-                      <TabsList className="m-4 mb-0">
+                      <TabsList className="m-4 mb-0 shrink-0">
                         <TabsTrigger value="details">Details</TabsTrigger>
                         <TabsTrigger value="changes">Changes</TabsTrigger>
                         <TabsTrigger value="json">JSON</TabsTrigger>
@@ -288,8 +288,8 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                         )}
                       </TabsList>
 
-                      <TabsContent value="details" className="flex-1 p-4">
-                        <div className="space-y-4">
+                      <TabsContent value="details" className="flex-1 overflow-auto p-0">
+                        <div className="space-y-4 p-4">
                           <div>
                             <h4 className="font-medium text-sm mb-2">
                               Version Information
@@ -331,7 +331,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                         </div>
                       </TabsContent>
 
-                      <TabsContent value="changes" className="flex-1 p-0">
+                      <TabsContent value="changes" className="flex-1 overflow-hidden p-0">
                         <ScrollArea className="h-full">
                           <div className="p-4">
                             {selectedEntry.changes ? (
@@ -352,7 +352,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                         </ScrollArea>
                       </TabsContent>
 
-                      <TabsContent value="json" className="flex-1 p-0">
+                      <TabsContent value="json" className="flex-1 overflow-hidden p-0">
                         <ScrollArea className="h-full">
                           <div className="p-4">
                             <Card className="overflow-hidden">
@@ -371,7 +371,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                       </TabsContent>
 
                       {compareEntry && (
-                        <TabsContent value="compare" className="flex-1 p-0">
+                        <TabsContent value="compare" className="flex-1 overflow-hidden p-0">
                           <ScrollArea className="h-full">
                             <div className="p-4">
                               <div className="space-y-4">
@@ -397,7 +397,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                       )}
                     </Tabs>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-muted-foreground">
+                    <div className="h-full flex items-center justify-center text-muted-foreground p-4">
                       Select a history entry to view details
                     </div>
                   )}
