@@ -185,29 +185,38 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <Label className="text-sm font-medium">Operator</Label>
-              {localConstraint.operator &&
-                operatorHelp[localConstraint.operator] && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 px-2"
-                    onClick={() => setShowHelp(!showHelp)}
-                  >
-                    <HelpCircle className="h-3 w-3 mr-1" />
-                    Help
-                  </Button>
-                )}
+            <Label className="text-sm font-medium">Operator</Label>
+            <div className="flex items-center gap-2">
+              <OperatorSelector
+                value={localConstraint.operator}
+                onChange={handleOperatorChange}
+                field={localConstraint.field}
+                fieldType={selectedField?.type}
+                disabled={readOnly}
+                customOperators={customOperators}
+                className="flex-1"
+              />
+              {localConstraint.operator && operatorHelp[localConstraint.operator] && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => setShowHelp(!showHelp)}
+                      >
+                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p className="font-medium">{operatorHelp[localConstraint.operator].name}</p>
+                      <p className="text-xs">{operatorHelp[localConstraint.operator].description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
-            <OperatorSelector
-              value={localConstraint.operator}
-              onChange={handleOperatorChange}
-              field={localConstraint.field}
-              fieldType={selectedField?.type}
-              disabled={readOnly}
-              customOperators={customOperators}
-            />
           </div>
         </div>
 
@@ -330,11 +339,35 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
 
         {/* Actions and Preview */}
         <div className="flex items-center justify-between pt-2">
-          <div className="text-xs text-muted-foreground font-mono">
-            {localConstraint.field}{" "}
-            {operatorConfig?.label || localConstraint.operator}
-            {localConstraint.value !== undefined && (
-              <> {JSON.stringify(localConstraint.value)}</>
+          <div className="flex items-center gap-2">
+            <div className="text-xs text-muted-foreground font-mono">
+              {localConstraint.field}{" "}
+              {operatorConfig?.label || localConstraint.operator}
+              {localConstraint.value !== undefined && (
+                <> {JSON.stringify(localConstraint.value)}</>
+              )}
+            </div>
+            {localConstraint.operator && operatorHelp[localConstraint.operator] && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-sm">
+                    <div className="space-y-2">
+                      <p className="font-medium">{operatorHelp[localConstraint.operator].name}</p>
+                      <p className="text-xs">{operatorHelp[localConstraint.operator].description}</p>
+                      {operatorHelp[localConstraint.operator].tips && operatorHelp[localConstraint.operator].tips.length > 0 && (
+                        <div className="text-xs space-y-1 pt-1 border-t">
+                          {operatorHelp[localConstraint.operator].tips.slice(0, 1).map((tip, i) => (
+                            <p key={i} className="text-muted-foreground">💡 {tip}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             )}
           </div>
 
