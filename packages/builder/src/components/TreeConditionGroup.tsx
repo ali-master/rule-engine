@@ -83,9 +83,9 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
   };
 
   const typeColors = {
-    or: colors.or || "border-rule-or/40 bg-rule-or-bg/50",
-    and: colors.and || "border-rule-and/40 bg-rule-and-bg/50",
-    none: colors.none || "border-rule-none/40 bg-rule-none-bg/50",
+    or: colors.or || "border-blue-500/30 bg-blue-500/5 dark:bg-blue-500/10",
+    and: colors.and || "border-green-500/30 bg-green-500/5 dark:bg-green-500/10",
+    none: colors.none || "border-red-500/30 bg-red-500/5 dark:bg-red-500/10",
   };
 
   const typeLabels = {
@@ -156,11 +156,16 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
   });
 
   return (
-    <div className={cn("relative", indentClass)}>
+    <div className={cn("relative animate-in fade-in-0 slide-in-from-top-2 duration-300", indentClass)}>
       {/* Connection line for nested items */}
       {depth > 0 && (
         <div
-          className="absolute left-[-16px] top-0 bottom-0 w-px bg-border"
+          className={cn(
+            "absolute left-[-16px] top-0 bottom-0 w-px",
+            conditionType === "or" && "bg-blue-500/30",
+            conditionType === "and" && "bg-green-500/30",
+            conditionType === "none" && "bg-red-500/30"
+          )}
           aria-hidden="true"
         />
       )}
@@ -168,9 +173,10 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
       <Card
         className={cn(
           "transition-all duration-200",
-          "hover:shadow-sm",
+          "hover:shadow-md",
           depth === 0 ? "border-2" : "border",
-          depth === 0 && typeColors[conditionType],
+          typeColors[conditionType],
+          "backdrop-blur-sm"
         )}
       >
         <div className="p-4">
@@ -199,13 +205,18 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
                   }
                   disabled={readOnly}
                 >
-                  <SelectTrigger className="h-8 w-24">
+                  <SelectTrigger className={cn(
+                    "h-8 w-24 font-semibold",
+                    conditionType === "or" && "text-blue-600 dark:text-blue-400",
+                    conditionType === "and" && "text-green-600 dark:text-green-400",
+                    conditionType === "none" && "text-red-600 dark:text-red-400"
+                  )}>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="or">{typeLabels.or}</SelectItem>
-                    <SelectItem value="and">{typeLabels.and}</SelectItem>
-                    <SelectItem value="none">{typeLabels.none}</SelectItem>
+                    <SelectItem value="or" className="text-blue-600 dark:text-blue-400 font-semibold">{typeLabels.or}</SelectItem>
+                    <SelectItem value="and" className="text-green-600 dark:text-green-400 font-semibold">{typeLabels.and}</SelectItem>
+                    <SelectItem value="none" className="text-red-600 dark:text-red-400 font-semibold">{typeLabels.none}</SelectItem>
                   </SelectContent>
                 </Select>
 
