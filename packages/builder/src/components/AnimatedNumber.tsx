@@ -41,3 +41,5 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
     />
   );
 };
+
+AnimatedNumber.displayName = 'AnimatedNumber';
