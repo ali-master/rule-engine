@@ -17,6 +17,7 @@ import { cn } from "../lib/utils";
 import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
 import { DiffViewer } from "./DiffViewer";
 import { JsonViewer } from "./JsonVisualizer";
+import { ResizablePanel } from "./ResizablePanel";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
@@ -160,9 +161,18 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
             </div>
 
             {/* History List and Details */}
-            <div className="flex-1 grid grid-cols-2 gap-4 min-h-0 overflow-hidden">
-              {/* History List */}
-              <Card className="flex flex-col overflow-hidden">
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <ResizablePanel
+                defaultSize={35}
+                minSize={25}
+                maxSize={50}
+                direction="horizontal"
+                persistId="history-panel"
+                className="h-full"
+                handleClassName="mx-2"
+              >
+                {/* History List */}
+                <Card className="h-full flex flex-col overflow-hidden">
                 <CardHeader className="py-3 shrink-0">
                   <CardTitle className="text-sm">
                     History ({filteredHistory.length} entries)
@@ -255,10 +265,10 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                     </div>
                   </ScrollArea>
                 </CardContent>
-              </Card>
+                </Card>
 
-              {/* Details/Diff View */}
-              <Card className="flex flex-col overflow-hidden">
+                {/* Details/Diff View */}
+                <Card className="h-full flex flex-col overflow-hidden">
                 <CardHeader className="py-3 shrink-0">
                   <CardTitle className="text-sm">Details</CardTitle>
                 </CardHeader>
@@ -380,7 +390,8 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                     </div>
                   )}
                 </CardContent>
-              </Card>
+                </Card>
+              </ResizablePanel>
             </div>
           </div>
         </ZoomDialogContent>
