@@ -2,6 +2,8 @@
 
 A simple yet powerful rule engine for Node.js and the browser. Define complex business rules using JSON structures and evaluate them against your data with full TypeScript support.
 
+> **New in v2**: Strategy pattern for operators, custom operator support, enhanced introspection, and performance optimizations. See the [V2 Migration Guide](./docs/v2-migration-guide.md) for details.
+
 ## Table of Contents
 
 - [Features](#features)
@@ -19,16 +21,18 @@ A simple yet powerful rule engine for Node.js and the browser. Define complex bu
 
 ## Features
 
-- =€ **Simple & Powerful**: Easy to use API with complex rule support
-- =æ **Zero Dependencies**: Lightweight core with optional peer dependencies
-- = **JSONPath Support**: Access nested properties with `$.path.to.property`
+- =ï¿½ **Simple & Powerful**: Easy to use API with complex rule support
+- =ï¿½ **Zero Dependencies**: Lightweight core with optional peer dependencies
+- =
+ **JSONPath Support**: Access nested properties with `$.path.to.property`
 - = **Self-referencing**: Reference other fields in rule values
-- <¯ **Type Safety**: Full TypeScript support with generics
-- ¡ **Performance**: Optional validation bypass for trusted rules
+- <ï¿½ **Type Safety**: Full TypeScript support with generics
+- ï¿½ **Performance**: Optional validation bypass for trusted rules
 - =' **Extensible**: Add custom mutations for data preprocessing
-- <¨ **Flexible**: 126+ built-in operators for every use case
-- = **Introspection**: Analyze rules to understand possible inputs
-- <× **Builder Pattern**: Fluent API for programmatic rule construction
+- <ï¿½ **Flexible**: 126+ built-in operators for every use case
+- =
+ **Introspection**: Analyze rules to understand possible inputs
+- <ï¿½ **Builder Pattern**: Fluent API for programmatic rule construction
 
 ## Installation
 
@@ -65,12 +69,12 @@ const rule = {
 };
 
 // Evaluate the rule
-const result = await RuleEngine.evaluate(rule, { 
-  age: 25, 
-  country: "US" 
+const result = await RuleEngine.evaluate(rule, {
+  age: 25,
+  country: "US"
 });
 
-console.log(result); 
+console.log(result);
 // { value: true, isPassed: true }
 ```
 
@@ -124,7 +128,7 @@ interface Constraint {
 | `evaluate(rule, criteria, trustRule?)` | Evaluates a rule against criteria | `Promise<EvaluationResult<T>>` |
 | `checkIsPassed(rule, criteria, trustRule?)` | Simple boolean check if rule passes | `Promise<boolean>` |
 | `getEvaluateResult(rule, criteria, trustRule?)` | Get only result values without metadata | `Promise<T>` |
-| `evaluateMultiple(rules, criteria, trustRule?)` | Evaluate multiple rules | `Promise<EvaluationResult<T>[]>` |
+| `evaluateMany(rules, criteria, trustRule?)` | Evaluate multiple rules | `Promise<EvaluationResult<T>[]>` |
 | `validate(rule)` | Validates rule structure | `ValidationResult` |
 | `introspect(rule)` | Analyzes rule for possible inputs | `IntrospectionResult` |
 | `builder()` | Returns fluent builder instance | `RuleBuilder` |
@@ -146,7 +150,7 @@ Utility methods for working with objects and JSONPath:
 |--------|-------------|---------|
 | `resolveProperty(path, json)` | Resolves nested properties | `resolveProperty("$.user.name", data)` |
 | `updateProperty(path, json, value)` | Updates nested properties | `updateProperty("$.user.age", data, 25)` |
-| `resolveTextPathExpressions(text, criteria)` | Template string resolution | `"Hello $.name"` ’ `"Hello John"` |
+| `resolveTextPathExpressions(text, criteria)` | Template string resolution | `"Hello $.name"` ï¿½ `"Hello John"` |
 
 ## Operators
 
@@ -208,15 +212,15 @@ Access nested properties using JSONPath expressions:
 const rule = {
   conditions: {
     and: [
-      { 
-        field: "$.user.profile.age", 
-        operator: "greater-than", 
-        value: 21 
+      {
+        field: "$.user.profile.age",
+        operator: "greater-than",
+        value: 21
       },
-      { 
-        field: "$.user.permissions[0]", 
-        operator: "equals", 
-        value: "admin" 
+      {
+        field: "$.user.permissions[0]",
+        operator: "equals",
+        value: "admin"
       }
     ]
   }
@@ -240,9 +244,9 @@ Reference other fields in your rules using JSONPath:
 const rule = {
   conditions: {
     and: [
-      { 
-        field: "$.price", 
-        operator: "less-than", 
+      {
+        field: "$.price",
+        operator: "less-than",
         value: "$.maxPrice" // Reference another field
       }
     ]
@@ -381,10 +385,10 @@ const accessRule = {
         { field: "role", operator: "equals", value: "admin" },
         { field: "status", operator: "equals", value: "active" }
       ],
-      result: { 
-        canRead: true, 
-        canWrite: true, 
-        canDelete: true 
+      result: {
+        canRead: true,
+        canWrite: true,
+        canDelete: true
       }
     },
     {
@@ -393,17 +397,17 @@ const accessRule = {
         { field: "role", operator: "equals", value: "editor" },
         { field: "status", operator: "equals", value: "active" }
       ],
-      result: { 
-        canRead: true, 
-        canWrite: true, 
-        canDelete: false 
+      result: {
+        canRead: true,
+        canWrite: true,
+        canDelete: false
       }
     }
   ],
-  default: { 
-    canRead: true, 
-    canWrite: false, 
-    canDelete: false 
+  default: {
+    canRead: true,
+    canWrite: false,
+    canDelete: false
   }
 };
 ```
@@ -415,30 +419,30 @@ const validationRule = {
   conditions: {
     and: [
       // Email validation
-      { 
-        field: "email", 
-        operator: "email", 
+      {
+        field: "email",
+        operator: "email",
         value: true,
         message: "Invalid email format"
       },
       // Password strength
-      { 
-        field: "password", 
-        operator: "min-length", 
+      {
+        field: "password",
+        operator: "min-length",
         value: 8,
         message: "Password must be at least 8 characters"
       },
       // Age restriction
-      { 
-        field: "age", 
-        operator: "between", 
+      {
+        field: "age",
+        operator: "between",
         value: [18, 120],
         message: "Age must be between 18 and 120"
       },
       // Terms acceptance
-      { 
-        field: "acceptedTerms", 
-        operator: "equals", 
+      {
+        field: "acceptedTerms",
+        operator: "equals",
         value: true,
         message: "You must accept the terms and conditions"
       }
@@ -501,6 +505,55 @@ const result = await RuleEngine.evaluate<DiscountResult>(rule, data);
 | JSONPath Resolution | 10,000 | 120ms | ~83,000/sec |
 | With Mutations | 10,000 | 150ms | ~66,000/sec |
 
+## Custom Operators (V2)
+
+The new V2 architecture allows you to create and register custom operators:
+
+```typescript
+import { registerCustomOperator, OperatorCategory, BaseOperatorStrategy } from '@usex/rule-engine';
+
+// Define a custom IPv4 validator
+class IPv4Operator extends BaseOperatorStrategy<string, void> {
+  readonly metadata = {
+    name: "ipv4",
+    displayName: "IPv4 Address",
+    category: OperatorCategory.PATTERN,
+    description: "Validates IPv4 addresses",
+    acceptedFieldTypes: ["string"],
+    expectedValueType: "void",
+    requiresValue: false,
+  };
+
+  evaluate(context) {
+    const { fieldValue } = context;
+    const ipv4Regex = /^(25[0-5]|2[0-4]\d|[01]?\d{1,2})\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})$/;
+    return ipv4Regex.test(fieldValue);
+  }
+}
+
+// Register the operator
+registerCustomOperator(IPv4Operator);
+
+// Use in rules
+const rule = {
+  conditions: {
+    and: [
+      { field: "serverIp", operator: "ipv4" }
+    ]
+  }
+};
+```
+
+### Benefits of V2
+
+- **Modular Operators**: Each operator is a self-contained strategy
+- **Type Safety**: Full TypeScript support with proper type inference
+- **Metadata**: Operators include metadata for validation and documentation
+- **Extensibility**: Easy to add custom operators without modifying core
+- **Performance**: Optional caching and lazy operator loading
+
+See the [V2 Migration Guide](./docs/v2-migration-guide.md) for more details.
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for details.
@@ -523,7 +576,7 @@ pnpm build
 
 ## License
 
-MIT © [Ali Torki](https://github.com/ali-master)
+MIT ï¿½ [Ali Torki](https://github.com/ali-master)
 
 ---
 

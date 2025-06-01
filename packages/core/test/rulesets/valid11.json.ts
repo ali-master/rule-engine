@@ -1,4 +1,5 @@
-import { RuleType, Operators } from "../../src";
+import type { RuleType } from "../../src";
+import { Operators } from "../../src";
 
 export const Valid11Json: RuleType = {
   conditions: [
@@ -8,7 +9,8 @@ export const Valid11Json: RuleType = {
           field: "$.payload.depositAmount",
           operator: Operators.LengthBetween,
           value: [4, 20],
-          message: "Deposit amount must be between $.self.value[0] and $.self.value[1] characters.",
+          message:
+            "Deposit amount must be between $.self.value[0] and $.self.value[1] characters.",
         },
         {
           or: [
@@ -18,7 +20,8 @@ export const Valid11Json: RuleType = {
                   field: "$.metadata.levelId",
                   operator: Operators.Equals,
                   value: 1,
-                  message: "Invalid levelId. Please check the value. Must be $.self.value.",
+                  message:
+                    "Invalid levelId. Please check the value. Must be $.self.value.",
                 },
                 {
                   and: [
@@ -36,7 +39,8 @@ export const Valid11Json: RuleType = {
                   field: "$.metadata.levelId",
                   operator: Operators.Equals,
                   value: 2,
-                  message: "Invalid levelId. Please check the value. Must be $.self.value.",
+                  message:
+                    "Invalid levelId. Please check the value. Must be $.self.value.",
                 },
                 {
                   and: [
@@ -54,7 +58,8 @@ export const Valid11Json: RuleType = {
                   field: "$.metadata.levelId",
                   operator: Operators.Equals,
                   value: 3,
-                  message: "Invalid levelId. Please check the value. Must be $.self.value.",
+                  message:
+                    "Invalid levelId. Please check the value. Must be $.self.value.",
                 },
                 {
                   and: [

@@ -82,6 +82,20 @@ export class ObjectDiscovery<T = any> {
   }
 
   /**
+   * Resolves a nested property from a string as an object path for a single object.
+   * @param path The path to resolve.
+   * @param json The object to resolve the path against.
+   */
+  resolveProperty(path: string, json: CriteriaObject<T>): any;
+
+  /**
+   * Resolves a nested property from a string as an object path for an array.
+   * @param path The path to resolve.
+   * @param json The array to resolve the path against.
+   */
+  resolveProperty(path: string, json: Array<T>): any;
+
+  /**
    * Resolves a nested property from a sting as an object path.
    * @param path The path to resolve.
    * @param json The object to resolve the path against.
@@ -97,6 +111,22 @@ export class ObjectDiscovery<T = any> {
 
     return isEmpty(result) ? undefined : result;
   }
+
+  /**
+   * Updates a property in a JSON object. Supports nested properties.
+   * @param path The path to the property to update.
+   * @param json The JSON object to update.
+   * @param value The value to set the property to.
+   */
+  updateProperty(path: string, json: CriteriaObject<T>, value: any): any;
+
+  /**
+   * Updates a property in a JSON array. Supports nested properties.
+   * @param path The path to the property to update.
+   * @param json The JSON array to update.
+   * @param value The value to set the property to.
+   */
+  updateProperty(path: string, json: Array<T>, value: any): any;
 
   /**
    * Updates a property in a JSON object. Supports nested properties.
@@ -126,6 +156,20 @@ export class ObjectDiscovery<T = any> {
   }
 
   /**
+   * Resolves the text properties of a string for a single object.
+   * @param str The string containing path expressions
+   * @param criteria The object to resolve paths against
+   */
+  resolveTextPathExpressions(str: string, criteria: CriteriaObject<T>): string;
+
+  /**
+   * Resolves the text properties of a string for an array.
+   * @param str The string containing path expressions
+   * @param criteria The array to resolve paths against
+   */
+  resolveTextPathExpressions(str: string, criteria: Array<T>): string;
+
+  /**
    * Resolves the text properties of a string.
    * @param {string} str
    * @param {Criteria} criteria
@@ -145,7 +189,7 @@ export class ObjectDiscovery<T = any> {
     let result = str;
 
     for (const expression of expressions) {
-      const resolvedExpressionPath = this.resolveProperty(expression, criteria);
+      const resolvedExpressionPath = (this as any).resolveProperty(expression, criteria);
       result = result.replace(expression, resolvedExpressionPath);
     }
 

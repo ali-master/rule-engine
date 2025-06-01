@@ -1,14 +1,14 @@
 // Utilities
-import { bench, describe } from "vitest";
+import { describe, bench } from "vitest";
 import { RuleEngine, Operators } from "../src";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 
-describe("RuleEngine mutator correctly", () => {
+describe("ruleEngine mutator correctly", () => {
   bench(
-    "Performs multiple mutations",
+    "performs multiple mutations",
     async () => {
-      const rp = new RuleEngine();
+      const rp = RuleEngine.getInstance();
 
       rp.addMutation("WinRate", (value: number) => value * 2);
       rp.addMutation("AverageTradeDuration", (value: number) => value / 2);
@@ -26,9 +26,9 @@ describe("RuleEngine mutator correctly", () => {
   );
 
   bench(
-    "Performs nested mutation",
+    "performs nested mutation",
     async () => {
-      const rp = new RuleEngine();
+      const rp = RuleEngine.getInstance();
 
       rp.addMutation("$.foo.bar", (value: number) => value * 2);
 
@@ -36,7 +36,13 @@ describe("RuleEngine mutator correctly", () => {
         {
           conditions: [
             {
-              and: [{ field: "$.foo.bar", operator: Operators.GreaterThan, value: 6 }],
+              and: [
+                {
+                  field: "$.foo.bar",
+                  operator: Operators.GreaterThan,
+                  value: 6,
+                },
+              ],
             },
           ],
         },

@@ -1,7 +1,10 @@
-import { isPersian } from "@persian-tools/persian-tools";
-import { dateWithTzOffset, isObject } from "@root/utils";
+import {
+  isValidTime,
+  isObject,
+  dateWithTzOffset,
+  convertTimeToMs,
+} from "@root/utils";
 import { isBefore, isAfter } from "date-fns-jalali";
-import { convertTimeToMs, isValidTime } from "@root/utils";
 
 /**
  * Checks if the value is equal to the compareValue. Both values must be of the same type. If the values are objects, it will compare the stringifies versions of the objects.
@@ -69,8 +72,14 @@ export function greaterThanOperator(value: any, compareValue: any): boolean {
  * @param value
  * @param compareValue
  */
-export function greaterThanOrEqualsOperator(value: any, compareValue: any): boolean {
-  return equalsOperator(value, compareValue) || greaterThanOperator(value, compareValue);
+export function greaterThanOrEqualsOperator(
+  value: any,
+  compareValue: any,
+): boolean {
+  return (
+    equalsOperator(value, compareValue) ||
+    greaterThanOperator(value, compareValue)
+  );
 }
 
 /**
@@ -91,8 +100,13 @@ export function lessThanOperator(value: any, compareValue: any): boolean {
  * @param value
  * @param compareValue
  */
-export function lessThanOrEqualsOperator(value: any, compareValue: any): boolean {
-  return equalsOperator(value, compareValue) || lessThanOperator(value, compareValue);
+export function lessThanOrEqualsOperator(
+  value: any,
+  compareValue: any,
+): boolean {
+  return (
+    equalsOperator(value, compareValue) || lessThanOperator(value, compareValue)
+  );
 }
 
 /**
@@ -123,9 +137,14 @@ export function lessThanOrEqualsOperator(value: any, compareValue: any): boolean
  * likeOperator("Hello, World!", "^Hello, %$") // true
  * likeOperator("Hello, World!", "^Hello, World!$") // false
  */
-export function likeOperator(text: string, pattern: string, caseInsensitive = false) {
+export function likeOperator(
+  text: string,
+  pattern: string,
+  caseInsensitive = false,
+) {
   // Escape special characters in the pattern to prevent SQL injection
-  const escapedPattern = pattern.replace(/([\\.%_\[\]\^$!@#$%^&*?\(\)-=+:;'"<>,\/\{\}])/g, "$1");
+  // eslint-disable-next-line regexp/no-obscure-range
+  const escapedPattern = pattern.replace(/([\\%_[\]^$!@#&?()-='">{}])/g, "$1");
 
   // Build the regular expression with pattern handling
   let regexStr = "^";
@@ -151,7 +170,8 @@ export function likeOperator(text: string, pattern: string, caseInsensitive = fa
           return false;
         }
         break;
-      case "[": // Character set handling
+      case "[": {
+        // Character set handling
         let charSetStr = "";
         let isNegated = false;
         if (escapedPattern[i + 1] === "^") {
@@ -167,6 +187,7 @@ export function likeOperator(text: string, pattern: string, caseInsensitive = fa
         }
         regexStr += isNegated ? `[^${charSetStr}]` : `[${charSetStr}]`;
         break;
+      }
       case "^": // Starts with
         if (i === 0) {
           isStartsWith = true;
@@ -216,7 +237,7 @@ export function isNullOrWhiteSpaceOperator(value: string): boolean {
 }
 
 export function isNumericOperator(value: any): boolean {
-  return !isNaN(Number(value));
+  return !Number.isNaN(Number(value));
 }
 
 export function isBooleanOperator(value: any): boolean {
@@ -226,27 +247,29 @@ export function isBooleanOperator(value: any): boolean {
 export function isDateOperator(value: any): boolean {
   try {
     return new Date(value).toString() !== "Invalid Date";
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
 export function isEmailOperator(value: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@][^\s.@]*\.[^\s@]+$/;
   return emailRegex.test(value);
 }
 
 export function isUrlOperator(value: string): boolean {
   try {
+     
     new URL(value);
     return true;
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
 export function isUuidOperator(value: string): boolean {
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+  const uuidRegex =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
   return uuidRegex.test(value);
 }
 
@@ -260,23 +283,27 @@ export const faAlphaText = faAlphabet + faShortVowels + faOthers;
 export const faComplexText = faText + faMixedWithArabic;
 export const faAlphaComplexText = faAlphaText + faMixedWithArabic;
 export function isAlphaOperator(value: string): boolean {
-  const alphaRegex = /^[a-zA-Z]+$/;
+  const alphaRegex = /^[a-z]+$/i;
   return alphaRegex.test(value);
 }
 export function isPersianAlphaOperator(value: string): boolean {
-  const text = value.replace(/["'-+()؟\s.]/g, "");
+  // eslint-disable-next-line regexp/no-obscure-range
+  const text = value.replace(/["'-+؟\s.]/g, "");
 
-  return new RegExp(`^[${faAlphaComplexText}]+$`).test(text);
+  // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
+  return new RegExp(`^[${faAlphaText}]+$`).test(text);
 }
 
 export function isAlphaNumericOperator(value: string): boolean {
-  const alphaNumericRegex = /^[a-zA-Z0-9]+$/;
+  const alphaNumericRegex = /^[a-z0-9]+$/i;
   return alphaNumericRegex.test(value);
 }
 
 export function isPersianAlphaNumericOperator(value: string): boolean {
-  const text = value.replace(/["'-+()؟\s.]/g, "");
+  // eslint-disable-next-line regexp/no-obscure-range
+  const text = value.replace(/["'-+؟\s.]/g, "");
 
+  // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
   return new RegExp(`^[${faComplexText}]+$`).test(text);
 }
 
@@ -313,31 +340,34 @@ export function isBooleanNumberStringOperator(value: any): boolean {
 }
 
 export function isNumberOperator(value: any): boolean {
-  // Check if it's a number using typeof and strict comparison
+  // Check if it's a number using typeof
   if (typeof value === "number") {
     // Check for NaN (Not a Number)
-    if (isNaN(value)) {
-      return false;
-    }
-    // Implicit conversion to integer might remove decimals, check for that as well
-    return value === parseFloat(value as unknown as string);
+    return !Number.isNaN(value);
   }
 
   // Check if it's a string and can be converted to a number
-  return typeof value === "string" && !isNaN(parseFloat(value));
+  if (typeof value === "string") {
+    const num = Number(value);
+    return !Number.isNaN(num) && value.trim() !== "";
+  }
+
+  return false;
 }
 
 export function isIntegerOperator(value: any): boolean {
   if (!isNumberOperator(value)) return false;
 
-  return value === parseInt(value, 10);
+  return value === Number.parseInt(value, 10);
 }
 
 export function isFloatOperator(value: any): boolean {
   if (!isNumericOperator(value)) return false;
 
   const epsilon = Number.EPSILON; // Machine epsilon for floating-point precision
-  return Number.isFinite(value) && Math.abs(value - Math.floor(value)) > epsilon;
+  return (
+    Number.isFinite(value) && Math.abs(value - Math.floor(value)) > epsilon
+  );
 }
 
 export function isPositiveOperator(value: any): boolean {
@@ -358,7 +388,10 @@ export function isZeroOperator(value: any): boolean {
   return Number(value) === 0;
 }
 
-export function isNumberBetweenOperator(value: any, compareValues: any[]): boolean {
+export function isNumberBetweenOperator(
+  value: any,
+  compareValues: any[],
+): boolean {
   if (!Array.isArray(compareValues) || compareValues.length !== 2) return false;
   if (!isNumericOperator(value)) return false;
 
@@ -387,7 +420,10 @@ export function isMaxLengthOperator(value: any, compareValue: any): boolean {
   return value.length <= compareValue;
 }
 
-export function IsLengthBetweenOperator(value: any, compareValues: any[]): boolean {
+export function IsLengthBetweenOperator(
+  value: any,
+  compareValues: any[],
+): boolean {
   if (typeof value !== "string") return false;
   if (!Array.isArray(compareValues) || compareValues.length !== 2) return false;
 
@@ -415,11 +451,21 @@ export function isBetweenOperator(value: any, compareValues: any[]): boolean {
 }
 
 export function isFalsyOperator(value: any): boolean {
-  return !value || value === "undefined" || value === "null" || value === "false";
+  // Standard JavaScript falsy values: false, 0, -0, 0n, "", null, undefined, NaN
+  return (
+    (!value && value !== 0 && value !== false && value !== "") ||
+    value === 0 ||
+    value === false ||
+    value === "" ||
+    value === null ||
+    value === undefined ||
+    Number.isNaN(value)
+  );
 }
 
 export function isTruthyOperator(value: any): boolean {
-  return !!value && value !== "undefined";
+  // Returns true for any truthy value in JavaScript
+  return !!value;
 }
 
 /**
@@ -440,19 +486,28 @@ export function containsOperator(value: any, compareValue: any): boolean {
   return value.includes(compareValue);
 }
 
-export function selfContainsAllOperator(value: any, compareValues: any[]): boolean {
+export function selfContainsAllOperator(
+  value: any,
+  compareValues: any[],
+): boolean {
   if (!isStringOperator(value) || !Array.isArray(compareValues)) return false;
 
   return compareValues.every((compareValue) => value.includes(compareValue));
 }
 
-export function selfContainsAnyOperator(value: any, compareValues: any[]): boolean {
+export function selfContainsAnyOperator(
+  value: any,
+  compareValues: any[],
+): boolean {
   if (!isStringOperator(value) || !Array.isArray(compareValues)) return false;
 
   return compareValues.some((compareValue) => value.includes(compareValue));
 }
 
-export function selfContainsNoneOperator(value: any, compareValues: any[]): boolean {
+export function selfContainsNoneOperator(
+  value: any,
+  compareValues: any[],
+): boolean {
   if (!isStringOperator(value) || !Array.isArray(compareValues)) return false;
 
   return compareValues.every((compareValue) => !value.includes(compareValue));
@@ -487,7 +542,7 @@ export function isExistsInObjectOperator(key: any, obj: any): boolean {
 }
 
 export function isNullOrUndefinedOperator(value: any): boolean {
-  return value === null || value === undefined || value === "undefined";
+  return value === null || value === undefined;
 }
 
 export function isEmptyOperator(value: any): boolean {
@@ -501,9 +556,13 @@ export function isEmptyOperator(value: any): boolean {
 export function isDateAfterOperator(left: any, right: any): boolean {
   try {
     return (
-      left !== right && isAfter(dateWithTzOffset(new Date(left)), dateWithTzOffset(new Date(right)))
+      left !== right &&
+      isAfter(
+        dateWithTzOffset(new Date(left)),
+        dateWithTzOffset(new Date(right)),
+      )
     );
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -511,7 +570,7 @@ export function isDateAfterOperator(left: any, right: any): boolean {
 export function isDateAfterNowOperator(value: any): boolean {
   try {
     return isAfter(dateWithTzOffset(new Date(value)), new Date());
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -520,9 +579,12 @@ export function isDateBeforeOperator(left: any, right: any): boolean {
   try {
     return (
       left !== right &&
-      isBefore(dateWithTzOffset(new Date(left)), dateWithTzOffset(new Date(right)))
+      isBefore(
+        dateWithTzOffset(new Date(left)),
+        dateWithTzOffset(new Date(right)),
+      )
     );
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -530,15 +592,18 @@ export function isDateBeforeOperator(left: any, right: any): boolean {
 export function isDateBeforeNowOperator(value: any): boolean {
   try {
     return isBefore(dateWithTzOffset(new Date(value)), new Date());
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
 export function isDateAfterOrEqualsOperator(left: any, right: any): boolean {
   try {
-    return !isBefore(dateWithTzOffset(new Date(left)), dateWithTzOffset(new Date(right)));
-  } catch (e) {
+    return !isBefore(
+      dateWithTzOffset(new Date(left)),
+      dateWithTzOffset(new Date(right)),
+    );
+  } catch {
     return false;
   }
 }
@@ -546,15 +611,18 @@ export function isDateAfterOrEqualsOperator(left: any, right: any): boolean {
 export function isDateAfterNowOrEqualsOperator(value: any): boolean {
   try {
     return !isBefore(dateWithTzOffset(new Date(value)), new Date());
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
 export function isDateBeforeOrEqualsOperator(left: any, right: any): boolean {
   try {
-    return !isAfter(dateWithTzOffset(new Date(left)), dateWithTzOffset(new Date(right)));
-  } catch (e) {
+    return !isAfter(
+      dateWithTzOffset(new Date(left)),
+      dateWithTzOffset(new Date(right)),
+    );
+  } catch {
     return false;
   }
 }
@@ -562,7 +630,7 @@ export function isDateBeforeOrEqualsOperator(left: any, right: any): boolean {
 export function isDateBeforeNowOrEqualsOperator(value: any): boolean {
   try {
     return !isAfter(dateWithTzOffset(new Date(value)), new Date());
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -570,17 +638,20 @@ export function isDateBeforeNowOrEqualsOperator(value: any): boolean {
 export function isDateEqualsOperator(left: any, right: any): boolean {
   try {
     return (
-      dateWithTzOffset(new Date(left)).getTime() === dateWithTzOffset(new Date(right)).getTime()
+      dateWithTzOffset(new Date(left)).getTime() ===
+      dateWithTzOffset(new Date(right)).getTime()
     );
-  } catch (e) {
+  } catch {
     return false;
   }
 }
 
 export function isDateEqualsToNowOperator(dateValue: any): boolean {
   try {
-    return dateWithTzOffset(new Date(dateValue)).getTime() === new Date().getTime();
-  } catch (e) {
+    return (
+      dateWithTzOffset(new Date(dateValue)).getTime() === new Date().getTime()
+    );
+  } catch {
     return false;
   }
 }
@@ -591,10 +662,16 @@ export function isDateBetweenOperator(left: any, rightRange: any[]): boolean {
 
     const [start, end] = rightRange;
     return (
-      isAfter(dateWithTzOffset(new Date(left)), dateWithTzOffset(new Date(start))) &&
-      isBefore(dateWithTzOffset(new Date(left)), dateWithTzOffset(new Date(end)))
+      isAfter(
+        dateWithTzOffset(new Date(left)),
+        dateWithTzOffset(new Date(start)),
+      ) &&
+      isBefore(
+        dateWithTzOffset(new Date(left)),
+        dateWithTzOffset(new Date(end)),
+      )
     );
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -602,7 +679,7 @@ export function isDateBetweenOperator(left: any, rightRange: any[]): boolean {
 export function isTimeAfterOperator(left: any, right: any): boolean {
   try {
     return convertTimeToMs(left) > convertTimeToMs(right);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -610,7 +687,7 @@ export function isTimeAfterOperator(left: any, right: any): boolean {
 export function isTimeBeforeOperator(left: any, right: any): boolean {
   try {
     return convertTimeToMs(left) < convertTimeToMs(right);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -618,7 +695,7 @@ export function isTimeBeforeOperator(left: any, right: any): boolean {
 export function isTimeAfterOrEqualsOperator(left: any, right: any): boolean {
   try {
     return convertTimeToMs(left) >= convertTimeToMs(right);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -626,7 +703,7 @@ export function isTimeAfterOrEqualsOperator(left: any, right: any): boolean {
 export function isTimeBeforeOrEqualsOperator(left: any, right: any): boolean {
   try {
     return convertTimeToMs(left) <= convertTimeToMs(right);
-  } catch (e) {
+  } catch {
     return false;
   }
 }
@@ -634,7 +711,7 @@ export function isTimeBeforeOrEqualsOperator(left: any, right: any): boolean {
 export function isTimeEqualsOperator(left: any, right: any): boolean {
   try {
     return convertTimeToMs(left) === convertTimeToMs(right);
-  } catch (e) {
+  } catch {
     return false;
   }
 }

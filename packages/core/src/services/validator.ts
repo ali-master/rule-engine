@@ -2,17 +2,18 @@ import { isEmpty } from "ramda";
 import { RuleError, isObject } from "@root/utils";
 import { ObjectDiscovery } from "@root/services/object-discovery";
 // Enums
-import { ConditionTypes, Operators } from "@root/enums";
+import { Operators, ConditionTypes } from "@root/enums";
 // Types
 import type {
+  ValidationResult,
   RuleType,
   OperatorsType,
-  Condition,
   Constraint,
-  ValidationResult,
   ConditionType,
+  Condition,
 } from "@root/types";
 import { isStringOperator } from "@root";
+import { operatorRegistry } from "@root/operators/registry";
 
 export class Validator<T = any> {
   private readonly discovery = new ObjectDiscovery<T>();
@@ -60,11 +61,15 @@ export class Validator<T = any> {
     const conditions = this.discovery.getConditions(rule);
 
     // Validate the 'conditions' property.
-    if (!conditions.length || (isObject(conditions[0]) && isEmpty(conditions[0]))) {
+    if (
+      !conditions.length ||
+      (isObject(conditions[0]) && isEmpty(conditions[0]))
+    ) {
       return new RuleError({
         isValid: false,
         error: {
-          message: "The conditions property must contain at least one condition.",
+          message:
+            "The conditions property must contain at least one condition.",
           element: rule,
         },
       });
@@ -100,8 +105,8 @@ export class Validator<T = any> {
    * @param {object} condition - The condition object to be validated.
    * @param {string} condition.field - The field name to be evaluated.
    * @param {string} condition.operator - The comparison operator to be used.
-   * @param {string|number|boolean|array} condition.value - The value to be compared against the field.
-   * @param {number} [depth=0] - Optional recursion depth parameter (defaults to 0).
+   * @param {string | number | boolean | Array} condition.value - The value to be compared against the field.
+   * @param {number} [depth] - Optional recursion depth parameter (defaults to 0).
    *
    * @returns {object} A `RuleError` object with the following properties:
    *   - `isValid` (boolean): True if the condition is valid, False otherwise.
@@ -110,7 +115,10 @@ export class Validator<T = any> {
    *                             The error message is set to the first validation error encountered.
    *                             If the condition is valid, the error message is null.
    */
-  private validateCondition(condition: Condition, depth: number = 0): RuleError {
+  private validateCondition(
+    condition: Condition,
+    depth: number = 0,
+  ): RuleError {
     // Check to see if the condition is valid.
     const result = this.isValidCondition(condition);
     if (!result.isValid) {
@@ -183,7 +191,7 @@ export class Validator<T = any> {
    * @param {object} constraint - The rule constraint object to be validated.
    * @param {string} constraint.field - The field name to be evaluated.
    * @param {string} constraint.operator - The comparison operator to be used.
-   * @param {string|number|boolean|array} constraint.value - The value to be compared against the field.
+   * @param {string | number | boolean | Array} constraint.value - The value to be compared against the field.
    *
    * @returns {object} A `RuleError` object with the following properties:
    *   - `isValid` (boolean): True if the constraint is valid, False otherwise.
@@ -202,169 +210,18 @@ export class Validator<T = any> {
       });
     }
 
-    const generalOperators: Array<OperatorsType> = [
-      Operators.Equals,
-      Operators.NotEquals,
-      Operators.Like,
-      Operators.NotLike,
-      // Comparison Operators on Numbers
-      Operators.GreaterThan,
-      Operators.LessThan,
-      Operators.GreaterThanOrEquals,
-      Operators.LessThanOrEquals,
-      // Existence Operators on Fields and Relationships
-      Operators.Exists,
-      Operators.NotExists,
-      // Nullability Operators on Fields and Relationships
-      Operators.NullOrUndefined,
-      Operators.NotNullOrUndefined,
-      Operators.Empty,
-      Operators.NotEmpty,
-      // Comparison Operators on Dates and Times
-      Operators.DateAfter,
-      Operators.DateBefore,
-      Operators.DateAfterOrEquals,
-      Operators.DateBeforeOrEquals,
-      Operators.DateEquals,
-      Operators.DateNotEquals,
-      Operators.DateBetween,
-      Operators.DateNotBetween,
-      Operators.TimeAfter,
-      Operators.TimeBefore,
-      Operators.TimeAfterOrEquals,
-      Operators.TimeBeforeOrEquals,
-      Operators.TimeEquals,
-      Operators.TimeNotEquals,
-      Operators.TimeBetween,
-      Operators.TimeNotBetween,
+    const matchOperators: Array<OperatorsType> = [
+      Operators.Matches,
+      Operators.NotMatches,
     ];
-    const validationOperators: Array<OperatorsType> = [
-      Operators.NullOrUndefined,
-      Operators.NotNullOrUndefined,
-      Operators.Empty,
-      Operators.NotEmpty,
-      Operators.DateAfter,
-      Operators.DateAfterNow,
-      Operators.DateBefore,
-      Operators.DateBeforeNow,
-      Operators.DateAfterOrEquals,
-      Operators.DateAfterNowOrEquals,
-      Operators.DateBeforeOrEquals,
-      Operators.DateBeforeNowOrEquals,
-      Operators.DateEquals,
-      Operators.DateEqualsToNow,
-      Operators.DateNotEquals,
-      Operators.DateNotEqualsToNow,
-      Operators.DateBetween,
-      Operators.DateNotBetween,
-      Operators.TimeAfter,
-      Operators.TimeBefore,
-      Operators.TimeAfterOrEquals,
-      Operators.TimeBeforeOrEquals,
-      Operators.TimeEquals,
-      Operators.TimeNotEquals,
-      Operators.TimeBetween,
-      Operators.TimeNotBetween,
-      Operators.NullOrWhiteSpace, //,
-      Operators.NotNullOrWhiteSpace,
-      Operators.Numeric,
-      Operators.NotNumeric,
-      Operators.Boolean,
-      Operators.NotBoolean,
-      Operators.Date,
-      Operators.NotDate,
-      Operators.Email,
-      Operators.NotEmail,
-      Operators.Url,
-      Operators.NotUrl,
-      Operators.UUID,
-      Operators.NotUUID,
-      Operators.Alpha,
-      Operators.NotAlpha,
-      Operators.AlphaNumeric,
-      Operators.NotAlphaNumeric,
-      Operators.PersianAlpha,
-      Operators.NotPersianAlpha,
-      Operators.PersianAlphaNumeric,
-      Operators.NotPersianAlphaNumeric,
-      Operators.LowerCase,
-      Operators.NotLowerCase,
-      Operators.UpperCase,
-      Operators.NotUpperCase,
-      Operators.String,
-      Operators.NotString,
-      Operators.Object,
-      Operators.NotObject,
-      Operators.Array,
-      Operators.NotArray,
-      Operators.BooleanString,
-      Operators.NotBooleanString,
-      Operators.BooleanNumber,
-      Operators.NotBooleanNumber,
-      Operators.BooleanNumberString,
-      Operators.NotBooleanNumberString,
-      Operators.Number,
-      Operators.NotNumber,
-      Operators.Integer,
-      Operators.NotInteger,
-      Operators.Float,
-      Operators.NotFloat,
-      Operators.Positive,
-      Operators.NotPositive,
-      Operators.Negative,
-      Operators.NotNegative,
-      Operators.Zero,
-      Operators.NotZero,
-      Operators.Min,
-      Operators.NotMin,
-      Operators.Max,
-      Operators.NotMax,
-      Operators.Between,
-      Operators.NotBetween,
-      Operators.NumberBetween,
-      Operators.NotNumberBetween,
-      Operators.StringLength,
-      Operators.NotStringLength,
-      Operators.MinLength,
-      Operators.NotMinLength,
-      Operators.MaxLength,
-      Operators.NotMaxLength,
-      Operators.LengthBetween,
-      Operators.NotLengthBetween,
-      Operators.Falsy,
-      Operators.NotFalsy,
-      Operators.Truthy,
-      Operators.NotTruthy,
-    ];
-    const arrayOperators: Array<OperatorsType> = [
-      Operators.In,
-      Operators.NotIn,
-      Operators.Contains,
-      Operators.NotContains,
-      Operators.ContainsAny,
-      Operators.NotContainsAny,
-      Operators.SelfContainsAny,
-      Operators.SelfNotContainsAny,
-      Operators.SelfContainsNone,
-      Operators.ContainsAll,
-      Operators.SelfContainsAll,
-      Operators.NotContainsAll,
-      Operators.SelfNotContainsAll,
-    ];
-    const matchOperators: Array<OperatorsType> = [Operators.Matches, Operators.NotMatches];
-    const allOperators: OperatorsType[] = [
-      ...new Set([
-        ...generalOperators,
-        ...validationOperators,
-        ...arrayOperators,
-        ...matchOperators,
-      ]),
-    ];
-    if (!allOperators.includes(constraint.operator as OperatorsType)) {
+
+    // Check if the operator exists in the registry
+    if (!operatorRegistry.has(constraint.operator as OperatorsType)) {
+      const registeredOperators = operatorRegistry.getOperatorNames();
       return new RuleError({
         isValid: false,
         error: {
-          message: `Constraint "operator" with value ${constraint.operator} is invalid. Valid operators are ${allOperators.join(`,`)}`,
+          message: `Constraint "operator" with value ${constraint.operator} is invalid. Valid operators are ${registeredOperators.join(`,`)}`,
           element: constraint,
         },
       });
@@ -379,7 +236,10 @@ export class Validator<T = any> {
       Operators.ContainsAll,
       Operators.NotContainsAll,
     ];
-    if (arrayOperatorsChecklist.includes(constraint.operator) && !Array.isArray(constraint.value)) {
+    if (
+      arrayOperatorsChecklist.includes(constraint.operator) &&
+      !Array.isArray(constraint.value)
+    ) {
       return new RuleError({
         isValid: false,
         error: {
@@ -392,7 +252,7 @@ export class Validator<T = any> {
     if (matchOperators.includes(constraint.operator)) {
       try {
         new RegExp(constraint.value as string);
-      } catch (e) {
+      } catch {
         return new RuleError({
           isValid: false,
           error: {
@@ -438,7 +298,8 @@ export class Validator<T = any> {
       return new RuleError({
         isValid: false,
         error: {
-          message: 'A condition cannot have more than one "any", "all", or "none" property.',
+          message:
+            'A condition cannot have more than one "any", "all", or "none" property.',
           element: obj,
         },
       });

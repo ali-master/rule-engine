@@ -8,16 +8,16 @@
  */
 export function extractJsonPathExpressions(text: string): Array<string> {
   // Match complex expressions starting with $ followed by nested structures
-  const regex = /\$[^\s,()]+(?:\[[^\[\]]*]|\([^()]*\))*/g;
+  const regex = /\$[^\s,()]+(?:\[[^[\]]*\]|\([^()]*\))*/g;
   const matches: Array<string> = [];
   let match: RegExpExecArray | null;
 
   while ((match = regex.exec(text)) !== null) {
     let expression = match[0];
-    let openParenCount = (expression.match(/\(/g) || []).length;
+    const openParenCount = (expression.match(/\(/g) || []).length;
     let closeParenCount = (expression.match(/\)/g) || []).length;
-    let openBracketCount = (expression.match(/\[/g) || []).length;
-    let closeBracketCount = (expression.match(/]/g) || []).length;
+    const openBracketCount = (expression.match(/\[/g) || []).length;
+    let closeBracketCount = (expression.match(/\]/g) || []).length;
 
     // Balance closing parentheses
     while (closeParenCount > openParenCount) {

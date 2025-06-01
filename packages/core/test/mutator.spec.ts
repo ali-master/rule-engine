@@ -1,7 +1,7 @@
 // Utilities
 import axios from "axios";
 import { RuleEngine, Operators } from "../src";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { vi, it, expect, describe, beforeEach, afterEach } from "vitest";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 import { valid3Json } from "./rulesets/valid3.json";
@@ -40,23 +40,33 @@ const criteria = [
   },
 ];
 
-describe("RuleEngine mutator correctly", () => {
+describe("ruleEngine mutator correctly", () => {
   beforeEach(() => {
     console.debug = vi.fn();
     process.env.DEBUG = "true";
   });
 
-  it("Performs desired mutation", async () => {
-    const rp = new RuleEngine();
-
-    rp.addMutation("$.payload.ProfitPercentage", (value: number) => value * 2);
-    expect(await rp.getEvaluateResult(valid1Json, { payload: { ProfitPercentage: 5 } })).toEqual(
-      true,
-    );
+  afterEach(() => {
+    // Clear mutations and cache after each test to ensure test isolation
+    const rp = RuleEngine.getInstance();
+    rp.clearMutations();
+    rp.clearMutationCache();
+    rp.clearCache();
   });
 
-  it("Performs multiple mutations", async () => {
-    const rp = new RuleEngine();
+  it("performs desired mutation", async () => {
+    const rp = RuleEngine.getInstance();
+
+    rp.addMutation("$.payload.ProfitPercentage", (value: number) => value * 2);
+    expect(
+      await rp.getEvaluateResult(valid1Json, {
+        payload: { ProfitPercentage: 5 },
+      }),
+    ).toEqual(true);
+  });
+
+  it("performs multiple mutations", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("WinRate", (value: number) => value * 2);
     rp.addMutation("AverageTradeDuration", (value: number) => value / 2);
@@ -71,8 +81,8 @@ describe("RuleEngine mutator correctly", () => {
     ).toEqual(true);
   });
 
-  it("Performs async mutation", async () => {
-    const rp = new RuleEngine();
+  it("performs async mutation", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("CountryIso", mutation1);
 
@@ -88,8 +98,8 @@ describe("RuleEngine mutator correctly", () => {
     ).toEqual(3);
   });
 
-  it("Performs nested mutation", async () => {
-    const rp = new RuleEngine();
+  it("performs nested mutation", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("$.foo.bar", (value: number) => value * 2);
     expect(
@@ -97,7 +107,13 @@ describe("RuleEngine mutator correctly", () => {
         {
           conditions: [
             {
-              and: [{ field: "$.foo.bar", operator: Operators.GreaterThan, value: 6 }],
+              and: [
+                {
+                  field: "$.foo.bar",
+                  operator: Operators.GreaterThan,
+                  value: 6,
+                },
+              ],
             },
           ],
         },
@@ -106,8 +122,8 @@ describe("RuleEngine mutator correctly", () => {
     ).toEqual(true);
   });
 
-  it("Caches async mutation results", async () => {
-    const rp = new RuleEngine();
+  it("caches async mutation results", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("Leverage", (value: unknown) => value);
     rp.addMutation("CountryIso", mutation1);
@@ -121,8 +137,8 @@ describe("RuleEngine mutator correctly", () => {
     expect(result).toEqual([3, 2, 3]);
   });
 
-  it("Performs a migration with an array parameter", async () => {
-    const rp = new RuleEngine();
+  it("performs a migration with an array parameter", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("CountryIso", mutation2);
 
@@ -130,7 +146,9 @@ describe("RuleEngine mutator correctly", () => {
       {
         conditions: [
           {
-            and: [{ field: "CountryIso", operator: Operators.Equals, value: "GB" }],
+            and: [
+              { field: "CountryIso", operator: Operators.Equals, value: "GB" },
+            ],
           },
         ],
       },
@@ -140,8 +158,8 @@ describe("RuleEngine mutator correctly", () => {
     expect(result).toEqual(true);
   });
 
-  it("Performs a migration with a nested array parameter", async () => {
-    const rp = new RuleEngine();
+  it("performs a migration with a nested array parameter", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("$.foo.bar", mutation2);
 
@@ -149,7 +167,9 @@ describe("RuleEngine mutator correctly", () => {
       {
         conditions: [
           {
-            and: [{ field: "$.foo.bar", operator: Operators.Equals, value: "GB" }],
+            and: [
+              { field: "$.foo.bar", operator: Operators.Equals, value: "GB" },
+            ],
           },
         ],
       },
@@ -159,8 +179,8 @@ describe("RuleEngine mutator correctly", () => {
     expect(result).toEqual(true);
   });
 
-  it("Mutation cache works properly", async () => {
-    const rp = new RuleEngine();
+  it("mutation cache works properly", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("Leverage", (value: unknown) => value);
     rp.addMutation("CountryIso", mutation1);
@@ -169,13 +189,15 @@ describe("RuleEngine mutator correctly", () => {
 
     setTimeout(async () => {
       const result = await rp.getEvaluateResult(valid3Json, criteria);
-      expect(console.debug).toBeCalledWith('Cache hit on "CountryIso" with param "United Kingdom"');
+      expect(console.debug).toBeCalledWith(
+        'Cache hit on "CountryIso" with param "United Kingdom"',
+      );
       expect(result).toEqual([3, 2, 3]);
     }, 1500);
   });
 
-  it("Removes a mutation properly", async () => {
-    const rp = new RuleEngine();
+  it("removes a mutation properly", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("CountryIso", mutation1);
     rp.removeMutation("CountryIso");
@@ -190,8 +212,8 @@ describe("RuleEngine mutator correctly", () => {
     expect(result).toEqual(2);
   });
 
-  it("Clears mutation cache properly", async () => {
-    const rp = new RuleEngine();
+  it("clears mutation cache properly", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("CountryIso", mutation1);
 
@@ -215,8 +237,8 @@ describe("RuleEngine mutator correctly", () => {
     expect(result).toEqual(3);
   });
 
-  it("Clears all mutation cache properly", async () => {
-    const rp = new RuleEngine();
+  it("clears all mutation cache properly", async () => {
+    const rp = RuleEngine.getInstance();
 
     rp.addMutation("CountryIso", mutation1);
 
@@ -240,8 +262,8 @@ describe("RuleEngine mutator correctly", () => {
     expect(result).toEqual(3);
   });
 
-  it("Static methods behave as expected", async () => {
-    const rp = new RuleEngine();
+  it("static methods behave as expected", async () => {
+    const rp = RuleEngine.getInstance();
 
     RuleEngine.addMutation("CountryIso", mutation1);
 

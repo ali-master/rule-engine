@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { RuleEngine, RuleTypeError } from "../src";
+import { it, expect, describe } from "vitest";
+import { RuleTypeError, RuleEngine } from "../src";
 // Assets
 import { valid2Json } from "./rulesets/valid2.json";
 import { valid3Json } from "./rulesets/valid3.json";
@@ -10,12 +10,12 @@ import { valid8Json } from "./rulesets/valid8.json";
 import { valid9Json } from "./rulesets/valid9.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("RuleEngine introspector correctly", () => {
-  it("Detects invalid rules", async () => {
+describe("ruleEngine introspector correctly", () => {
+  it("detects invalid rules", async () => {
     expect(() => RuleEngine.introspect(valid2Json)).toThrow(RuleTypeError);
   });
 
-  it("Introspects valid rules", async () => {
+  it("introspects valid rules", async () => {
     expect(RuleEngine.introspect(selfFieldsConstraintsJson)).toEqual({
       results: [
         {
@@ -85,12 +85,20 @@ describe("RuleEngine introspector correctly", () => {
             {
               CountryIso: { operator: "contains", value: ["GB", "FI"] },
               Monetization: "Real",
-              Category: [{ operator: "greater-than-or-equals", value: 1000 }, 22, 11, 12],
+              Category: [
+                { operator: "greater-than-or-equals", value: 1000 },
+                22,
+                11,
+                12,
+              ],
             },
             {
               CountryIso: { operator: "contains", value: ["GB", "FI"] },
               Monetization: "Real",
-              Category: [{ operator: "greater-than-or-equals", value: 1000 }, 22],
+              Category: [
+                { operator: "greater-than-or-equals", value: 1000 },
+                22,
+              ],
               HasStudentCard: true,
               IsUnder18: true,
             },
@@ -111,13 +119,22 @@ describe("RuleEngine introspector correctly", () => {
               CountryIso: { operator: "contains", value: ["GB", "FI"] },
               Leverage: { operator: "less-than", value: 200 },
               Monetization: "Real",
-              Category: [{ operator: "greater-than-or-equals", value: 1000 }, 22, 11, 12],
+              Category: [
+                { operator: "greater-than-or-equals", value: 1000 },
+                22,
+                11,
+                12,
+              ],
             },
             {
               CountryIso: { operator: "contains", value: ["GB", "FI"] },
               Leverage: { operator: "less-than", value: 200 },
               Monetization: "Real",
-              Category: [{ operator: "greater-than-or-equals", value: 1000 }, 22, 122],
+              Category: [
+                { operator: "greater-than-or-equals", value: 1000 },
+                22,
+                122,
+              ],
               IsUnder18: true,
             },
           ],

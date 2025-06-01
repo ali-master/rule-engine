@@ -1,4 +1,4 @@
-import { RuleType } from "../../src";
+import type { RuleType } from "../../src";
 import { Operators } from "../../src/enums";
 
 export const valid13Json: RuleType = {

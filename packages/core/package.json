@@ -50,7 +50,8 @@
     "inspect": "node-modules-inspector",
     "knip": "knip",
     "knip:fix": "knip --fix",
-    "lint": "eslint .",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\" --fix",
     "prepublishOnly": "pnpm lint && pnpm test",
     "release": "pnpm test && bumpp && pnpm publish"
   },

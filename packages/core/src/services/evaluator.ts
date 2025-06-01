@@ -1,90 +1,42 @@
+/**
+ * Evaluator V2 - Refactored to use Strategy pattern for operators
+ */
+
 import { ObjectDiscovery } from "@root/services/object-discovery";
-// Operators
-import {
-  selfContainsNoneOperator,
-  selfContainsAnyOperator,
-  selfContainsAllOperator,
-  matchesOperator,
-  likeOperator,
-  lessThanOrEqualsOperator,
-  lessThanOperator,
-  isZeroOperator,
-  isUuidOperator,
-  isUrlOperator,
-  isUpperCaseOperator,
-  isTruthyOperator,
-  isTimeEqualsOperator,
-  isTimeBetweenOperator,
-  isTimeBeforeOrEqualsOperator,
-  isTimeBeforeOperator,
-  isTimeAfterOrEqualsOperator,
-  isTimeAfterOperator,
-  isStringOperator,
-  isPositiveOperator,
-  isPersianAlphaOperator,
-  isPersianAlphaNumericOperator,
-  isObjectOperator,
-  isNumericOperator,
-  isNumberOperator,
-  isNumberBetweenOperator,
-  isNullOrWhiteSpaceOperator,
-  isNullOrUndefinedOperator,
-  isNegativeOperator,
-  isMinOperator,
-  isMinLengthOperator,
-  isMaxOperator,
-  isMaxLengthOperator,
-  isLowerCaseOperator,
-  isLengthOperator,
-  IsLengthBetweenOperator,
-  isIntegerOperator,
-  isFloatOperator,
-  isFalsyOperator,
-  isExistsInObjectOperator,
-  isEmptyOperator,
-  isEmailOperator,
-  isDateOperator,
-  isDateEqualsToNowOperator,
-  isDateEqualsOperator,
-  isDateBetweenOperator,
-  isDateBeforeOrEqualsOperator,
-  isDateBeforeOperator,
-  isDateBeforeNowOrEqualsOperator,
-  isDateBeforeNowOperator,
-  isDateAfterOrEqualsOperator,
-  isDateAfterOperator,
-  isDateAfterNowOrEqualsOperator,
-  isDateAfterNowOperator,
-  isBooleanStringOperator,
-  isBooleanOperator,
-  isBooleanNumberStringOperator,
-  isBooleanNumberOperator,
-  isBetweenOperator,
-  isArrayOperator,
-  isAlphaOperator,
-  isAlphaNumericOperator,
-  inOperator,
-  greaterThanOrEqualsOperator,
-  greaterThanOperator,
-  equalsOperator,
-  containsOperator,
-  containsAnyOperator,
-  containsAllOperator,
-} from "@root/operators";
-// Enums
-import { Operators, ConditionTypes } from "@root/enums";
-// Types
+import { operatorRegistry } from "@root/operators/registry";
+import { ConditionTypes } from "@root/enums";
+import { isStringOperator } from "@root/operators";
 import type {
   RuleType,
   EvaluationResult,
   EngineResult,
+  CriteriaObject,
   Criteria,
   Constraint,
   Condition,
 } from "@root/types";
+import type { OperatorContext } from "@root/operators/base";
 
 export class Evaluator<T = any> {
   private readonly discovery = new ObjectDiscovery<T>();
+
+  /**
+   * Evaluates a rule against a single criteria object and returns a single result.
+   *
+   * @param rule The rule to evaluate.
+   * @param criteria The criteria object to evaluate the rule against.
+   * @returns {EvaluationResult} The result of the rule evaluation.
+   */
+  evaluate(rule: RuleType, criteria: CriteriaObject<T>): EvaluationResult<T>;
+
+  /**
+   * Evaluates a rule against an array of criteria and returns an array of results.
+   *
+   * @param rule The rule to evaluate.
+   * @param criteria The array of criteria to evaluate the rule against.
+   * @returns {Array<EvaluationResult>} An array of rule evaluation results.
+   */
+  evaluate(rule: RuleType, criteria: Array<T>): Array<EvaluationResult<T>>;
 
   /**
    * Evaluates a rule against a set of criteria and returns the result.
@@ -132,6 +84,8 @@ export class Evaluator<T = any> {
   ): EvaluationResult<T> {
     // We should evaluate all conditions and return the result
     // of the first condition that passes.
+    let lastErrorMessage: string | undefined;
+
     for (const condition of conditions) {
       const evaluationResult = this.evaluateCondition(condition, criteria);
       if (evaluationResult.isPassed) {
@@ -146,20 +100,15 @@ export class Evaluator<T = any> {
           true,
         );
       }
+      // Don't return early on validation errors - continue evaluating other conditions
+      // Store the last error message to return if no conditions pass
       if (evaluationResult.message) {
-        return this.mutateResultMessage(
-          {
-            value: defaultResult?.value ?? (false as T),
-            isPassed: false,
-            message: evaluationResult.message,
-          },
-          criteria,
-          false,
-        );
+        lastErrorMessage = evaluationResult.message;
       }
     }
 
-    const message = (defaultResult as EvaluationResult)?.message;
+    const message =
+      lastErrorMessage || (defaultResult as EvaluationResult)?.message;
     // If no conditions pass, we should return the default result of
     // the rule or false if no default result is provided.
     return this.mutateResultMessage(
@@ -206,7 +155,6 @@ export class Evaluator<T = any> {
     let message: string | undefined;
 
     // Check each node in the condition.
-    // eslint-disable-next-line no-labels
     processLoop: for (const node of condition[conditionType]!) {
       const isCondition = this.discovery.isCondition(node);
       const isConstraint = this.discovery.isConstraint(node);
@@ -231,7 +179,7 @@ export class Evaluator<T = any> {
             if (!evaluation.isPassed) {
               message = evaluation.message;
             } else {
-              // eslint-disable-next-line no-labels
+               
               break processLoop;
             }
           }
@@ -242,6 +190,12 @@ export class Evaluator<T = any> {
           if (isCondition) {
             const evaluation = this.evaluateCondition(node, criteria);
             isPassed &&= evaluation.isPassed;
+
+            if (!evaluation.isPassed && evaluation.message) {
+              message = evaluation.message;
+               
+              break processLoop;
+            }
           }
           if (isConstraint) {
             const evaluation = this.evaluateConstraint(node, criteria);
@@ -249,7 +203,7 @@ export class Evaluator<T = any> {
 
             if (!evaluation.isPassed) {
               message = evaluation.message;
-              // eslint-disable-next-line no-labels
+               
               break processLoop;
             }
           }
@@ -283,13 +237,7 @@ export class Evaluator<T = any> {
 
   /**
    * Checks a constraint against a set of criteria and returns true whenever the constraint passes. Otherwise, false is returned.
-   * The constraint is evaluated by comparing the field value in the criteria object with the constraint value using the specified operator.
-   * The operator is a function that takes two arguments: the field value and the constraint value.
-   * The operator function returns true if the constraint passes, otherwise false.
-   * The constraint value can be a text path expression resolved using the criteria object.
-   * The criteria object is used to resolve the field and constraint values.
-   * The result is an object with a valid property that is true if the constraint passes, otherwise false.
-   * The result also has a message property that contains the result message.
+   * Uses the Strategy pattern to evaluate operators.
    *
    * @param constraint The constraint to evaluate.
    * @param criteria The criteria to evaluate the constraint with.
@@ -298,402 +246,21 @@ export class Evaluator<T = any> {
     constraint: Constraint,
     criteria: Criteria,
   ): EvaluationResult<T> {
-    let criterion = this.discovery.resolveProperty(constraint.field, criteria);
-    if (typeof criterion === "undefined") {
-      criterion = "undefined";
-    }
+    // Resolve field value
+    const fieldValue = this.discovery.resolveProperty(
+      constraint.field,
+      criteria,
+    );
 
-    const message = constraint.message!;
-    const constraintValue = Array.isArray(constraint.value)
-      ? constraint.value.map((x) =>
-          `${constraint.value}`.includes("$.")
-            ? this.discovery.resolveProperty(x as string, criteria)
-            : x,
-        )
-      : `${constraint.value}`.includes("$.")
-        ? this.discovery.resolveProperty(constraint.value as string, criteria)
-        : constraint.value;
+    // Resolve constraint value (handle self-references)
+    const constraintValue = this.resolveConstraintValue(
+      constraint.value,
+      criteria,
+    );
 
-    const operatorsProcessorMap: Record<
-      Operators,
-      (...args: Array<any>) => any
-    > = {
-      [Operators.Equals]: () => {
-        return equalsOperator(criterion, constraintValue);
-      },
-      [Operators.NotEquals]: () => {
-        return !equalsOperator(criterion, constraintValue);
-      },
-      [Operators.Like]: () => {
-        return likeOperator(criterion, constraintValue);
-      },
-      [Operators.NotLike]: () => {
-        return !likeOperator(criterion, constraintValue);
-      },
-      [Operators.GreaterThan]: () => {
-        return greaterThanOperator(criterion, constraintValue);
-      },
-      [Operators.GreaterThanOrEquals]: () => {
-        return greaterThanOrEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.LessThan]: () => {
-        return lessThanOperator(criterion, constraintValue);
-      },
-      [Operators.LessThanOrEquals]: () => {
-        return lessThanOrEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.In]: () => {
-        return inOperator(criterion, constraintValue);
-      },
-      [Operators.NotIn]: () => {
-        return !inOperator(criterion, constraintValue);
-      },
-      [Operators.Contains]: () => {
-        return containsOperator(criterion, constraintValue);
-      },
-      /* istanbul ignore next */
-      [Operators.NotContains]: () => {
-        return !containsOperator(criterion, constraintValue);
-      },
-      [Operators.SelfContainsAll]: () => {
-        return selfContainsAllOperator(criterion, constraintValue);
-      },
-      [Operators.SelfNotContainsAll]: () => {
-        return !selfContainsAllOperator(criterion, constraintValue);
-      },
-      [Operators.SelfContainsAny]: () => {
-        return selfContainsAnyOperator(criterion, constraintValue);
-      },
-      [Operators.SelfNotContainsAny]: () => {
-        return !selfContainsAnyOperator(criterion, constraintValue);
-      },
-      [Operators.SelfContainsNone]: () => {
-        return selfContainsNoneOperator(criterion, constraintValue);
-      },
-      [Operators.ContainsAny]: () => {
-        return containsAnyOperator(criterion, constraintValue);
-      },
-      [Operators.NotContainsAny]: () => {
-        return !containsAnyOperator(criterion, constraintValue);
-      },
-      [Operators.ContainsAll]: () => {
-        return containsAllOperator(criterion, constraintValue);
-      },
-      [Operators.NotContainsAll]: () => {
-        return !containsAllOperator(criterion, constraintValue);
-      },
-      [Operators.Matches]: () => {
-        return matchesOperator(criterion, constraintValue);
-      },
-      [Operators.NotMatches]: () => {
-        return !matchesOperator(criterion, constraintValue);
-      },
-      [Operators.Exists]: () => {
-        if (constraint.field.includes("$.")) {
-          return !!this.discovery.resolveProperty(constraint.field, criteria);
-        }
-
-        return isExistsInObjectOperator(constraint.field, criteria);
-      },
-      [Operators.NotExists]: () => {
-        if (constraint.field.includes("$.")) {
-          return !this.discovery.resolveProperty(constraint.field, criteria);
-        }
-
-        return !isExistsInObjectOperator(constraint.field, criteria);
-      },
-      [Operators.NullOrUndefined]: () => {
-        return isNullOrUndefinedOperator(criterion);
-      },
-      [Operators.NotNullOrUndefined]: () => {
-        return !isNullOrUndefinedOperator(criterion);
-      },
-      [Operators.DateAfter]: () => {
-        return isDateAfterOperator(criterion, constraintValue);
-      },
-      [Operators.DateBefore]: () => {
-        return isDateBeforeOperator(criterion, constraintValue);
-      },
-      [Operators.DateAfterNow]: () => {
-        return isDateAfterNowOperator(criterion);
-      },
-      [Operators.DateBeforeNow]: () => {
-        return isDateBeforeNowOperator(criterion);
-      },
-      [Operators.DateAfterNowOrEquals]: () => {
-        return isDateAfterNowOrEqualsOperator(criterion);
-      },
-      [Operators.DateBeforeNowOrEquals]: () => {
-        return isDateBeforeNowOrEqualsOperator(criterion);
-      },
-      [Operators.DateEqualsToNow]: () => {
-        return isDateEqualsToNowOperator(criterion);
-      },
-      [Operators.DateNotEqualsToNow]: () => {
-        return !isDateEqualsToNowOperator(criterion);
-      },
-      [Operators.DateAfterOrEquals]: () => {
-        return isDateAfterOrEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.DateBeforeOrEquals]: () => {
-        return isDateBeforeOrEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.DateEquals]: () => {
-        return isDateEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.DateNotEquals]: () => {
-        return !isDateEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.DateBetween]: () => {
-        return isDateBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.DateNotBetween]: () => {
-        return !isDateBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.TimeAfter]: () => {
-        return isTimeAfterOperator(criterion, constraintValue);
-      },
-      [Operators.TimeBefore]: () => {
-        return isTimeBeforeOperator(criterion, constraintValue);
-      },
-      [Operators.TimeAfterOrEquals]: () => {
-        return isTimeAfterOrEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.TimeBeforeOrEquals]: () => {
-        return isTimeBeforeOrEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.TimeEquals]: () => {
-        return isTimeEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.TimeNotEquals]: () => {
-        return !isTimeEqualsOperator(criterion, constraintValue);
-      },
-      [Operators.TimeBetween]: () => {
-        return isTimeBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.TimeNotBetween]: () => {
-        return !isTimeBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.Empty]: () => {
-        return isEmptyOperator(criterion);
-      },
-      [Operators.NotEmpty]: () => {
-        return !isEmptyOperator(criterion);
-      },
-      [Operators.NullOrWhiteSpace]: () => {
-        return isNullOrWhiteSpaceOperator(criterion);
-      },
-      [Operators.NotNullOrWhiteSpace]: () => {
-        return !isNullOrWhiteSpaceOperator(criterion);
-      },
-      [Operators.Numeric]: () => {
-        return isNumericOperator(criterion);
-      },
-      [Operators.NotNumeric]: () => {
-        return !isNumericOperator(criterion);
-      },
-      [Operators.Boolean]: () => {
-        return isBooleanOperator(criterion);
-      },
-      [Operators.NotBoolean]: () => {
-        return !isBooleanOperator(criterion);
-      },
-      [Operators.Date]: () => {
-        return isDateOperator(criterion);
-      },
-      [Operators.NotDate]: () => {
-        return !isDateOperator(criterion);
-      },
-      [Operators.Email]: () => {
-        return isEmailOperator(criterion);
-      },
-      [Operators.NotEmail]: () => {
-        return !isEmailOperator(criterion);
-      },
-      [Operators.Url]: () => {
-        return isUrlOperator(criterion);
-      },
-      [Operators.NotUrl]: () => {
-        return !isUrlOperator(criterion);
-      },
-      [Operators.UUID]: () => {
-        return isUuidOperator(criterion);
-      },
-      [Operators.NotUUID]: () => {
-        return !isUuidOperator(criterion);
-      },
-      [Operators.Alpha]: () => {
-        return isAlphaOperator(criterion);
-      },
-      [Operators.NotAlpha]: () => {
-        return !isAlphaOperator(criterion);
-      },
-      [Operators.AlphaNumeric]: () => {
-        return isAlphaNumericOperator(criterion);
-      },
-      [Operators.NotAlphaNumeric]: () => {
-        return !isAlphaNumericOperator(criterion);
-      },
-      [Operators.PersianAlpha]: () => {
-        return isPersianAlphaOperator(criterion);
-      },
-      [Operators.NotPersianAlpha]: () => {
-        return !isPersianAlphaOperator(criterion);
-      },
-      [Operators.PersianAlphaNumeric]: () => {
-        return isPersianAlphaNumericOperator(criterion);
-      },
-      [Operators.NotPersianAlphaNumeric]: () => {
-        return !isPersianAlphaNumericOperator(criterion);
-      },
-      [Operators.LowerCase]: () => {
-        return isLowerCaseOperator(criterion);
-      },
-      [Operators.NotLowerCase]: () => {
-        return !isLowerCaseOperator(criterion);
-      },
-      [Operators.UpperCase]: () => {
-        return isUpperCaseOperator(criterion);
-      },
-      [Operators.NotUpperCase]: () => {
-        return !isUpperCaseOperator(criterion);
-      },
-      [Operators.String]: () => {
-        return isStringOperator(criterion);
-      },
-      [Operators.NotString]: () => {
-        return !isStringOperator(criterion);
-      },
-      [Operators.Falsy]: () => {
-        return isFalsyOperator(criterion);
-      },
-      [Operators.NotFalsy]: () => {
-        return !isFalsyOperator(criterion);
-      },
-      [Operators.Truthy]: () => {
-        return isTruthyOperator(criterion);
-      },
-      [Operators.NotTruthy]: () => {
-        return !isTruthyOperator(criterion);
-      },
-      [Operators.Object]: () => {
-        return isObjectOperator(criterion);
-      },
-      [Operators.NotObject]: () => {
-        return !isObjectOperator(criterion);
-      },
-      [Operators.Array]: () => {
-        return isArrayOperator(criterion);
-      },
-      [Operators.NotArray]: () => {
-        return !isArrayOperator(criterion);
-      },
-      [Operators.BooleanString]: () => {
-        return isBooleanStringOperator(criterion);
-      },
-      [Operators.NotBooleanString]: () => {
-        return !isBooleanStringOperator(criterion);
-      },
-      [Operators.BooleanNumber]: () => {
-        return isBooleanNumberOperator(criterion);
-      },
-      [Operators.NotBooleanNumber]: () => {
-        return !isBooleanNumberOperator(criterion);
-      },
-      [Operators.BooleanNumberString]: () => {
-        return isBooleanNumberStringOperator(criterion);
-      },
-      [Operators.NotBooleanNumberString]: () => {
-        return !isBooleanNumberStringOperator(criterion);
-      },
-      [Operators.Number]: () => {
-        return isNumberOperator(criterion);
-      },
-      [Operators.NotNumber]: () => {
-        return !isNumberOperator(criterion);
-      },
-      [Operators.Integer]: () => {
-        return isIntegerOperator(criterion);
-      },
-      [Operators.NotInteger]: () => {
-        return !isIntegerOperator(criterion);
-      },
-      [Operators.Float]: () => {
-        return isFloatOperator(criterion);
-      },
-      [Operators.NotFloat]: () => {
-        return !isFloatOperator(criterion);
-      },
-      [Operators.Positive]: () => {
-        return isPositiveOperator(criterion);
-      },
-      [Operators.NotPositive]: () => {
-        return !isPositiveOperator(criterion);
-      },
-      [Operators.Negative]: () => {
-        return isNegativeOperator(criterion);
-      },
-      [Operators.NotNegative]: () => {
-        return !isNegativeOperator(criterion);
-      },
-      [Operators.Zero]: () => {
-        return isZeroOperator(criterion);
-      },
-      [Operators.NotZero]: () => {
-        return !isZeroOperator(criterion);
-      },
-      [Operators.Min]: () => {
-        return isMinOperator(criterion, constraintValue);
-      },
-      [Operators.NotMin]: () => {
-        return !isMinOperator(criterion, constraintValue);
-      },
-      [Operators.Max]: () => {
-        return isMaxOperator(criterion, constraintValue);
-      },
-      [Operators.NotMax]: () => {
-        return !isMaxOperator(criterion, constraintValue);
-      },
-      [Operators.Between]: () => {
-        return isBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.NotBetween]: () => {
-        return !isBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.NumberBetween]: () => {
-        return isNumberBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.NotNumberBetween]: () => {
-        return !isNumberBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.StringLength]: () => {
-        return isLengthOperator(criterion, constraintValue);
-      },
-      [Operators.NotStringLength]: () => {
-        return !isLengthOperator(criterion, constraintValue);
-      },
-      [Operators.MinLength]: () => {
-        return isMinLengthOperator(criterion, constraintValue);
-      },
-      [Operators.NotMinLength]: () => {
-        return !isMinLengthOperator(criterion, constraintValue);
-      },
-      [Operators.MaxLength]: () => {
-        return isMaxLengthOperator(criterion, constraintValue);
-      },
-      [Operators.NotMaxLength]: () => {
-        return !isMaxLengthOperator(criterion, constraintValue);
-      },
-      [Operators.LengthBetween]: () => {
-        return IsLengthBetweenOperator(criterion, constraintValue);
-      },
-      [Operators.NotLengthBetween]: () => {
-        return !IsLengthBetweenOperator(criterion, constraintValue);
-      },
-    };
-
-    const operatorFn = operatorsProcessorMap[constraint.operator];
-    if (!operatorFn) {
+    // Get operator strategy from registry
+    const operatorStrategy = operatorRegistry.get(constraint.operator);
+    if (!operatorStrategy) {
       return {
         value: false as T,
         isPassed: false,
@@ -701,26 +268,78 @@ export class Evaluator<T = any> {
       };
     }
 
-    const value = operatorFn();
-    return {
-      value,
-      isPassed: value,
-      message: this.mutateResultMessage(
+    // Create operator context
+    const context: OperatorContext = {
+      fieldValue,
+      constraintValue,
+      criteria,
+      fieldPath: constraint.field,
+    };
+
+    // Validate inputs
+    const validation = operatorStrategy.validate(context);
+    if (!validation.isValid) {
+      return {
+        value: false as T,
+        isPassed: false,
+        message:
+          validation.error ||
+          `Validation failed for operator: ${constraint.operator}`,
+      };
+    }
+
+    // Evaluate operator
+    const isPassed = operatorStrategy.evaluate(context);
+    const value = isPassed as T;
+
+    // Format message if provided
+    let formattedMessage: string | undefined;
+    if (constraint.message) {
+      formattedMessage = operatorStrategy.formatMessage
+        ? operatorStrategy.formatMessage(constraint.message, context)
+        : constraint.message;
+
+      formattedMessage = this.mutateResultMessage(
         {
           value,
-          isPassed: value,
-          message,
+          isPassed,
+          message: formattedMessage,
         },
         {
           ...criteria,
           self: {
             value: constraint.value,
-            input: criterion,
+            input: fieldValue,
           },
         },
-        value,
-      ).message,
+        isPassed,
+      ).message;
+    }
+
+    return {
+      value,
+      isPassed,
+      message: formattedMessage,
     };
+  }
+
+  /**
+   * Resolves constraint value, handling self-references
+   */
+  private resolveConstraintValue(value: any, criteria: Criteria): any {
+    if (Array.isArray(value)) {
+      return value.map((x) =>
+        typeof x === "string" && x.includes("$.")
+          ? this.discovery.resolveProperty(x, criteria)
+          : x,
+      );
+    }
+
+    if (typeof value === "string" && value.includes("$.")) {
+      return this.discovery.resolveProperty(value, criteria);
+    }
+
+    return value;
   }
 
   /**

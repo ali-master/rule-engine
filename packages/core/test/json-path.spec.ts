@@ -1,16 +1,16 @@
 import { RuleEngine, ObjectDiscovery } from "../src";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { vi, it, expect, describe, beforeEach } from "vitest";
 
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("RuleEngine JSON Path correctly", () => {
+describe("ruleEngine JSON Path correctly", () => {
   beforeEach(() => {
     console.debug = vi.fn();
     process.env.DEBUG = "true";
   });
 
   const discovery = new ObjectDiscovery();
-  it("Resolves simple field definitions in a Text", async () => {
+  it("resolves simple field definitions in a Text", async () => {
     expect(
       discovery.resolveTextPathExpressions(
         "Password is invalid and contains username($.username), name($.name) and family($.family)",
@@ -25,10 +25,12 @@ describe("RuleEngine JSON Path correctly", () => {
           family: "doe",
         },
       ),
-    ).toEqual("Password is invalid and contains username(john-doe), name(john) and family(doe)");
+    ).toEqual(
+      "Password is invalid and contains username(john-doe), name(john) and family(doe)",
+    );
   });
 
-  it("Resolves complex nested field definitions in a Text", async () => {
+  it("resolves complex nested field definitions in a Text", async () => {
     const data = {
       store: {
         book: [
@@ -67,17 +69,17 @@ describe("RuleEngine JSON Path correctly", () => {
     };
 
     const expression = "$.store.book[*].author";
-    expect(discovery.resolveTextPathExpressions(`Hi all ${expression}`, data)).toEqual(
-      `Hi all ${discovery.resolveProperty(expression, data)}`,
-    );
+    expect(
+      discovery.resolveTextPathExpressions(`Hi all ${expression}`, data),
+    ).toEqual(`Hi all ${discovery.resolveProperty(expression, data)}`);
 
     const expressionB = "$..author";
-    expect(discovery.resolveTextPathExpressions(`Hi all ${expressionB}`, data)).toEqual(
-      `Hi all ${discovery.resolveProperty(expressionB, data)}`,
-    );
+    expect(
+      discovery.resolveTextPathExpressions(`Hi all ${expressionB}`, data),
+    ).toEqual(`Hi all ${discovery.resolveProperty(expressionB, data)}`);
   });
 
-  it("RuleEngine evaluate and return the resolved message correctly", async () => {
+  it("ruleEngine evaluate and return the resolved message correctly", async () => {
     expect(
       await RuleEngine.evaluate(selfFieldsConstraintsJson, {
         meta: {
@@ -90,7 +92,8 @@ describe("RuleEngine JSON Path correctly", () => {
         family: "doe",
       }),
     ).toEqual({
-      message: "Password is valid and contains username(john-doe), name(john) and family(doe)",
+      message:
+        "Password is valid and contains username(john-doe), name(john) and family(doe)",
       value: true,
       isPassed: true,
     });

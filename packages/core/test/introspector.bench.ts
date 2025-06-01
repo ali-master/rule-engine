@@ -1,12 +1,12 @@
-import { bench, describe, expect, it } from "vitest";
-import { RuleEngine, RuleTypeError } from "../src";
+import { describe, bench } from "vitest";
+import { RuleEngine } from "../src";
 // Assets
 import { valid2Json } from "./rulesets/valid2.json";
 import { valid6Json } from "./rulesets/valid6.json";
 
-describe("RuleEngine introspector correctly", () => {
+describe("ruleEngine introspector correctly", () => {
   bench(
-    "Detects invalid rule",
+    "detects invalid rule",
     async () => {
       RuleEngine.introspect(valid2Json);
     },
@@ -16,7 +16,7 @@ describe("RuleEngine introspector correctly", () => {
   );
 
   bench(
-    "Introspects valid rule",
+    "introspects valid rule",
     async () => {
       RuleEngine.introspect(valid6Json);
     },

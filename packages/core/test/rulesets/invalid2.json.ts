@@ -1,4 +1,5 @@
-import { RuleType, Condition, Operators } from "../../src";
+import type { RuleType, Condition } from "../../src";
+import { Operators } from "../../src";
 
 export const invalid2Json: RuleType = {
   conditions: [

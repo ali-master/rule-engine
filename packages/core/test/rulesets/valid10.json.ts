@@ -1,4 +1,5 @@
-import { RuleType, Operators } from "../../src";
+import type { RuleType } from "../../src";
+import { Operators } from "../../src";
 
 export const Valid10Json: RuleType = {
   conditions: [

@@ -1,15 +1,15 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "strictNullChecks": true,
-    "outDir": "dist",
     "baseUrl": "./",
+    "moduleResolution": "node",
     "paths": {
       "@root": ["./src"],
       "@root/*": ["./src/*"]
-    }
+    },
+    "strictNullChecks": true,
+    "outDir": "dist"
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "test/**/*", "scripts/**/*"],
   "exclude": ["node_modules", "dist", "coverage", ".idea", ".vscode","**/*.d.ts", "**/dist/*"]
 }

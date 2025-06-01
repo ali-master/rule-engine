@@ -1,333 +1,527 @@
-import { Builder } from "@root/services/builder";
-import { Mutator } from "@root/services/mutator";
-import { Evaluator } from "@root/services/evaluator";
 import { Validator } from "@root/services/validator";
+import { Evaluator } from "@root/services/evaluator";
+import { Mutator } from "@root/services/mutator";
 import { Introspector } from "@root/services/introspector";
-// Utilities
-import { isObject, RuleError } from "@root/utils";
-// Types
+import { RuleBuilder } from "@root/services/builder";
+import { operatorRegistry, initializeOperators } from "@root/operators/factory";
 import type {
-  Criteria,
-  EngineResult,
-  EvaluationResult,
-  IntrospectionResult,
   RuleType,
-  ValidationResult,
+  EvaluationResult,
+  CriteriaObject,
+  Criteria,
 } from "@root/types";
+import type { EnhancedIntrospectionResult } from "./introspector";
 
-export class RuleEngine<T = any> {
-  // Singleton instance of the RuleEngine class. Used to access the RuleEngine class methods.
-  static self = new RuleEngine();
-
-  // Services
+/**
+ * Configuration options for RuleEngineV2
+ */
+export interface RuleEngineConfig {
   /**
-   * The mutator service instance. Used to mutate criteria before evaluation.
-   * @private
+   * Whether to skip validation for trusted rules
    */
-  private readonly mutator: Mutator = new Mutator();
-  /**
-   * The validator service instance. Used to validate rules before evaluation.
-   * @private
-   */
-  private readonly validator: Validator = new Validator<T>();
-  /**
-   * The evaluator service instance. Used to evaluate rules against criteria.
-   * @private
-   */
-  private readonly evaluator: Evaluator = new Evaluator<T>();
-  /**
-   * The introspector service instance. Used to introspect rules.
-   * @private
-   */
-  private readonly introspector: Introspector = new Introspector();
+  trustMode?: boolean;
 
   /**
-   * Returns a rule builder class instance.
-   * Allows for the construction of rules using a fluent interface.
-   *
-   * @returns A new instance of the Builder class.
+   * Whether to initialize built-in operators automatically
    */
-  builder(): Builder {
-    return new Builder(this.validator);
+  autoInitializeOperators?: boolean;
+
+  /**
+   * Custom operator initialization function
+   */
+  customOperatorInit?: () => void;
+
+  /**
+   * Enable performance optimizations
+   */
+  enableOptimizations?: boolean;
+
+  /**
+   * Cache evaluation results
+   */
+  enableCaching?: boolean;
+
+  /**
+   * Maximum cache size
+   */
+  maxCacheSize?: number;
+}
+
+/**
+ * Enhanced Rule Engine with Strategy pattern and improved type safety
+ */
+export class RuleEngine {
+  private static instance: RuleEngine;
+  private readonly validator = new Validator();
+  private readonly evaluator = new Evaluator();
+  private readonly mutator = new Mutator();
+  private readonly introspector = new Introspector();
+  private config: RuleEngineConfig = {};
+  private cache?: Map<string, any>;
+  private initialized = false;
+
+  /**
+   * Private constructor for singleton pattern
+   */
+  private constructor(config?: RuleEngineConfig) {
+    this.configure(config);
   }
 
   /**
-   * Adds a mutation to the rule engine instance.
-   * Mutations allow for the modification of the criteria before
-   * it is evaluated against a rule.
-   *
-   * @param name The name of the mutation.
-   * @param mutation The mutation function.
-   * @returns The RuleEngine instance.
+   * Get singleton instance
    */
-  addMutation(name: string, mutation: Function): RuleEngine {
-    this.mutator.add(name, mutation);
-
-    return this;
+  static getInstance(config?: RuleEngineConfig): RuleEngine {
+    if (!RuleEngine.instance) {
+      RuleEngine.instance = new RuleEngine(config);
+    }
+    return RuleEngine.instance;
   }
 
   /**
-   * Removes a mutation to the rule engine instance.
-   * Any cached mutation values for this mutation will be purged.
-   *
-   * @param name The name of the mutation.
-   * @returns The RuleEngine instance.
+   * Configure the rule engine
    */
-  removeMutation(name: string): RuleEngine {
-    this.mutator.remove(name);
+  configure(config?: RuleEngineConfig): void {
+    this.config = {
+      autoInitializeOperators: true,
+      enableOptimizations: true,
+      ...config,
+    };
 
-    return this;
-  }
-
-  /**
-   * Clears the mutator cache.
-   * The entire cache, or cache for a specific mutator can be cleared
-   * by passing or omitting the mutator name as an argument.
-   *
-   * @param name The mutator name to clear the cache for.
-   * @returns The RuleEngine instance.
-   */
-  clearMutationCache(name?: string): RuleEngine {
-    this.mutator.clearCache(name);
-
-    return this;
-  }
-
-  /**
-   * Evaluates a rule against a set of criteria and returns the result.
-   * * If the criteria is an array (indicating multiple criteria to test), the rule will be evaluated against each item in the array and an array of results will be returned.
-   * * If the rule is passed, the result will be true.
-   * * If the rule is not passed, the result will be false.
-   * * If the rule is not granular, the result will be false.
-   * * If the trustRule is set to true, the rule will be evaluated without validation.
-   * * If the trustRule is set to false, the rule will be validated before evaluation.
-   * * If the rule is invalid, a RuleError will be thrown.
-   * * If the rule is not granular, a RuleTypeError will be thrown.
-   * * The criteria will be mutated before evaluation.
-   * * The result will be an EvaluationResult object.
-   * * If the criteria is an array, the result will be an array of EvaluationResult objects.
-   *
-   * @param rule The rule to evaluate.
-   * @param criteria The criteria to evaluate the rule against.
-   * @param trustRule Set true to avoid validating the rule before evaluating it (faster).
-   * @throws RuleError if the rule is invalid.
-   */
-
-  async evaluate(
-    rule: RuleType<T>,
-    criteria: Criteria,
-    trustRule = false,
-  ): Promise<EvaluationResult<T> | Array<EvaluationResult<T>>> {
-    // Before we evaluate the rule, we should validate it.
-    // If `trustRuleset` is set to true, we will skip validation.
-    const validationResult = (!trustRule ? this.validate(rule) : {}) as ValidationResult;
-    if (!trustRule && !validationResult.isValid) {
-      if (isObject(validationResult) && validationResult.isValid) {
-        throw validationResult;
-      }
-      throw new RuleError({
-        isValid: false,
-        error: {
-          message: "Invalid rule.",
-          element: rule,
-        },
-      });
+    // Initialize operators if needed
+    if (!this.initialized && this.config.autoInitializeOperators) {
+      initializeOperators();
+      this.initialized = true;
     }
 
-    const mutatedCriteria = await this.mutator.mutate(criteria);
+    // Run custom initialization if provided
+    if (this.config.customOperatorInit) {
+      this.config.customOperatorInit();
+    }
 
-    return this.evaluator.evaluate(rule, mutatedCriteria);
+    // Setup caching if enabled
+    if (this.config.enableCaching) {
+      this.cache = new Map();
+    }
   }
 
   /**
-   * Checks if a rule is passed against a set of criteria.
-   * * If the criteria is an array (indicating multiple criteria to test), the rule will be evaluated against each item in the array and an array of results will be returned.
-   * * If the rule is passed, the result will be true.
-   * * If the rule is not passed, the result will be false.
-   * * If the rule is not granular, the result will be false.
-   * @param rule The rule to evaluate.
-   * @param criteria The criteria to evaluate the rule against.
-   * @param trustRule Set true to avoid validating the rule before evaluating it (faster).
-   * @returns A boolean indicating whether the rule is passed or not.
+   * Evaluates a rule against a single criteria object and returns a single result.
+   * @param rule The rule to evaluate
+   * @param criteria The criteria object to evaluate against
+   * @param trustRule Whether to skip validation
    */
-  async checkIsPassed(rule: RuleType<T>, criteria: Criteria, trustRule = false): Promise<boolean> {
+  async evaluate<T = any>(
+    rule: RuleType,
+    criteria: CriteriaObject<T>,
+    trustRule?: boolean,
+  ): Promise<EvaluationResult<T>>;
+
+  /**
+   * Evaluates a rule against an array of criteria and returns an array of results.
+   * @param rule The rule to evaluate
+   * @param criteria The array of criteria to evaluate against
+   * @param trustRule Whether to skip validation
+   */
+  async evaluate<T = any>(
+    rule: RuleType,
+    criteria: Array<T>,
+    trustRule?: boolean,
+  ): Promise<Array<EvaluationResult<T>>>;
+
+  /**
+   * Evaluates a rule against given criteria
+   * @param rule The rule to evaluate
+   * @param criteria The criteria to test against
+   * @param trustRule Whether to skip validation
+   */
+  async evaluate<T = any>(
+    rule: RuleType,
+    criteria: Criteria,
+    trustRule?: boolean,
+  ): Promise<EvaluationResult<T> | Array<EvaluationResult<T>>> {
+    // Validate unless in trust mode
+    if (!trustRule && !this.config.trustMode) {
+      const validation = this.validator.validate(rule);
+      if (!validation.isValid) {
+        throw validation;
+      }
+    }
+
+    // Check cache if enabled
+    if (this.config.enableCaching && this.cache) {
+      const cacheKey = this.getCacheKey(rule, criteria);
+      if (this.cache.has(cacheKey)) {
+        return this.cache.get(cacheKey);
+      }
+    }
+
+    // Apply mutations if any
+    const mutatedCriteria = await this.mutator.mutate(criteria);
+
+    // Evaluate the rule
+    const result = this.evaluator.evaluate(rule, mutatedCriteria);
+
+    // Cache result if enabled
+    if (this.config.enableCaching && this.cache) {
+      const cacheKey = this.getCacheKey(rule, criteria);
+      this.cache.set(cacheKey, result);
+
+      // Manage cache size
+      if (
+        this.config.maxCacheSize &&
+        this.cache.size > this.config.maxCacheSize
+      ) {
+        const firstKey = this.cache.keys().next().value;
+        this.cache.delete(firstKey!);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Quick check if a rule passes for a single criteria object
+   */
+  async checkIsPassed(
+    rule: RuleType,
+    criteria: CriteriaObject,
+    trustRule?: boolean,
+  ): Promise<boolean>;
+
+  /**
+   * Quick check if a rule passes for an array of criteria
+   * Returns single boolean if all pass/fail uniformly, otherwise array of booleans
+   */
+  async checkIsPassed<T = any>(
+    rule: RuleType,
+    criteria: Array<T>,
+    trustRule?: boolean,
+  ): Promise<boolean | boolean[]>;
+
+  /**
+   * Quick check if a rule passes for given criteria
+   * When criteria is an array and all pass, returns true
+   * When criteria is an array and any fail, returns false
+   */
+  async checkIsPassed(
+    rule: RuleType,
+    criteria: Criteria,
+    trustRule?: boolean,
+  ): Promise<boolean | boolean[]> {
     const result = await this.evaluate(rule, criteria, trustRule);
 
     if (Array.isArray(result)) {
-      return result.every((r) => r.isPassed);
+      // If all criteria pass, return true, otherwise return array of results
+      const allPassed = result.every((r) => r.isPassed);
+      return result.length === 1 || allPassed
+        ? allPassed
+        : result.map((r) => r.isPassed);
     }
 
     return result.isPassed;
   }
 
   /**
-   * Evaluates a rule against a set of criteria and returns the result.
-   * * If the criteria is an array (indicating multiple criteria to test), the rule will be evaluated against each item in the array and an array of results will be returned.
-   * * If the rule is passed, the result will be true.
-   * * If the rule is not passed, the result will be false.
-   * * If the rule is not granular, the result will be false.
-   * * If the trustRule is set to true, the rule will be evaluated without validation.
-   * * If the trustRule is set to false, the rule will be validated before evaluation.
-   * * If the rule is invalid, a RuleError will be thrown.
-   * * If the rule is not granular, a RuleTypeError will be thrown.
-   *
-   * @param rule The rule to evaluate.
-   * @param criteria The criteria to evaluate the rule against.
-   * @param trustRule Set true to avoid validating the rule before evaluating it (faster).
-   * @returns A boolean indicating whether the rule is passed or not.
+   * Get just the evaluation result value for a single criteria
    */
-  async getEvaluateResult(
-    rule: RuleType<T>,
+  async getEvaluateResult<T = any>(
+    rule: RuleType,
+    criteria: CriteriaObject,
+    trustRule?: boolean,
+  ): Promise<T>;
+
+  /**
+   * Get just the evaluation result values for an array of criteria
+   */
+  async getEvaluateResult<T = any>(
+    rule: RuleType,
+    criteria: Array<any>,
+    trustRule?: boolean,
+  ): Promise<T[]>;
+
+  /**
+   * Get just the evaluation result value
+   */
+  async getEvaluateResult<T = any>(
+    rule: RuleType,
     criteria: Criteria,
-    trustRule = false,
-  ): Promise<T | Array<T>> {
+    trustRule?: boolean,
+  ): Promise<T | T[]> {
     const result = await this.evaluate(rule, criteria, trustRule);
 
     if (Array.isArray(result)) {
-      return result.map((ruleResult) => ruleResult.value);
+      return result.map((r) => r.value);
     }
 
     return result.value;
   }
 
   /**
-   * Evaluates multiple rules against a set of criteria and returns the results.
-   * - If the criteria is an array (indicating multiple criteria to test), the rules will be evaluated against each item in the array and an array of results will be returned.
-   *
-   * @param rules The rules to evaluate. Each rule will be evaluated against the criteria. If the rule is invalid, it will be skipped.
-   * @param criteria The criteria to evaluate the rule against.
-   * @param trustRule Set true to avoid validating the rule before evaluating it (faster).
+   * Evaluate multiple rules against a single criteria object
    */
-  async evaluateMultiple(
-    rules: Array<RuleType<T>>,
+  async evaluateMany<T = any>(
+    rules: RuleType[],
+    criteria: CriteriaObject<T>,
+    trustRule?: boolean,
+  ): Promise<Array<EvaluationResult<T>>>;
+
+  /**
+   * Evaluate multiple rules against an array of criteria
+   */
+  async evaluateMany<T = any>(
+    rules: RuleType[],
+    criteria: Array<T>,
+    trustRule?: boolean,
+  ): Promise<Array<Array<EvaluationResult<T>>>>;
+
+  /**
+   * Evaluate multiple rules against the same criteria
+   */
+  async evaluateMany<T = any>(
+    rules: RuleType[],
     criteria: Criteria,
-    trustRule = false,
-  ): Promise<Array<EvaluationResult<T> | Array<EvaluationResult<T>>>> {
-    return Promise.all(rules.map((rule) => this.evaluate(rule, criteria, trustRule)));
+    trustRule?: boolean,
+  ): Promise<Array<EvaluationResult<T>> | Array<Array<EvaluationResult<T>>>> {
+    if (Array.isArray(criteria)) {
+      // When criteria is an array, each rule gets evaluated against the array
+      const results = await Promise.all(
+        rules.map((rule) => this.evaluate<T>(rule, criteria, trustRule)),
+      );
+      return results as Array<Array<EvaluationResult<T>>>;
+    } else {
+      // When criteria is a single object, each rule gets evaluated against it
+      const results = await Promise.all(
+        rules.map((rule) => this.evaluate<T>(rule, criteria, trustRule)),
+      );
+      return results as Array<EvaluationResult<T>>;
+    }
   }
 
   /**
-   * Given a rule, checks the constraints and conditions to determine
-   * the possible range of input criteria which would be satisfied by the rule.
-   *
-   * @param rule The rule to evaluate.
-   * @throws RuleError if the rule is invalid
-   * @throws RuleTypeError if the rule is not granular
+   * Introspect a rule to understand its structure and requirements
    */
-  introspect(rule: RuleType<T>): IntrospectionResult<T> {
-    // Before we proceed with the rule, we should validate it.
-    const validationResult = this.validate(rule);
-    if (!validationResult.isValid) {
-      throw validationResult;
+  introspect<R = any>(
+    rule: RuleType<R>,
+    options?: {
+      includeMetadata?: boolean;
+      includeComplexity?: boolean;
+      validateOperators?: boolean;
+    },
+  ): EnhancedIntrospectionResult<R> {
+    // Validate the rule first
+    const validation = this.validator.validate(rule);
+    if (!validation.isValid) {
+      throw validation;
     }
 
-    return this.introspector.introspect<T>(rule);
+    return this.introspector.introspect(rule, options);
   }
 
   /**
-   * Takes in a rule as a parameter and returns a ValidationResult
-   * indicating whether the rule is valid or not.
-   *
-   * Invalid rules will contain an error property which contains a message and the element
-   * that caused the validation to fail.
-   *
-   * @param rule The rule to validate.
+   * Validate a rule
    */
-  validate(rule: RuleType<T>) {
+  validate(rule: RuleType): ReturnType<Validator["validate"]> {
     return this.validator.validate(rule);
   }
 
   /**
-   * Returns a rule builder class instance.
-   * Allows for the construction of rules using a fluent interface.
+   * Validate operators in a rule
    */
-  static builder<T = EngineResult>(): Builder<T> {
-    return this.self.builder();
+  validateOperators(rule: RuleType): { isValid: boolean; errors: string[] } {
+    return this.introspector.validateOperators(rule);
   }
 
   /**
-   * Evaluates a rule against a set of criteria and returns the result.
-   * If the criteria is an array (indicating multiple criteria to test),
-   * the rule will be evaluated against each item in the array and
-   * an array of results will be returned.
-   *
-   * @param rule The rule to evaluate.
-   * @param criteria The criteria to evaluate the rule against.
-   * @param trustRule Set true to avoid validating the rule before evaluating it (faster).
-   * @throws RuleError if the rule is invalid.
+   * Get all operators used in a rule
    */
-  static async evaluate<T = EngineResult>(
-    rule: RuleType<T>,
+  getUsedOperators(rule: RuleType): Set<string> {
+    return this.introspector.getUsedOperators(rule);
+  }
+
+  /**
+   * Create a rule builder
+   */
+  builder(): RuleBuilder {
+    return new RuleBuilder(this.validator);
+  }
+
+  /**
+   * Register mutations
+   */
+  registerMutation(field: string, mutation: (value: any) => any): void {
+    this.mutator.add(field, mutation);
+  }
+
+  /**
+   * Add mutation (backward compatibility)
+   */
+  addMutation(field: string, mutation: (value: any) => any): void {
+    this.registerMutation(field, mutation);
+  }
+
+  /**
+   * Remove mutation (backward compatibility)
+   */
+  removeMutation(field: string): void {
+    this.mutator.remove(field);
+  }
+
+  /**
+   * Clear mutation cache
+   */
+  clearMutationCache(field?: string): void {
+    this.mutator.clearCache(field);
+  }
+
+  /**
+   * Clear all mutations
+   */
+  clearMutations(): void {
+    this.mutator.removeAll();
+  }
+
+  /**
+   * Clear evaluation cache
+   */
+  clearCache(): void {
+    this.cache?.clear();
+  }
+
+  /**
+   * Get operator registry for advanced usage
+   */
+  getOperatorRegistry() {
+    return operatorRegistry;
+  }
+
+  /**
+   * Generate cache key for rule and criteria
+   */
+  private getCacheKey(rule: RuleType, criteria: Criteria): string {
+    return JSON.stringify({ rule, criteria });
+  }
+
+  // Static convenience methods
+  /**
+   * Static method: Evaluates a rule against a single criteria object
+   */
+  static async evaluate<T = any>(
+    rule: RuleType,
+    criteria: CriteriaObject<T>,
+    trustRule?: boolean,
+  ): Promise<EvaluationResult<T>>;
+
+  /**
+   * Static method: Evaluates a rule against an array of criteria
+   */
+  static async evaluate<T = any>(
+    rule: RuleType,
+    criteria: Array<T>,
+    trustRule?: boolean,
+  ): Promise<Array<EvaluationResult<T>>>;
+
+  /**
+   * Static method: Evaluates a rule against criteria
+   */
+  static async evaluate<T = any>(
+    rule: RuleType,
     criteria: Criteria,
-    trustRule = false,
+    trustRule?: boolean,
   ): Promise<EvaluationResult<T> | Array<EvaluationResult<T>>> {
-    return RuleEngine.self.evaluate(rule, criteria, trustRule);
+    return RuleEngine.getInstance().evaluate(rule, criteria, trustRule);
   }
 
-  static async getEvaluateResult<T = EngineResult>(
-    rule: RuleType<T>,
+  /**
+   * Static method: Quick check if a rule passes for a single criteria
+   */
+  static async checkIsPassed(
+    rule: RuleType,
+    criteria: CriteriaObject,
+    trustRule?: boolean,
+  ): Promise<boolean>;
+
+  /**
+   * Static method: Quick check if a rule passes for an array of criteria
+   */
+  static async checkIsPassed<T = any>(
+    rule: RuleType,
+    criteria: Array<T>,
+    trustRule?: boolean,
+  ): Promise<boolean | boolean[]>;
+
+  /**
+   * Static method: Quick check if a rule passes
+   */
+  static async checkIsPassed(
+    rule: RuleType,
     criteria: Criteria,
-    trustRule = false,
-  ): Promise<T | Array<T>> {
-    return RuleEngine.self.getEvaluateResult(rule, criteria, trustRule);
+    trustRule?: boolean,
+  ): Promise<boolean | boolean[]> {
+    return RuleEngine.getInstance().checkIsPassed(rule, criteria, trustRule);
   }
 
   /**
-   * Given a rule, checks the constraints and conditions to determine
-   * the possible range of input criteria which would be satisfied by the rule.
-   *
-   * @param rule The rule to introspect.
-   * @throws RuleError if the rule is invalid
-   * @throws RuleTypeError if the rule is not granular
+   * Static method: Get evaluation result value for a single criteria
    */
-  static introspect<T>(rule: RuleType<T>): IntrospectionResult<T> {
-    return RuleEngine.self.introspect(rule);
-  }
+  static async getEvaluateResult<T = any>(
+    rule: RuleType,
+    criteria: CriteriaObject,
+    trustRule?: boolean,
+  ): Promise<T>;
 
   /**
-   * Takes in a rule as a parameter and returns a ValidationResult
-   * indicating whether the rule is valid or not.
-   *
-   * Invalid rules will contain an error property which contains a message and the element
-   * that caused the validation to fail.
-   *
-   * @param rule The rule to validate.
+   * Static method: Get evaluation result values for an array of criteria
    */
-  static validate<T = EngineResult>(rule: RuleType<T>) {
-    return RuleEngine.self.validate(rule);
-  }
+  static async getEvaluateResult<T = any>(
+    rule: RuleType,
+    criteria: Array<any>,
+    trustRule?: boolean,
+  ): Promise<T[]>;
 
   /**
-   * Adds a mutation.
-   *
-   * Mutations allow for the modification of the criteria before
-   * it is evaluated against a rule.
-   *
-   * @param name The name of the mutation.
-   * @param mutation The mutation function.
+   * Static method: Get evaluation result value
    */
-  static addMutation(name: string, mutation: Function): RuleEngine {
-    return RuleEngine.self.addMutation(name, mutation);
+  static async getEvaluateResult<T = any>(
+    rule: RuleType,
+    criteria: Criteria,
+    trustRule?: boolean,
+  ): Promise<T | T[]> {
+    return RuleEngine.getInstance().getEvaluateResult(
+      rule,
+      criteria,
+      trustRule,
+    );
   }
 
-  /**
-   * Removes a mutation to the rule engine instance.
-   * Any cached mutation values for this mutation will be purged.
-   *
-   * @param name The name of the mutation.
-   */
-  static removeMutation(name: string): RuleEngine {
-    return RuleEngine.self.removeMutation(name);
+  static introspect<R = any>(
+    rule: RuleType<R>,
+    options?: {
+      includeMetadata?: boolean;
+      includeComplexity?: boolean;
+      validateOperators?: boolean;
+    },
+  ): EnhancedIntrospectionResult<R> {
+    return RuleEngine.getInstance().introspect(rule, options);
   }
 
-  /**
-   * Clears the mutator cache.
-   * The entire cache, or cache for a specific mutator can be cleared
-   * by passing or omitting the mutator name as an argument.
-   *
-   * @param name The mutator name to clear the cache for.
-   */
-  static clearMutationCache(name?: string): RuleEngine {
-    return RuleEngine.self.clearMutationCache(name);
+  static validate(rule: RuleType): ReturnType<Validator["validate"]> {
+    return RuleEngine.getInstance().validate(rule);
+  }
+
+  static builder(): RuleBuilder {
+    return RuleEngine.getInstance().builder();
+  }
+
+  // Static mutation methods for backward compatibility
+  static addMutation(field: string, mutation: (value: any) => any): void {
+    RuleEngine.getInstance().addMutation(field, mutation);
+  }
+
+  static removeMutation(field: string): void {
+    RuleEngine.getInstance().removeMutation(field);
+  }
+
+  static clearMutationCache(field?: string): void {
+    RuleEngine.getInstance().clearMutationCache(field);
   }
 }

@@ -4,7 +4,7 @@ import { EventEmitter } from "eventemitter3";
 import { Logger } from "@root/services/logger";
 import { ObjectDiscovery } from "@root/services/object-discovery";
 // Types
-import type { Criteria, CriteriaObject } from "@root/types";
+import type { CriteriaObject, Criteria } from "@root/types";
 
 /**
  * The Mutator class allows for the modification of criteria objects before they are evaluated against a rule.
@@ -47,7 +47,10 @@ export class Mutator {
    */
   add(options: Array<{ name: string; mutation: Function }>): void;
   add(options: string, mutation: Function): void;
-  add(options: string | Array<{ name: string; mutation: Function }>, mutation?: Function): void {
+  add(
+    options: string | Array<{ name: string; mutation: Function }>,
+    mutation?: Function,
+  ): void {
     if (Array.isArray(options)) {
       for (const { name, mutation } of options) {
         this.mutations.set(name, mutation);
@@ -80,6 +83,15 @@ export class Mutator {
 
     this.clearCache(names);
     this.mutations.delete(names);
+  }
+
+  /**
+   * Removes all mutations from the mutator instance.
+   * Clears all cached mutation values.
+   */
+  removeAll(): void {
+    this.mutations.clear();
+    this.cache.clear();
   }
 
   /**
@@ -187,7 +199,11 @@ export class Mutator {
           const value = this.discovery.resolveProperty(key, criteria);
           if (typeof value !== "undefined") {
             const processResult = await this.execMutation(key, criteria);
-            criteria = this.discovery.updateProperty(key, criteria, processResult);
+            criteria = this.discovery.updateProperty(
+              key,
+              criteria,
+              processResult,
+            );
           }
 
           resolve(value);
@@ -206,7 +222,10 @@ export class Mutator {
    * @param criteria The criteria to execute the mutation with.
    * @param mutationKey The key of the mutation to execute.
    */
-  private async execMutation(mutationKey: string, criteria: CriteriaObject): Promise<any> {
+  private async execMutation(
+    mutationKey: string,
+    criteria: CriteriaObject,
+  ): Promise<any> {
     // Resolve the value of the property to mutate.
     const value = this.discovery.resolveProperty(mutationKey, criteria);
 
@@ -222,9 +241,13 @@ export class Mutator {
     // If the mutation is already in progress, wait for it to finish.
     if (this.buffer.get(cacheKey)) {
       return await new Promise((resolve) => {
-        Logger.debug(`Waiting on mutation "${mutationKey}" with param "${value}"`);
+        Logger.debug(
+          `Waiting on mutation "${mutationKey}" with param "${value}"`,
+        );
         this.eventEmitter.once(`mutation:${cacheKey}`, (result) => {
-          Logger.debug(`Resolved mutation "${mutationKey}" with param "${value}"`);
+          Logger.debug(
+            `Resolved mutation "${mutationKey}" with param "${value}"`,
+          );
           resolve(result);
         });
       });

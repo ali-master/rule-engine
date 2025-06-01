@@ -1,5 +1,6 @@
-import { bench, describe } from "vitest";
-import { Operators, OperatorsType, RuleEngine } from "../src";
+import { describe, bench } from "vitest";
+import type { OperatorsType } from "@root";
+import { RuleEngine, Operators } from "@root";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 import { valid2Json } from "./rulesets/valid2.json";
@@ -11,27 +12,31 @@ import { Valid10Json } from "./rulesets/valid10.json";
 import { Valid11Json } from "./rulesets/valid11.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("RuleEngine engine works correctly", () => {
+describe("ruleEngine engine works correctly", () => {
   bench(
-    "Evaluates a simple ruleset A",
+    "evaluates a simple ruleset A",
     async () => {
-      await RuleEngine.getEvaluateResult(valid1Json, { payload: { ProfitPercentage: 9 } });
+      await RuleEngine.getEvaluateResult(valid1Json, {
+        payload: { ProfitPercentage: 9 },
+      });
     },
     {
       iterations: 10_000,
     },
   );
   bench(
-    "Evaluates a simple ruleset B",
+    "evaluates a simple ruleset B",
     async () => {
-      await RuleEngine.getEvaluateResult(valid1Json, { payload: { ProfitPercentage: 11 } });
+      await RuleEngine.getEvaluateResult(valid1Json, {
+        payload: { ProfitPercentage: 11 },
+      });
     },
     {
       iterations: 10_000,
     },
   );
   bench(
-    "Evaluates a simple ruleset C",
+    "evaluates a simple ruleset C",
     async () => {
       await RuleEngine.getEvaluateResult(valid1Json, {
         WinRate: 80,
@@ -44,7 +49,7 @@ describe("RuleEngine engine works correctly", () => {
     },
   );
   bench(
-    "Evaluates a simple ruleset D",
+    "evaluates a simple ruleset D",
     async () => {
       await RuleEngine.getEvaluateResult(valid1Json, {
         WinRate: 80,
@@ -59,13 +64,19 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates to false if operator is unknown",
+    "evaluates to false if operator is unknown",
     async () => {
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "name", operator: "foo" as OperatorsType, value: "test" }],
+              and: [
+                {
+                  field: "name",
+                  operator: "foo" as OperatorsType,
+                  value: "test",
+                },
+              ],
             },
           ],
         },
@@ -79,13 +90,19 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Resolves nested field definitions",
+    "resolves nested field definitions",
     async () => {
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "$.foo.bar", operator: Operators.Equals, value: "test" }],
+              and: [
+                {
+                  field: "$.foo.bar",
+                  operator: Operators.Equals,
+                  value: "test",
+                },
+              ],
             },
           ],
         },
@@ -102,13 +119,15 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Handles missing nested field definitions",
+    "handles missing nested field definitions",
     async () => {
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "foo.foo", operator: Operators.Equals, value: "test" }],
+              and: [
+                { field: "foo.foo", operator: Operators.Equals, value: "test" },
+              ],
             },
           ],
         },
@@ -125,13 +144,19 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Handles array of criteria properly",
+    "handles array of criteria properly",
     async () => {
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "$.foo.bar", operator: Operators.Equals, value: "bar" }],
+              and: [
+                {
+                  field: "$.foo.bar",
+                  operator: Operators.Equals,
+                  value: "bar",
+                },
+              ],
             },
           ],
         },
@@ -156,11 +181,11 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Throws an error on invalid not runnable ruleset",
+    "throws an error on invalid not runnable ruleset",
     async () => {
       try {
         await RuleEngine.getEvaluateResult({ conditions: [] }, {});
-      } catch (e) {}
+      } catch {}
     },
     {
       iterations: 10_000,
@@ -168,7 +193,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a simple ruleset with a single condition",
+    "evaluates a simple ruleset with a single condition",
     async () => {
       await RuleEngine.getEvaluateResult(valid13Json, {}, false);
     },
@@ -178,7 +203,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a nested ruleset A",
+    "evaluates a nested ruleset A",
     async () => {
       await RuleEngine.getEvaluateResult(valid3Json, {
         Monetization: "Real",
@@ -192,7 +217,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a nested ruleset B",
+    "evaluates a nested ruleset B",
     async () => {
       await RuleEngine.getEvaluateResult(valid3Json, {
         Monetization: "Real",
@@ -208,7 +233,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a simple ruleset with none type condition",
+    "evaluates a simple ruleset with none type condition",
     async () => {
       await RuleEngine.getEvaluateResult(valid2Json, {
         Leverage: 100,
@@ -224,9 +249,11 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a simple ruleset with a Contains and ContainsAny any condition",
+    "evaluates a simple ruleset with a Contains and ContainsAny any condition",
     async () => {
-      await RuleEngine.getEvaluateResult(valid5Json, { countries: ["US", "FR"] });
+      await RuleEngine.getEvaluateResult(valid5Json, {
+        countries: ["US", "FR"],
+      });
     },
     {
       iterations: 10_000,
@@ -234,7 +261,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a self ruleset with a SelfContainsAll and SelfContainsAny A",
+    "evaluates a self ruleset with a SelfContainsAll and SelfContainsAny A",
     async () => {
       await RuleEngine.evaluate(selfFieldsConstraintsJson, {
         meta: {
@@ -253,7 +280,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a self ruleset with a SelfContainsAll and SelfContainsAny B",
+    "evaluates a self ruleset with a SelfContainsAll and SelfContainsAny B",
     async () => {
       await RuleEngine.evaluate(selfFieldsConstraintsJson, {
         meta: {
@@ -272,7 +299,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a simple ruleset with Exists and NotExists conditions",
+    "evaluates a simple ruleset with Exists and NotExists conditions",
     async () => {
       await RuleEngine.getEvaluateResult(Valid10Json, {
         name: "John",
@@ -287,7 +314,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a simple ruleset with Priority based conditions",
+    "evaluates a simple ruleset with Priority based conditions",
     async () => {
       await RuleEngine.evaluate(Valid11Json, {
         payload: {
@@ -304,7 +331,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a nested ruleset with Priority based conditions A",
+    "evaluates a nested ruleset with Priority based conditions A",
     async () => {
       await RuleEngine.getEvaluateResult(valid4Json, {
         CountryIso: "GB",
@@ -318,7 +345,7 @@ describe("RuleEngine engine works correctly", () => {
   );
 
   bench(
-    "Evaluates a nested ruleset with Priority based conditions B",
+    "evaluates a nested ruleset with Priority based conditions B",
     async () => {
       await RuleEngine.getEvaluateResult(valid4Json, {
         Leverage: 500, // This is the first condition in the ruleset.

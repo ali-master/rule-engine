@@ -1,13 +1,13 @@
-import { bench, describe } from "vitest";
+import { describe, bench } from "vitest";
 import { RuleEngine, Operators } from "../src";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 import { valid3Json } from "./rulesets/valid3.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("RuleEngine validator correctly", () => {
+describe("ruleEngine validator correctly", () => {
   bench(
-    "Validates a correct rule",
+    "validates a correct rule",
     () => {
       RuleEngine.validate({
         conditions: [
@@ -23,7 +23,7 @@ describe("RuleEngine validator correctly", () => {
   );
 
   bench(
-    "Validates a simple correct rule",
+    "validates a simple correct rule",
     () => {
       RuleEngine.validate(valid1Json);
     },
@@ -33,7 +33,7 @@ describe("RuleEngine validator correctly", () => {
   );
 
   bench(
-    "Validates a simple correct self rule",
+    "validates a simple correct self rule",
     () => {
       RuleEngine.validate(selfFieldsConstraintsJson);
     },
@@ -43,7 +43,7 @@ describe("RuleEngine validator correctly", () => {
   );
 
   bench(
-    "Validates a nested correct rule",
+    "validates a nested correct rule",
     () => {
       RuleEngine.validate(valid3Json);
     },

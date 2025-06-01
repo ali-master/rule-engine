@@ -1,5 +1,9 @@
-import { describe, it, expect } from "vitest";
-import { extractJsonPathExpressions, isValidTime, convertTimeToMs } from "../src";
+import { it, expect, describe } from "vitest";
+import {
+  isValidTime,
+  extractJsonPathExpressions,
+  convertTimeToMs,
+} from "@root";
 
 describe("isValidTime", () => {
   it("should return true for valid time strings", () => {
@@ -8,7 +12,7 @@ describe("isValidTime", () => {
     expect(isValidTime("00:00")).toBe(true);
     expect(isValidTime("00:00")).toBe(true);
   });
-  it("should return true for valid time strings", () => {
+  it("should return true for valid time strings 2", () => {
     expect(convertTimeToMs("00:00")).toBe(0);
     expect(isValidTime("invalid")).toBe(false);
   });
@@ -28,12 +32,20 @@ describe("convertTimeToMs", () => {
   });
 
   it("should throw an error for invalid time strings", () => {
-    expect(() => convertTimeToMs("invalid")).toThrowError("Invalid time format");
+    expect(() => convertTimeToMs("invalid")).toThrowError(
+      "Invalid time format",
+    );
     expect(() => convertTimeToMs("25:00")).toThrowError("Invalid time format");
     expect(() => convertTimeToMs("00:61")).toThrowError("Invalid time format");
-    expect(() => convertTimeToMs("00:00:61")).toThrowError("Invalid time format");
-    expect(() => convertTimeToMs("00:00:00:1000")).toThrowError("Invalid time format");
-    expect(() => convertTimeToMs("00:00:00.2000")).toThrowError("Invalid time format");
+    expect(() => convertTimeToMs("00:00:61")).toThrowError(
+      "Invalid time format",
+    );
+    expect(() => convertTimeToMs("00:00:00:1000")).toThrowError(
+      "Invalid time format",
+    );
+    expect(() => convertTimeToMs("00:00:00.2000")).toThrowError(
+      "Invalid time format",
+    );
   });
 });
 

@@ -1,7 +1,10 @@
 // Enums
-import { ConditionTypes, Operators } from "@root/enums";
+import type { Operators, ConditionTypes } from "@root/enums";
 
-export type ConditionType = ConditionTypes.OR | ConditionTypes.AND | ConditionTypes.NONE;
+export type ConditionType =
+  | ConditionTypes.OR
+  | ConditionTypes.AND
+  | ConditionTypes.NONE;
 export type OperatorsType =
   | Operators.Equals
   | Operators.NotEquals
@@ -11,6 +14,9 @@ export type OperatorsType =
   | Operators.LessThanOrEquals
   | Operators.Like
   | Operators.NotLike
+  | Operators.StartsWith
+  | Operators.EndsWith
+  | Operators.ContainsString
   | Operators.In
   | Operators.NotIn
   | Operators.Contains
@@ -86,6 +92,9 @@ export type OperatorsType =
   | Operators.NotObject
   | Operators.Array
   | Operators.NotArray
+  | Operators.ArrayLength
+  | Operators.ArrayMinLength
+  | Operators.ArrayMaxLength
   | Operators.BooleanString
   | Operators.NotBooleanString
   | Operators.BooleanNumber
@@ -168,10 +177,10 @@ export interface Constraint {
 /**
  * The result of the evaluation.
  * This is the value of the field that was evaluated.
- * * If the field is valid, then the `isPassed` property is `true`.
- * * If the field is invalid, then the `isPassed` property is `false`.
- * * The `message` property is optional and only used if the field is invalid.
- 
+ * - If the field is valid, then the `isPassed` property is `true`.
+ * - If the field is invalid, then the `isPassed` property is `false`.
+ * - The `message` property is optional and only used if the field is invalid.
+ *
  * @example { value: "The field is valid." }
  * @example { value: "The field is invalid.", isPassed: false }
  * @example { value: "The field is invalid.", isPassed: false, message: "The field must be a string." }
@@ -192,26 +201,26 @@ export type Criteria<T = any> = CriteriaObject<T> | Array<T>;
 export interface Condition<R = any> {
   /**
    * The constraints to evaluate. This is optional.
-   * * If one of the constraints is met, then the result is valid.
+   * - If one of the constraints is met, then the result is valid.
    * @example { or: [{ field: "name", operator: Operators.Equals, value: "test" }] } // The result is valid if the name field equals "test".
    */
   or?: Array<Constraint | Condition<R>>;
   /**
    * The constraints to evaluate. This is optional.
-   * * If all the constraints are met, then the result is valid.
+   * - If all the constraints are met, then the result is valid.
    * @example { and: [{ field: "name", operator: Operators.Equals, value: "test" }] } // The result is valid if the name field equals "test".
    */
   and?: Array<Constraint | Condition<R>>;
   /**
    * The constraints to evaluate. This is optional.
-   * * If none of the constraints are met, then the result is valid.
+   * - If none of the constraints are met, then the result is valid.
    * @example { none: [{ field: "name", operator: Operators.Equals, value: "test" }] } // The result is valid if the name field does not equal "test".
    */
   none?: Array<Constraint | Condition<R>>;
   /**
    * The result of the evaluation.
-   * * This is the value of the field that was evaluated.
-   * * This is optional.
+   * - This is the value of the field that was evaluated.
+   * - This is optional.
    */
   result?: EngineResult<R>;
 }

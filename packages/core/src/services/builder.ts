@@ -1,8 +1,14 @@
-import { Validator } from "@root/services/validator";
+import type { Validator } from "@root/services/validator";
 // Types
-import type { RuleType, OperatorsType, Condition, Constraint, ConditionType } from "@root/types";
+import type {
+  RuleType,
+  OperatorsType,
+  Constraint,
+  ConditionType,
+  Condition,
+} from "@root/types";
 
-export class Builder<T = any> {
+export class RuleBuilder<T = any> {
   /** Stores to rule being constructed */
   private rule: RuleType = { conditions: [] };
 
@@ -13,7 +19,7 @@ export class Builder<T = any> {
    *
    * @param node The node to add to the rule
    */
-  add(node: Condition<T>): Builder<T> {
+  add(node: Condition<T>): RuleBuilder<T> {
     (this.rule.conditions as Condition<T>[]).push(node);
 
     return this;
@@ -25,7 +31,7 @@ export class Builder<T = any> {
    * @param value The default value of the rule
    * @returns The builder instance
    */
-  default(value: RuleType["default"]): Builder<T> {
+  default(value: RuleType["default"]): RuleBuilder<T> {
     this.rule.default = value;
 
     return this;
@@ -78,7 +84,11 @@ export class Builder<T = any> {
    * @param value The value to compare the field to
    * @returns The constraint node
    */
-  constraint(field: string, operator: OperatorsType, value: Constraint["value"]): Constraint {
+  constraint(
+    field: string,
+    operator: OperatorsType,
+    value: Constraint["value"],
+  ): Constraint {
     return {
       field,
       operator,

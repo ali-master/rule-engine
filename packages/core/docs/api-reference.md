@@ -37,8 +37,8 @@ Evaluates a rule against criteria.
 
 ```typescript
 async evaluate<R = any>(
-  rule: RuleType<R>, 
-  criteria: any | any[], 
+  rule: RuleType<R>,
+  criteria: any | any[],
   trustRule?: boolean
 ): Promise<EvaluationResult<R> | EvaluationResult<R>[]>
 ```
@@ -65,8 +65,8 @@ Simple boolean check if rule passes.
 
 ```typescript
 async checkIsPassed(
-  rule: RuleType<any>, 
-  criteria: any | any[], 
+  rule: RuleType<any>,
+  criteria: any | any[],
   trustRule?: boolean
 ): Promise<boolean>
 ```
@@ -89,8 +89,8 @@ Get only result values without evaluation metadata.
 
 ```typescript
 async getEvaluateResult<R = any>(
-  rule: RuleType<R>, 
-  criteria: any | any[], 
+  rule: RuleType<R>,
+  criteria: any | any[],
   trustRule?: boolean
 ): Promise<R | R[]>
 ```
@@ -107,14 +107,14 @@ const result = await engine.getEvaluateResult(rule, data);
 // { discount: 0.15, message: "15% off" }
 ```
 
-#### evaluateMultiple
+#### evaluateMany
 
 Evaluate multiple rules against same criteria.
 
 ```typescript
-async evaluateMultiple<R = any>(
-  rules: RuleType<R>[], 
-  criteria: any, 
+async evaluateMany<R = any>(
+  rules: RuleType<R>[],
+  criteria: any,
   trustRule?: boolean
 ): Promise<EvaluationResult<R>[]>
 ```
@@ -129,7 +129,7 @@ async evaluateMultiple<R = any>(
 
 **Example:**
 ```typescript
-const results = await engine.evaluateMultiple([rule1, rule2], data);
+const results = await engine.evaluateMany([rule1, rule2], data);
 // [{ value: true, isPassed: true }, { value: false, isPassed: false }]
 ```
 
@@ -268,7 +268,7 @@ All instance methods are available as static methods on the `RuleEngine` class:
 RuleEngine.evaluate(rule, criteria, trustRule?)
 RuleEngine.checkIsPassed(rule, criteria, trustRule?)
 RuleEngine.getEvaluateResult(rule, criteria, trustRule?)
-RuleEngine.evaluateMultiple(rules, criteria, trustRule?)
+RuleEngine.evaluateMany(rules, criteria, trustRule?)
 RuleEngine.validate(rule)
 RuleEngine.introspect(rule)
 RuleEngine.builder()
@@ -284,7 +284,7 @@ Resolves a property value from an object using path or JSONPath.
 
 ```typescript
 static resolveProperty(
-  path: string, 
+  path: string,
   json: any
 ): any
 ```
@@ -308,8 +308,8 @@ Updates a property value in an object.
 
 ```typescript
 static updateProperty(
-  path: string, 
-  json: any, 
+  path: string,
+  json: any,
   value: any
 ): void
 ```
@@ -330,7 +330,7 @@ Resolves JSONPath expressions in template strings.
 
 ```typescript
 static resolveTextPathExpressions(
-  text: string, 
+  text: string,
   criteria: any
 ): string
 ```
@@ -567,7 +567,7 @@ interface IntrospectionResult {
 ```typescript
 enum ConditionType {
   Or = "or",
-  And = "and", 
+  And = "and",
   None = "none"
 }
 ```

@@ -1,73 +1,74 @@
-import { describe, expect, it } from "vitest";
+import { it, expect, describe } from "vitest";
+
 import {
-  equalsOperator,
-  greaterThanOperator,
-  greaterThanOrEqualsOperator,
-  lessThanOperator,
-  lessThanOrEqualsOperator,
-  likeOperator,
-  isNullOrWhiteSpaceOperator,
-  isNumericOperator,
-  isBooleanOperator,
-  isDateOperator,
-  isEmailOperator,
-  isUrlOperator,
-  isUuidOperator,
-  isAlphaOperator,
-  isPersianAlphaOperator,
-  isAlphaNumericOperator,
-  isPersianAlphaNumericOperator,
-  isLowerCaseOperator,
-  isUpperCaseOperator,
-  isStringOperator,
-  isObjectOperator,
-  isArrayOperator,
-  isBooleanStringOperator,
-  isBooleanNumberOperator,
-  isBooleanNumberStringOperator,
-  isNumberOperator,
-  isIntegerOperator,
-  isFloatOperator,
-  isPositiveOperator,
-  isNegativeOperator,
-  isZeroOperator,
-  isNumberBetweenOperator,
-  isLengthOperator,
-  isMinLengthOperator,
-  isMaxLengthOperator,
-  IsLengthBetweenOperator,
-  isMinOperator,
-  isMaxOperator,
-  isBetweenOperator,
-  isFalsyOperator,
-  isTruthyOperator,
-  inOperator,
-  containsOperator,
-  selfContainsAllOperator,
   selfContainsAnyOperator,
-  containsAnyOperator,
-  containsAllOperator,
-  matchesOperator,
-  isExistsInObjectOperator,
-  isNullOrUndefinedOperator,
-  isEmptyOperator,
-  isDateAfterOperator,
-  isDateBeforeOperator,
-  isDateAfterOrEqualsOperator,
-  isDateBeforeOrEqualsOperator,
-  isDateEqualsOperator,
-  isDateBetweenOperator,
-  isTimeAfterOperator,
-  isTimeBeforeOperator,
-  isTimeAfterOrEqualsOperator,
-  isTimeBeforeOrEqualsOperator,
-  isTimeEqualsOperator,
-  isTimeBetweenOperator,
+  selfContainsAllOperator,
   RuleEngine,
   Operators,
-} from "../src";
+  matchesOperator,
+  likeOperator,
+  lessThanOrEqualsOperator,
+  lessThanOperator,
+  isZeroOperator,
+  isUuidOperator,
+  isUrlOperator,
+  isUpperCaseOperator,
+  isTruthyOperator,
+  isTimeEqualsOperator,
+  isTimeBetweenOperator,
+  isTimeBeforeOrEqualsOperator,
+  isTimeBeforeOperator,
+  isTimeAfterOrEqualsOperator,
+  isTimeAfterOperator,
+  isStringOperator,
+  isPositiveOperator,
+  isPersianAlphaOperator,
+  isPersianAlphaNumericOperator,
+  isObjectOperator,
+  isNumericOperator,
+  isNumberOperator,
+  isNumberBetweenOperator,
+  isNullOrWhiteSpaceOperator,
+  isNullOrUndefinedOperator,
+  isNegativeOperator,
+  isMinOperator,
+  isMinLengthOperator,
+  isMaxOperator,
+  isMaxLengthOperator,
+  isLowerCaseOperator,
+  isLengthOperator,
+  IsLengthBetweenOperator,
+  isIntegerOperator,
+  isFloatOperator,
+  isFalsyOperator,
+  isExistsInObjectOperator,
+  isEmptyOperator,
+  isEmailOperator,
+  isDateOperator,
+  isDateEqualsOperator,
+  isDateBetweenOperator,
+  isDateBeforeOrEqualsOperator,
+  isDateBeforeOperator,
+  isDateAfterOrEqualsOperator,
+  isDateAfterOperator,
+  isBooleanStringOperator,
+  isBooleanOperator,
+  isBooleanNumberStringOperator,
+  isBooleanNumberOperator,
+  isBetweenOperator,
+  isArrayOperator,
+  isAlphaOperator,
+  isAlphaNumericOperator,
+  inOperator,
+  greaterThanOrEqualsOperator,
+  greaterThanOperator,
+  equalsOperator,
+  containsOperator,
+  containsAnyOperator,
+  containsAllOperator,
+} from "@root";
 
-describe("Rule Engine Evaluation Operators", () => {
+describe("rule Engine Evaluation Operators", () => {
   ///////////////////////////
   // :: LIKE OPERATOR :: //
   ///////////////////////////
@@ -78,7 +79,7 @@ describe("Rule Engine Evaluation Operators", () => {
         const pattern = "%simple%";
         expect(likeOperator(text, pattern)).toBeTruthy();
       });
-      it("should match a simple pattern with wildcards", () => {
+      it("should match a simple pattern with wildcards 2", () => {
         const text = "@Aa101010";
         const pattern = "^@A%";
         expect(likeOperator(text, pattern)).toBeTruthy();
@@ -307,21 +308,29 @@ describe("Rule Engine Evaluation Operators", () => {
       });
     });
 
-    describe("RuleEngine Like Operator", () => {
+    describe("ruleEngine Like Operator", () => {
       it("should match a simple pattern with wildcards", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "%simple%" }],
+            and: [
+              { field: "text", operator: Operators.Like, value: "%simple%" },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "This is a complex string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a wildcard at the beginning", async () => {
@@ -331,124 +340,196 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a wildcard at the end", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "%string" }],
+            and: [
+              { field: "text", operator: Operators.Like, value: "%string" },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "This is a simple" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a wildcard at the beginning and end", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "%is a simple%" }],
+            and: [
+              {
+                field: "text",
+                operator: Operators.Like,
+                value: "%is a simple%",
+              },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "This is a string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with an underscore character set", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "abc_de_%" }],
+            and: [
+              { field: "text", operator: Operators.Like, value: "abc_de_%" },
+            ],
           },
         ];
         const data = { text: "abc_x_defg" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
 
         const data2 = { text: "abc_y_123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { text: "abc_def" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
 
         const data4 = { text: "abc_defg" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeTruthy();
 
         const data5 = { text: "abc_x_defg" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeFalsy();
 
         const data6 = { text: "abc_y_123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data6)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data6),
+        ).toBeFalsy();
       });
 
       it("should match a pattern with a character set", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "[a-c]_%" }],
+            and: [
+              { field: "text", operator: Operators.Like, value: "[a-c]_%" },
+            ],
           },
         ];
         const data = { text: "a_def" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "b_ghi" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { text: "c_jkl" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
 
         const data4 = { text: "d_mno" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
       });
 
       it("should match a pattern with a character set range", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "[^aeiou]_%" }],
+            and: [
+              { field: "text", operator: Operators.Like, value: "[^aeiou]_%" },
+            ],
           },
         ];
         const data = { text: "x_def" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "z_ghi" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { text: "a_jkl" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { text: "e_mno" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
       });
 
       it("should handle escaped special characters", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Like, value: "Th%is is an exa%ple str%ng" }],
+            and: [
+              {
+                field: "text",
+                operator: Operators.Like,
+                value: "Th%is is an exa%ple str%ng",
+              },
+            ],
           },
         ];
         const data = { text: "This is an example string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "This is an example string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { text: "This is an example string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a wildcard character", async () => {
@@ -458,22 +539,34 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { text: "myfile.txt" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: "document.txt" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { text: "image.jpg" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { text: "myfile.txt" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeTruthy();
 
         const data5 = { text: "myfile.txt" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeTruthy();
 
         const data6 = { text: "myfile.txt" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data6)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data6),
+        ).toBeTruthy();
       });
     });
   });
@@ -481,7 +574,7 @@ describe("Rule Engine Evaluation Operators", () => {
   ///////////////////////////
   // :: REGEXP OPERATOR :: //
   ///////////////////////////
-  describe("Matches Operator", () => {
+  describe("matches Operator", () => {
     it("should match a simple pattern", () => {
       const text = "This is a simple string";
       const pattern = "simple";
@@ -571,55 +664,83 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(matchesOperator(text, pattern)).toBeTruthy();
     });
 
-    describe("RuleEngine Matches Operator", () => {
+    describe("ruleEngine Matches Operator", () => {
       it("should match a simple pattern", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Matches, value: "simple" }],
+            and: [
+              { field: "text", operator: Operators.Matches, value: "simple" },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a wildcard", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Matches, value: "simple.*" }],
+            and: [
+              { field: "text", operator: Operators.Matches, value: "simple.*" },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a character set", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Matches, value: "simple [a-z]" }],
+            and: [
+              {
+                field: "text",
+                operator: Operators.Matches,
+                value: "simple [a-z]",
+              },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should match a pattern with a character set range", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Matches, value: "simple [a-z]" }],
+            and: [
+              {
+                field: "text",
+                operator: Operators.Matches,
+                value: "simple [a-z]",
+              },
+            ],
           },
         ];
         const data = { text: "This is a simple string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should not match if the pattern is not present", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Matches, value: "manager" }],
+            and: [
+              { field: "text", operator: Operators.Matches, value: "manager" },
+            ],
           },
         ];
         const data = { text: "This is a different string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should handle empty pattern", async () => {
@@ -629,7 +750,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { text: "Any string" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should handle empty text", async () => {
@@ -639,17 +762,23 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { text: "" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should not match if the underscore is not part of the pattern", async () => {
         const conditions = [
           {
-            and: [{ field: "text", operator: Operators.Matches, value: "hello_" }],
+            and: [
+              { field: "text", operator: Operators.Matches, value: "hello_" },
+            ],
           },
         ];
         const data = { text: "helloworld" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
       // check Email regex
       it("should match a valid email", async () => {
@@ -665,16 +794,24 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { email: "test@gmail.com" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { email: "test@gmail" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { email: "testgmail.com" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { email: "test@gmail." };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
       });
 
       // check URL regex
@@ -692,16 +829,24 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { url: "https://www.google.com" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { url: "http://www.google.com" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { url: "http://www.google" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { url: "https://www.google." };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
       });
     });
   });
@@ -712,12 +857,16 @@ describe("Rule Engine Evaluation Operators", () => {
   describe("isNullOrWhiteSpaceOperator", () => {
     it("should return true for null", () => {
       const text = null;
-      expect(isNullOrWhiteSpaceOperator(text as unknown as string)).toBeTruthy();
+      expect(
+        isNullOrWhiteSpaceOperator(text as unknown as string),
+      ).toBeTruthy();
     });
 
     it("should return true for undefined", () => {
       const text = undefined;
-      expect(isNullOrWhiteSpaceOperator(text as unknown as string)).toBeTruthy();
+      expect(
+        isNullOrWhiteSpaceOperator(text as unknown as string),
+      ).toBeTruthy();
     });
 
     it("should return true for empty string", () => {
@@ -735,7 +884,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isNullOrWhiteSpaceOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isNullOrWhiteSpace Operator", () => {
+    describe("ruleEngine isNullOrWhiteSpace Operator", () => {
       it("should return true for null", async () => {
         const conditions = [
           {
@@ -743,16 +892,24 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { text: null };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { text: undefined };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { text: "" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
 
         const data4 = { text: " " };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeTruthy();
       });
 
       it("should return false for a string with content", async () => {
@@ -762,7 +919,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { text: "Some text" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -792,7 +951,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isNumericOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isNumeric Operator", () => {
+    describe("ruleEngine isNumeric Operator", () => {
       it("should return true for a number", async () => {
         const conditions = [
           {
@@ -800,10 +959,14 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { number: "-123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -813,7 +976,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string with numbers", async () => {
@@ -823,7 +988,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: "abc123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string with numbers and special characters", async () => {
@@ -833,7 +1000,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: "abc123$" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -867,7 +1036,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isBooleanOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isBoolean Operator", () => {
+    describe("ruleEngine isBoolean Operator", () => {
       it("should return true for true", async () => {
         const conditions = [
           {
@@ -875,10 +1044,14 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { bool: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { bool: false };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -888,7 +1061,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { bool: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -898,7 +1073,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { bool: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string contains false as string", async () => {
@@ -908,7 +1085,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { bool: "true" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -942,7 +1121,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateOperator(text2)).toBeFalsy();
     });
 
-    describe("RuleEngine isDate Operator", () => {
+    describe("ruleEngine isDate Operator", () => {
       it("should return true for a date string", async () => {
         const conditions = [
           {
@@ -950,13 +1129,19 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { date: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { date: "2020-01-01T00:00:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { date: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -966,10 +1151,14 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data4 = { date: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
 
         const data5 = { date: "date" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeFalsy();
       });
     });
   });
@@ -996,7 +1185,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isEmailOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isEmail Operator", () => {
+    describe("ruleEngine isEmail Operator", () => {
       it("should return true for a valid email", async () => {
         const conditions = [
           {
@@ -1004,7 +1193,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { email: "test@gmail.com" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -1014,7 +1205,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { email: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1041,7 +1234,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isUrlOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isUrl Operator", () => {
+    describe("ruleEngine isUrl Operator", () => {
       it("should return true for a valid url", async () => {
         const conditions = [
           {
@@ -1049,7 +1242,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { url: "https://www.google.com" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -1059,7 +1254,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { url: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1069,7 +1266,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { url: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1096,7 +1295,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isUuidOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isUuid Operator", () => {
+    describe("ruleEngine isUuid Operator", () => {
       it("should return true for a valid UUID", async () => {
         const conditions = [
           {
@@ -1104,7 +1303,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { uuid: "550e8400-e29b-41d4-a716-446655440000" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -1114,7 +1315,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { uuid: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1124,7 +1327,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { uuid: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1147,7 +1352,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isAlphaOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isAlpha Operator", () => {
+    describe("ruleEngine isAlpha Operator", () => {
       it("should return true for a valid alpha", async () => {
         const conditions = [
           {
@@ -1155,7 +1360,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { alpha: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -1165,7 +1372,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { alpha: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1175,7 +1384,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { alpha: "123abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1202,7 +1413,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isPersianAlphaOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isPersianAlpha Operator", () => {
+    describe("ruleEngine isPersianAlpha Operator", () => {
       it("should return true for a valid persian alpha", async () => {
         const conditions = [
           {
@@ -1210,7 +1421,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { persian: "پارسی" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -1220,7 +1433,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { persian: "۱۲۳" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1230,7 +1445,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { persian: "123پارسی" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string contains persian alpha as string", async () => {
@@ -1240,7 +1457,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { persian: "persian" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1263,7 +1482,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isAlphaNumericOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isAlphaNumeric Operator", () => {
+    describe("ruleEngine isAlphaNumeric Operator", () => {
       it("should return true for a valid alpha numeric", async () => {
         const conditions = [
           {
@@ -1271,7 +1490,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { alphaNumeric: "abc123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1281,7 +1502,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { alphaNumeric: "abc123$" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string contains alpha numeric as string", async () => {
@@ -1291,7 +1514,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { alphaNumeric: "alpha numeric" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1314,35 +1539,56 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isPersianAlphaNumericOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isPersianAlphaNumeric Operator", () => {
+    describe("ruleEngine isPersianAlphaNumeric Operator", () => {
       it("should return true for a valid persian alpha numeric", async () => {
         const conditions = [
           {
-            and: [{ field: "persianAlphaNumeric", operator: Operators.PersianAlphaNumeric }],
+            and: [
+              {
+                field: "persianAlphaNumeric",
+                operator: Operators.PersianAlphaNumeric,
+              },
+            ],
           },
         ];
         const data = { persianAlphaNumeric: "پارسی۱۲۳" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
         const conditions = [
           {
-            and: [{ field: "persianAlphaNumeric", operator: Operators.PersianAlphaNumeric }],
+            and: [
+              {
+                field: "persianAlphaNumeric",
+                operator: Operators.PersianAlphaNumeric,
+              },
+            ],
           },
         ];
         const data = { persianAlphaNumeric: "پارسی۱۲۳$a" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string contains persian alpha numeric as string", async () => {
         const conditions = [
           {
-            and: [{ field: "persianAlphaNumeric", operator: Operators.PersianAlphaNumeric }],
+            and: [
+              {
+                field: "persianAlphaNumeric",
+                operator: Operators.PersianAlphaNumeric,
+              },
+            ],
           },
         ];
         const data = { persianAlphaNumeric: "persian alpha numeric" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1365,7 +1611,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isLowerCaseOperator(text)).toBeTruthy();
     });
 
-    describe("RuleEngine isLowerCase Operator", () => {
+    describe("ruleEngine isLowerCase Operator", () => {
       it("should return true for a valid lower case", async () => {
         const conditions = [
           {
@@ -1373,7 +1619,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { lowerCase: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1383,7 +1631,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { lowerCase: "ABC" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for a string contains lower case as string", async () => {
@@ -1393,7 +1643,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { lowerCase: "lower case" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
     });
   });
@@ -1416,7 +1668,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isUpperCaseOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isUpperCase Operator", () => {
+    describe("ruleEngine isUpperCase Operator", () => {
       it("should return true for a valid upper case", async () => {
         const conditions = [
           {
@@ -1424,7 +1676,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { upperCase: "ABC" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1434,7 +1688,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { upperCase: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string contains upper case as string", async () => {
@@ -1444,7 +1700,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { upperCase: "upper case" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1467,7 +1725,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isStringOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isString Operator", () => {
+    describe("ruleEngine isString Operator", () => {
       it("should return true for a string", async () => {
         const conditions = [
           {
@@ -1475,7 +1733,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { string: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number", async () => {
@@ -1485,7 +1745,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { string: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a boolean", async () => {
@@ -1495,7 +1757,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { string: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1518,7 +1782,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isObjectOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isObject Operator", () => {
+    describe("ruleEngine isObject Operator", () => {
       it("should return true for an object", async () => {
         const conditions = [
           {
@@ -1526,7 +1790,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { object: { key: "value" } };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1536,7 +1802,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { object: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
@@ -1546,7 +1814,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { object: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1569,7 +1839,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isArrayOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isArray Operator", () => {
+    describe("ruleEngine isArray Operator", () => {
       it("should return true for an array", async () => {
         const conditions = [
           {
@@ -1577,7 +1847,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { array: [1, 2, 3] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1587,7 +1859,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { array: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
@@ -1597,7 +1871,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { array: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1620,7 +1896,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isBooleanStringOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isBooleanString Operator", () => {
+    describe("ruleEngine isBooleanString Operator", () => {
       it("should return true for a valid boolean string", async () => {
         const conditions = [
           {
@@ -1628,7 +1904,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { boolStr: "true" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1638,7 +1916,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { boolStr: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
@@ -1648,7 +1928,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { boolStr: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1671,7 +1953,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isBooleanNumberOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isBooleanNumber Operator", () => {
+    describe("ruleEngine isBooleanNumber Operator", () => {
       it("should return true for a valid boolean number", async () => {
         const conditions = [
           {
@@ -1679,7 +1961,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { boolNum: 1 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string", async () => {
@@ -1689,7 +1973,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { boolNum: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
@@ -1699,7 +1985,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { boolNum: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1722,44 +2010,62 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isBooleanNumberStringOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isBooleanNumberString Operator", () => {
+    describe("ruleEngine isBooleanNumberString Operator", () => {
       it("should return true for a valid boolean number string", async () => {
         const conditions = [
           {
-            and: [{ field: "boolNumStr", operator: Operators.BooleanNumberString }],
+            and: [
+              { field: "boolNumStr", operator: Operators.BooleanNumberString },
+            ],
           },
         ];
         const data = { boolNumStr: "1" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { boolNumStr: "0" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { boolNumStr: "true" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { boolNumStr: "false" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
         const conditions = [
           {
-            and: [{ field: "boolNumStr", operator: Operators.BooleanNumberString }],
+            and: [
+              { field: "boolNumStr", operator: Operators.BooleanNumberString },
+            ],
           },
         ];
         const data = { boolNumStr: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
         const conditions = [
           {
-            and: [{ field: "boolNumStr", operator: Operators.BooleanNumberString }],
+            and: [
+              { field: "boolNumStr", operator: Operators.BooleanNumberString },
+            ],
           },
         ];
         const data = { boolNumStr: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1782,11 +2088,11 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isNumberOperator(text)).toBeFalsy();
     });
     it("should return false for a NaN", () => {
-      const text = NaN;
+      const text = Number.NaN;
       expect(isNumberOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isNumber Operator", () => {
+    describe("ruleEngine isNumber Operator", () => {
       it("should return true for a number", async () => {
         const conditions = [
           {
@@ -1794,25 +2100,39 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { number: 123.45 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { number: "123" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
 
         const data4 = { number: "123.45" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeTruthy();
 
         const data5 = { number: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeFalsy();
 
         const data6 = { number: false };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data6)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data6),
+        ).toBeFalsy();
 
         const data7 = { number: null };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data7)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data7),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1822,7 +2142,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a boolean", async () => {
@@ -1832,7 +2154,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { number: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1855,7 +2179,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isIntegerOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isInteger Operator", () => {
+    describe("ruleEngine isInteger Operator", () => {
       it("should return true for an integer", async () => {
         const conditions = [
           {
@@ -1863,7 +2187,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { integer: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a float", async () => {
@@ -1873,7 +2199,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { integer: 123.45 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1883,7 +2211,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { integer: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1906,7 +2236,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isFloatOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isFloat Operator", () => {
+    describe("ruleEngine isFloat Operator", () => {
       it("should return true for a float", async () => {
         const conditions = [
           {
@@ -1914,7 +2244,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { float: 123.45 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for an integer", async () => {
@@ -1924,7 +2256,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { float: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1934,7 +2268,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { float: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -1957,7 +2293,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isPositiveOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isPositive Operator", () => {
+    describe("ruleEngine isPositive Operator", () => {
       it("should return true for a positive number", async () => {
         const conditions = [
           {
@@ -1965,7 +2301,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { positive: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a negative number", async () => {
@@ -1975,7 +2313,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { positive: -123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -1985,7 +2325,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { positive: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2008,7 +2350,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isNegativeOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isNegative Operator", () => {
+    describe("ruleEngine isNegative Operator", () => {
       it("should return true for a negative number", async () => {
         const conditions = [
           {
@@ -2016,7 +2358,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { negative: -123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a positive number", async () => {
@@ -2026,7 +2370,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { negative: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -2036,7 +2382,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { negative: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2063,7 +2411,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isZeroOperator(text)).toBeFalsy();
     });
 
-    describe("RuleEngine isZero Operator", () => {
+    describe("ruleEngine isZero Operator", () => {
       it("should return true for zero", async () => {
         const conditions = [
           {
@@ -2071,7 +2419,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { zero: 0 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a positive number", async () => {
@@ -2081,7 +2431,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { zero: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a negative number", async () => {
@@ -2091,7 +2443,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { zero: -123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -2101,7 +2455,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { zero: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2130,35 +2486,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isNumberBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("RuleEngine isNumberBetween Operator", () => {
+    describe("ruleEngine isNumberBetween Operator", () => {
       it("should return true for a number between the range", async () => {
         const conditions = [
           {
-            and: [{ field: "numberBetween", operator: Operators.NumberBetween, value: [1, 10] }],
+            and: [
+              {
+                field: "numberBetween",
+                operator: Operators.NumberBetween,
+                value: [1, 10],
+              },
+            ],
           },
         ];
         const data = { numberBetween: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number outside the range", async () => {
         const conditions = [
           {
-            and: [{ field: "numberBetween", operator: Operators.NumberBetween, value: [1, 10] }],
+            and: [
+              {
+                field: "numberBetween",
+                operator: Operators.NumberBetween,
+                value: [1, 10],
+              },
+            ],
           },
         ];
         const data = { numberBetween: 15 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
         const conditions = [
           {
-            and: [{ field: "numberBetween", operator: Operators.NumberBetween, value: [1, 10] }],
+            and: [
+              {
+                field: "numberBetween",
+                operator: Operators.NumberBetween,
+                value: [1, 10],
+              },
+            ],
           },
         ];
         const data = { numberBetween: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2184,35 +2564,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isLengthOperator(text, length)).toBeFalsy();
     });
 
-    describe("RuleEngine isStringLength Operator", () => {
+    describe("ruleEngine isStringLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
-            and: [{ field: "stringLength", operator: Operators.StringLength, value: 3 }],
+            and: [
+              {
+                field: "stringLength",
+                operator: Operators.StringLength,
+                value: 3,
+              },
+            ],
           },
         ];
         const data = { stringLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string with the incorrect length", async () => {
         const conditions = [
           {
-            and: [{ field: "stringLength", operator: Operators.StringLength, value: 5 }],
+            and: [
+              {
+                field: "stringLength",
+                operator: Operators.StringLength,
+                value: 5,
+              },
+            ],
           },
         ];
         const data = { stringLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
         const conditions = [
           {
-            and: [{ field: "stringLength", operator: Operators.StringLength, value: 3 }],
+            and: [
+              {
+                field: "stringLength",
+                operator: Operators.StringLength,
+                value: 3,
+              },
+            ],
           },
         ];
         const data = { stringLength: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2238,35 +2642,47 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isMinLengthOperator(text, length)).toBeFalsy();
     });
 
-    describe("RuleEngine isMinLength Operator", () => {
+    describe("ruleEngine isMinLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
-            and: [{ field: "minLength", operator: Operators.MinLength, value: 3 }],
+            and: [
+              { field: "minLength", operator: Operators.MinLength, value: 3 },
+            ],
           },
         ];
         const data = { minLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string with the incorrect length", async () => {
         const conditions = [
           {
-            and: [{ field: "minLength", operator: Operators.MinLength, value: 5 }],
+            and: [
+              { field: "minLength", operator: Operators.MinLength, value: 5 },
+            ],
           },
         ];
         const data = { minLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
         const conditions = [
           {
-            and: [{ field: "minLength", operator: Operators.MinLength, value: 3 }],
+            and: [
+              { field: "minLength", operator: Operators.MinLength, value: 3 },
+            ],
           },
         ];
         const data = { minLength: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2292,35 +2708,47 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isMaxLengthOperator(text, length)).toBeFalsy();
     });
 
-    describe("RuleEngine isMaxLength Operator", () => {
+    describe("ruleEngine isMaxLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
-            and: [{ field: "maxLength", operator: Operators.MaxLength, value: 3 }],
+            and: [
+              { field: "maxLength", operator: Operators.MaxLength, value: 3 },
+            ],
           },
         ];
         const data = { maxLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string with the incorrect length", async () => {
         const conditions = [
           {
-            and: [{ field: "maxLength", operator: Operators.MaxLength, value: 2 }],
+            and: [
+              { field: "maxLength", operator: Operators.MaxLength, value: 2 },
+            ],
           },
         ];
         const data = { maxLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
         const conditions = [
           {
-            and: [{ field: "maxLength", operator: Operators.MaxLength, value: 3 }],
+            and: [
+              { field: "maxLength", operator: Operators.MaxLength, value: 3 },
+            ],
           },
         ];
         const data = { maxLength: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2329,7 +2757,7 @@ describe("Rule Engine Evaluation Operators", () => {
   // :: IS BETWEEN LENGTH OPERATOR :: //
   ///////////////////////////
 
-  describe("IsBetweenLengthOperator", () => {
+  describe("isBetweenLengthOperator", () => {
     it("should return true for a string with the correct length", () => {
       const text = "abc";
       const min = 1;
@@ -2349,35 +2777,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(IsLengthBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("RuleEngine isBetweenLength Operator", () => {
+    describe("ruleEngine isBetweenLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
-            and: [{ field: "betweenLength", operator: Operators.LengthBetween, value: [1, 5] }],
+            and: [
+              {
+                field: "betweenLength",
+                operator: Operators.LengthBetween,
+                value: [1, 5],
+              },
+            ],
           },
         ];
         const data = { betweenLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a string with the incorrect length", async () => {
         const conditions = [
           {
-            and: [{ field: "betweenLength", operator: Operators.LengthBetween, value: [5, 10] }],
+            and: [
+              {
+                field: "betweenLength",
+                operator: Operators.LengthBetween,
+                value: [5, 10],
+              },
+            ],
           },
         ];
         const data = { betweenLength: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a number", async () => {
         const conditions = [
           {
-            and: [{ field: "betweenLength", operator: Operators.LengthBetween, value: [1, 5] }],
+            and: [
+              {
+                field: "betweenLength",
+                operator: Operators.LengthBetween,
+                value: [1, 5],
+              },
+            ],
           },
         ];
         const data = { betweenLength: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2403,7 +2855,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isMinOperator(text, min)).toBeFalsy();
     });
 
-    describe("RuleEngine isMin Operator", () => {
+    describe("ruleEngine isMin Operator", () => {
       it("should return true for a number greater than the minimum", async () => {
         const conditions = [
           {
@@ -2411,7 +2863,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { min: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number less than the minimum", async () => {
@@ -2421,7 +2875,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { min: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -2431,7 +2887,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { min: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2457,7 +2915,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isMaxOperator(text, max)).toBeFalsy();
     });
 
-    describe("RuleEngine isMax Operator", () => {
+    describe("ruleEngine isMax Operator", () => {
       it("should return true for a number less than the maximum", async () => {
         const conditions = [
           {
@@ -2465,7 +2923,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { max: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number greater than the maximum", async () => {
@@ -2475,7 +2935,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { max: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
@@ -2485,7 +2947,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { max: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2514,35 +2978,47 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("RuleEngine isBetween Operator", () => {
+    describe("ruleEngine isBetween Operator", () => {
       it("should return true for a number between the range", async () => {
         const conditions = [
           {
-            and: [{ field: "between", operator: Operators.Between, value: [1, 10] }],
+            and: [
+              { field: "between", operator: Operators.Between, value: [1, 10] },
+            ],
           },
         ];
         const data = { between: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a number outside the range", async () => {
         const conditions = [
           {
-            and: [{ field: "between", operator: Operators.Between, value: [1, 10] }],
+            and: [
+              { field: "between", operator: Operators.Between, value: [1, 10] },
+            ],
           },
         ];
         const data = { between: 15 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a string", async () => {
         const conditions = [
           {
-            and: [{ field: "between", operator: Operators.Between, value: [1, 10] }],
+            and: [
+              { field: "between", operator: Operators.Between, value: [1, 10] },
+            ],
           },
         ];
         const data = { between: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2559,7 +3035,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isFalsyOperator(undefined)).toBeTruthy();
       expect(isFalsyOperator("")).toBeTruthy();
       expect(isFalsyOperator(0)).toBeTruthy();
-      expect(isFalsyOperator(NaN)).toBeTruthy();
+      expect(isFalsyOperator(Number.NaN)).toBeTruthy();
     });
     it("should return false for a truthy values", () => {
       const text = "abc";
@@ -2569,7 +3045,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isFalsyOperator([])).toBeFalsy();
     });
 
-    describe("RuleEngine isFalsy Operator", () => {
+    describe("ruleEngine isFalsy Operator", () => {
       it("should return true for a falsy value", async () => {
         const conditions = [
           {
@@ -2577,22 +3053,34 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { falsy: false };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { falsy: null };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { falsy: undefined };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
 
         const data4 = { falsy: "" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeTruthy();
 
         const data5 = { falsy: 0 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeTruthy();
 
-        const data6 = { falsy: NaN };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data6)).toBeTruthy();
+        const data6 = { falsy: Number.NaN };
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data6),
+        ).toBeTruthy();
       });
 
       it("should return false for a truthy values", async () => {
@@ -2602,16 +3090,24 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { falsy: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
 
         const data2 = { falsy: 1 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { falsy: {} };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { falsy: [] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
       });
     });
   });
@@ -2636,10 +3132,10 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTruthyOperator(undefined)).toBeFalsy();
       expect(isTruthyOperator("")).toBeFalsy();
       expect(isTruthyOperator(0)).toBeFalsy();
-      expect(isTruthyOperator(NaN)).toBeFalsy();
+      expect(isTruthyOperator(Number.NaN)).toBeFalsy();
     });
 
-    describe("RuleEngine isTruthy Operator", () => {
+    describe("ruleEngine isTruthy Operator", () => {
       it("should return true for a truthy value", async () => {
         const conditions = [
           {
@@ -2647,19 +3143,29 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { truthy: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
 
         const data2 = { truthy: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeTruthy();
 
         const data3 = { truthy: 1 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeTruthy();
 
         const data4 = { truthy: {} };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeTruthy();
 
         const data5 = { truthy: [] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeTruthy();
       });
 
       it("should return false for a falsy value", async () => {
@@ -2669,22 +3175,34 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { truthy: false };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
 
         const data2 = { truthy: null };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data2)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data2),
+        ).toBeFalsy();
 
         const data3 = { truthy: undefined };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data3)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data3),
+        ).toBeFalsy();
 
         const data4 = { truthy: "" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data4)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data4),
+        ).toBeFalsy();
 
         const data5 = { truthy: 0 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data5)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data5),
+        ).toBeFalsy();
 
-        const data6 = { truthy: NaN };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data6)).toBeFalsy();
+        const data6 = { truthy: Number.NaN };
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data6),
+        ).toBeFalsy();
       });
     });
   });
@@ -2709,25 +3227,41 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(inOperator(text, [])).toBeFalsy();
     });
 
-    describe("RuleEngine in Operator", () => {
+    describe("ruleEngine in Operator", () => {
       it("should return true for a value in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "in", operator: Operators.In, value: ["abc", "def", "ghi"] }],
+            and: [
+              {
+                field: "in",
+                operator: Operators.In,
+                value: ["abc", "def", "ghi"],
+              },
+            ],
           },
         ];
         const data = { in: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a value not in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "in", operator: Operators.In, value: ["abc", "def", "ghi"] }],
+            and: [
+              {
+                field: "in",
+                operator: Operators.In,
+                value: ["abc", "def", "ghi"],
+              },
+            ],
           },
         ];
         const data = { in: "xyz" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty list", async () => {
@@ -2737,7 +3271,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { in: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2762,35 +3298,47 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(containsOperator([], value)).toBeFalsy();
     });
 
-    describe("RuleEngine contains Operator", () => {
+    describe("ruleEngine contains Operator", () => {
       it("should return true for a value in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "contains", operator: Operators.Contains, value: "abc" }],
+            and: [
+              { field: "contains", operator: Operators.Contains, value: "abc" },
+            ],
           },
         ];
         const data = { contains: ["abc", "def", "ghi"] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a value not in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "contains", operator: Operators.Contains, value: "xyz" }],
+            and: [
+              { field: "contains", operator: Operators.Contains, value: "xyz" },
+            ],
           },
         ];
         const data = { contains: ["abc", "def", "ghi"] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty list", async () => {
         const conditions = [
           {
-            and: [{ field: "contains", operator: Operators.Contains, value: "abc" }],
+            and: [
+              { field: "contains", operator: Operators.Contains, value: "abc" },
+            ],
           },
         ];
         const data = { contains: [] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2815,7 +3363,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(selfContainsAllOperator([], values)).toBeFalsy();
     });
 
-    describe("RuleEngine selfContainsAll Operator", () => {
+    describe("ruleEngine selfContainsAll Operator", () => {
       it("should return false for all values in the list", async () => {
         const conditions = [
           {
@@ -2829,7 +3377,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { selfContainsAll: ["abc", "def"], a: "abc", b: "def" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a value not in the list", async () => {
@@ -2845,7 +3395,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { selfContainsAll: ["abc", "def"], a: "abc", b: "xyz" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty list", async () => {
@@ -2861,7 +3413,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { selfContainsAll: [], a: "abc", b: "def" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2886,7 +3440,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(selfContainsAnyOperator([], values)).toBeFalsy();
     });
 
-    describe("RuleEngine selfContainsAny Operator", () => {
+    describe("ruleEngine selfContainsAny Operator", () => {
       it("should return false for any value in the list", async () => {
         const conditions = [
           {
@@ -2900,7 +3454,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { selfContainsAny: ["abc", "def"], a: "abc", b: "xyz" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for a value not in the list", async () => {
@@ -2916,7 +3472,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { selfContainsAny: ["abc", "def"], a: "xyz", b: "pqr" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty list", async () => {
@@ -2932,7 +3490,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { selfContainsAny: [], a: "abc", b: "def" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -2957,35 +3517,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(containsAnyOperator([], values)).toBeFalsy();
     });
 
-    describe("RuleEngine containsAny Operator", () => {
+    describe("ruleEngine containsAny Operator", () => {
       it("should return true for any value in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "containsAny", operator: Operators.ContainsAny, value: ["abc", "xyz"] }],
+            and: [
+              {
+                field: "containsAny",
+                operator: Operators.ContainsAny,
+                value: ["abc", "xyz"],
+              },
+            ],
           },
         ];
         const data = { containsAny: ["abc", "def", "ghi"] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a value not in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "containsAny", operator: Operators.ContainsAny, value: ["xyz", "pqr"] }],
+            and: [
+              {
+                field: "containsAny",
+                operator: Operators.ContainsAny,
+                value: ["xyz", "pqr"],
+              },
+            ],
           },
         ];
         const data = { containsAny: ["abc", "def", "ghi"] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty list", async () => {
         const conditions = [
           {
-            and: [{ field: "containsAny", operator: Operators.ContainsAny, value: ["abc"] }],
+            and: [
+              {
+                field: "containsAny",
+                operator: Operators.ContainsAny,
+                value: ["abc"],
+              },
+            ],
           },
         ];
         const data = { containsAny: [] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3010,35 +3594,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(containsAllOperator([], values)).toBeFalsy();
     });
 
-    describe("RuleEngine containsAll Operator", () => {
+    describe("ruleEngine containsAll Operator", () => {
       it("should return true for all values in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "containsAll", operator: Operators.ContainsAll, value: ["abc", "def"] }],
+            and: [
+              {
+                field: "containsAll",
+                operator: Operators.ContainsAll,
+                value: ["abc", "def"],
+              },
+            ],
           },
         ];
         const data = { containsAll: ["abc", "def", "ghi"] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a value not in the list", async () => {
         const conditions = [
           {
-            and: [{ field: "containsAll", operator: Operators.ContainsAll, value: ["abc", "xyz"] }],
+            and: [
+              {
+                field: "containsAll",
+                operator: Operators.ContainsAll,
+                value: ["abc", "xyz"],
+              },
+            ],
           },
         ];
         const data = { containsAll: ["abc", "def", "ghi"] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty list", async () => {
         const conditions = [
           {
-            and: [{ field: "containsAll", operator: Operators.ContainsAll, value: ["abc"] }],
+            and: [
+              {
+                field: "containsAll",
+                operator: Operators.ContainsAll,
+                value: ["abc"],
+              },
+            ],
           },
         ];
         const data = { containsAll: [] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3133,25 +3741,33 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(equalsOperator(text, value)).toBeFalsy();
     });
 
-    describe("RuleEngine equals Operator", () => {
+    describe("ruleEngine equals Operator", () => {
       it("should return true for equal values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: "abc" }],
+            and: [
+              { field: "equals", operator: Operators.Equals, value: "abc" },
+            ],
           },
         ];
         const data = { equals: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: "def" }],
+            and: [
+              { field: "equals", operator: Operators.Equals, value: "def" },
+            ],
           },
         ];
         const data = { equals: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for different types", async () => {
@@ -3161,7 +3777,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { equals: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for equal numbers", async () => {
@@ -3171,7 +3789,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { equals: 123 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return true for equal boolean values", async () => {
@@ -3181,77 +3801,123 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { equals: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal boolean values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: false }],
+            and: [
+              { field: "equals", operator: Operators.Equals, value: false },
+            ],
           },
         ];
         const data = { equals: true };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for equal date values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: "2020-01-01" }],
+            and: [
+              {
+                field: "equals",
+                operator: Operators.Equals,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { equals: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal date values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: "2020-01-02" }],
+            and: [
+              {
+                field: "equals",
+                operator: Operators.Equals,
+                value: "2020-01-02",
+              },
+            ],
           },
         ];
         const data = { equals: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for equal object values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: { key: "value" } }],
+            and: [
+              {
+                field: "equals",
+                operator: Operators.Equals,
+                value: { key: "value" },
+              },
+            ],
           },
         ];
         const data = { equals: { key: "value" } };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal object values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: { key: "value2" } }],
+            and: [
+              {
+                field: "equals",
+                operator: Operators.Equals,
+                value: { key: "value2" },
+              },
+            ],
           },
         ];
         const data = { equals: { key: "value" } };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for equal array values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: [1, 2, 3] }],
+            and: [
+              { field: "equals", operator: Operators.Equals, value: [1, 2, 3] },
+            ],
           },
         ];
         const data = { equals: [1, 2, 3] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal array values", async () => {
         const conditions = [
           {
-            and: [{ field: "equals", operator: Operators.Equals, value: [1, 2, 4] }],
+            and: [
+              { field: "equals", operator: Operators.Equals, value: [1, 2, 4] },
+            ],
           },
         ];
         const data = { equals: [1, 2, 3] };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3287,35 +3953,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(greaterThanOperator(5, "5")).toBeFalsy();
     });
 
-    describe("RuleEngine greaterThan Operator", () => {
+    describe("ruleEngine greaterThan Operator", () => {
       it("should return true for a greater value", async () => {
         const conditions = [
           {
-            and: [{ field: "greaterThan", operator: Operators.GreaterThan, value: 1 }],
+            and: [
+              {
+                field: "greaterThan",
+                operator: Operators.GreaterThan,
+                value: 1,
+              },
+            ],
           },
         ];
         const data = { greaterThan: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a lesser value", async () => {
         const conditions = [
           {
-            and: [{ field: "greaterThan", operator: Operators.GreaterThan, value: 10 }],
+            and: [
+              {
+                field: "greaterThan",
+                operator: Operators.GreaterThan,
+                value: 10,
+              },
+            ],
           },
         ];
         const data = { greaterThan: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an equal value", async () => {
         const conditions = [
           {
-            and: [{ field: "greaterThan", operator: Operators.GreaterThan, value: 5 }],
+            and: [
+              {
+                field: "greaterThan",
+                operator: Operators.GreaterThan,
+                value: 5,
+              },
+            ],
           },
         ];
         const data = { greaterThan: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3350,41 +4040,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(greaterThanOrEqualsOperator(null, null)).toBeFalsy();
     });
 
-    describe("RuleEngine greaterThanOrEqual Operator", () => {
+    describe("ruleEngine greaterThanOrEqual Operator", () => {
       it("should return true for a greater value", async () => {
         const conditions = [
           {
             and: [
-              { field: "greaterThanOrEqual", operator: Operators.GreaterThanOrEquals, value: 1 },
+              {
+                field: "greaterThanOrEqual",
+                operator: Operators.GreaterThanOrEquals,
+                value: 1,
+              },
             ],
           },
         ];
         const data = { greaterThanOrEqual: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a lesser value", async () => {
         const conditions = [
           {
             and: [
-              { field: "greaterThanOrEqual", operator: Operators.GreaterThanOrEquals, value: 10 },
+              {
+                field: "greaterThanOrEqual",
+                operator: Operators.GreaterThanOrEquals,
+                value: 10,
+              },
             ],
           },
         ];
         const data = { greaterThanOrEqual: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for an equal value", async () => {
         const conditions = [
           {
             and: [
-              { field: "greaterThanOrEqual", operator: Operators.GreaterThanOrEquals, value: 5 },
+              {
+                field: "greaterThanOrEqual",
+                operator: Operators.GreaterThanOrEquals,
+                value: 5,
+              },
             ],
           },
         ];
         const data = { greaterThanOrEqual: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
     });
   });
@@ -3419,35 +4127,47 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(lessThanOperator(5, "5")).toBeFalsy();
     });
 
-    describe("RuleEngine lessThan Operator", () => {
+    describe("ruleEngine lessThan Operator", () => {
       it("should return true for a lesser value", async () => {
         const conditions = [
           {
-            and: [{ field: "lessThan", operator: Operators.LessThan, value: 10 }],
+            and: [
+              { field: "lessThan", operator: Operators.LessThan, value: 10 },
+            ],
           },
         ];
         const data = { lessThan: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a greater value", async () => {
         const conditions = [
           {
-            and: [{ field: "lessThan", operator: Operators.LessThan, value: 1 }],
+            and: [
+              { field: "lessThan", operator: Operators.LessThan, value: 1 },
+            ],
           },
         ];
         const data = { lessThan: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an equal value", async () => {
         const conditions = [
           {
-            and: [{ field: "lessThan", operator: Operators.LessThan, value: 5 }],
+            and: [
+              { field: "lessThan", operator: Operators.LessThan, value: 5 },
+            ],
           },
         ];
         const data = { lessThan: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3479,38 +4199,62 @@ describe("Rule Engine Evaluation Operators", () => {
 
       expect(lessThanOrEqualsOperator(null, 5)).toBeFalsy();
       expect(lessThanOrEqualsOperator(5, null)).toBeFalsy();
-      expect(lessThanOrEqualsOperator(null, null)).toBeFalsy;
+      expect(lessThanOrEqualsOperator(null, null)).toBeFalsy();
     });
 
-    describe("RuleEngine lessThanOrEqual Operator", () => {
+    describe("ruleEngine lessThanOrEqual Operator", () => {
       it("should return true for a lesser value", async () => {
         const conditions = [
           {
-            and: [{ field: "lessThanOrEqual", operator: Operators.LessThanOrEquals, value: 10 }],
+            and: [
+              {
+                field: "lessThanOrEqual",
+                operator: Operators.LessThanOrEquals,
+                value: 10,
+              },
+            ],
           },
         ];
         const data = { lessThanOrEqual: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a greater value", async () => {
         const conditions = [
           {
-            and: [{ field: "lessThanOrEqual", operator: Operators.LessThanOrEquals, value: 1 }],
+            and: [
+              {
+                field: "lessThanOrEqual",
+                operator: Operators.LessThanOrEquals,
+                value: 1,
+              },
+            ],
           },
         ];
         const data = { lessThanOrEqual: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for an equal value", async () => {
         const conditions = [
           {
-            and: [{ field: "lessThanOrEqual", operator: Operators.LessThanOrEquals, value: 5 }],
+            and: [
+              {
+                field: "lessThanOrEqual",
+                operator: Operators.LessThanOrEquals,
+                value: 5,
+              },
+            ],
           },
         ];
         const data = { lessThanOrEqual: 5 };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
     });
   });
@@ -3556,45 +4300,69 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isExistsInObjectOperator(text, obj)).toBeFalsy();
     });
 
-    describe("RuleEngine isExistentInObject Operator", () => {
+    describe("ruleEngine isExistentInObject Operator", () => {
       it("should return true for a value in the object", async () => {
         const conditions = [
           {
-            and: [{ field: "$.isExistentInObject.key", operator: Operators.Exists }],
+            and: [
+              { field: "$.isExistentInObject.key", operator: Operators.Exists },
+            ],
           },
         ];
         const data = { isExistentInObject: { key: "abc" } };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a value not in the object", async () => {
         const conditions = [
           {
-            and: [{ field: "$.isExistentInObject.key", operator: Operators.Exists }],
+            and: [
+              { field: "$.isExistentInObject.key", operator: Operators.Exists },
+            ],
           },
         ];
         const data = { isExistentInObject: {} };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an empty object", async () => {
         const conditions = [
           {
-            and: [{ field: "isExistentInObject", operator: Operators.Exists, value: "abc" }],
+            and: [
+              {
+                field: "isExistentInObject",
+                operator: Operators.Exists,
+                value: "abc",
+              },
+            ],
           },
         ];
         const data = { isExistentInObject: {} };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a non-object", async () => {
         const conditions = [
           {
-            and: [{ field: "isExistentInObject", operator: Operators.Exists, value: "abc" }], // value will be ignored
+            and: [
+              {
+                field: "isExistentInObject",
+                operator: Operators.Exists,
+                value: "abc",
+              },
+            ], // value will be ignored
           },
         ];
         const data = { isExistentInObject: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return true for a nested field selection on criteria", async () => {
@@ -3608,7 +4376,9 @@ describe("Rule Engine Evaluation Operators", () => {
             field: "test",
           },
         };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a nested missing field selection on criteria", async () => {
@@ -3622,7 +4392,9 @@ describe("Rule Engine Evaluation Operators", () => {
             fieldB: "test",
           },
         };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3652,45 +4424,73 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isNullOrUndefinedOperator("")).toBeFalsy();
     });
 
-    describe("RuleEngine isNullOrUndefined Operator", () => {
+    describe("ruleEngine isNullOrUndefined Operator", () => {
       it("should return true for a null value", async () => {
         const conditions = [
           {
-            and: [{ field: "isNullOrUndefined", operator: Operators.NullOrUndefined }],
+            and: [
+              {
+                field: "isNullOrUndefined",
+                operator: Operators.NullOrUndefined,
+              },
+            ],
           },
         ];
         const data = { isNullOrUndefined: null };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a non-null value", async () => {
         const conditions = [
           {
-            and: [{ field: "isNullOrUndefined", operator: Operators.NullOrUndefined }],
+            and: [
+              {
+                field: "isNullOrUndefined",
+                operator: Operators.NullOrUndefined,
+              },
+            ],
           },
         ];
         const data = { isNullOrUndefined: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return true for an undefined value", async () => {
         const conditions = [
           {
-            and: [{ field: "isNullOrUndefined", operator: Operators.NullOrUndefined }],
+            and: [
+              {
+                field: "isNullOrUndefined",
+                operator: Operators.NullOrUndefined,
+              },
+            ],
           },
         ];
         const data = { isNullOrUndefined: undefined };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a non-undefined value", async () => {
         const conditions = [
           {
-            and: [{ field: "isNullOrUndefined", operator: Operators.NullOrUndefined }],
+            and: [
+              {
+                field: "isNullOrUndefined",
+                operator: Operators.NullOrUndefined,
+              },
+            ],
           },
         ];
         const data = { isNullOrUndefined: "abc" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3731,45 +4531,77 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateAfterOperator(dateA, dateB)).toBeFalsy();
     });
 
-    describe("RuleEngine isDateAfter Operator", () => {
+    describe("ruleEngine isDateAfter Operator", () => {
       it("should return true for a date after the specified date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateAfter", operator: Operators.DateAfter, value: "2020-01-01" }],
+            and: [
+              {
+                field: "isDateAfter",
+                operator: Operators.DateAfter,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateAfter: "2021-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a date before the specified date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateAfter", operator: Operators.DateAfter, value: "2021-01-01" }],
+            and: [
+              {
+                field: "isDateAfter",
+                operator: Operators.DateAfter,
+                value: "2021-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateAfter: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an equal date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateAfter", operator: Operators.DateAfter, value: "2020-01-01" }],
+            and: [
+              {
+                field: "isDateAfter",
+                operator: Operators.DateAfter,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateAfter: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateAfter", operator: Operators.DateAfter, value: "2020-01-01" }],
+            and: [
+              {
+                field: "isDateAfter",
+                operator: Operators.DateAfter,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateAfter: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3805,45 +4637,77 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateBeforeOperator(dateA, dateB)).toBeFalsy();
     });
 
-    describe("RuleEngine isDateBefore Operator", () => {
+    describe("ruleEngine isDateBefore Operator", () => {
       it("should return true for a date before the specified date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateBefore", operator: Operators.DateBefore, value: "2021-01-01" }],
+            and: [
+              {
+                field: "isDateBefore",
+                operator: Operators.DateBefore,
+                value: "2021-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateBefore: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a date after the specified date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateBefore", operator: Operators.DateBefore, value: "2019-01-01" }],
+            and: [
+              {
+                field: "isDateBefore",
+                operator: Operators.DateBefore,
+                value: "2019-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateBefore: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an equal date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateBefore", operator: Operators.DateBefore, value: "2020-01-01" }],
+            and: [
+              {
+                field: "isDateBefore",
+                operator: Operators.DateBefore,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateBefore: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid date", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateBefore", operator: Operators.DateBefore, value: "2020-01-01" }],
+            and: [
+              {
+                field: "isDateBefore",
+                operator: Operators.DateBefore,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateBefore: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3869,7 +4733,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateAfterOrEqualsOperator(text, date)).toBeFalsy();
     });
 
-    describe("RuleEngine isDateAfterOrEqual Operator", () => {
+    describe("ruleEngine isDateAfterOrEqual Operator", () => {
       it("should return true for a date after the specified date", async () => {
         const conditions = [
           {
@@ -3883,7 +4747,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateAfterOrEqual: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return true for an equal date", async () => {
@@ -3899,7 +4765,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateAfterOrEqual: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a date before the specified date", async () => {
@@ -3915,7 +4783,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateAfterOrEqual: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid date", async () => {
@@ -3931,7 +4801,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateAfterOrEqual: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -3957,7 +4829,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateBeforeOrEqualsOperator(text, date)).toBeFalsy();
     });
 
-    describe("RuleEngine isDateBeforeOrEqual Operator", () => {
+    describe("ruleEngine isDateBeforeOrEqual Operator", () => {
       it("should return true for a date before the specified date", async () => {
         const conditions = [
           {
@@ -3971,7 +4843,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBeforeOrEqual: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return true for an equal date", async () => {
@@ -3987,7 +4861,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBeforeOrEqual: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a date after the specified date", async () => {
@@ -4003,7 +4879,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBeforeOrEqual: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid date", async () => {
@@ -4019,7 +4897,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBeforeOrEqual: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4040,25 +4920,41 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateEqualsOperator(text, date)).toBeFalsy();
     });
 
-    describe("RuleEngine isDateEquals Operator", () => {
+    describe("ruleEngine isDateEquals Operator", () => {
       it("should return true for equal dates", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateEquals", operator: Operators.DateEquals, value: "2020-01-01" }],
+            and: [
+              {
+                field: "isDateEquals",
+                operator: Operators.DateEquals,
+                value: "2020-01-01",
+              },
+            ],
           },
         ];
         const data = { isDateEquals: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal dates", async () => {
         const conditions = [
           {
-            and: [{ field: "isDateEquals", operator: Operators.DateEquals, value: "2020-01-02" }],
+            and: [
+              {
+                field: "isDateEquals",
+                operator: Operators.DateEquals,
+                value: "2020-01-02",
+              },
+            ],
           },
         ];
         const data = { isDateEquals: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4081,7 +4977,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isDateBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("RuleEngine isDateBetween Operator", () => {
+    describe("ruleEngine isDateBetween Operator", () => {
       it("should return true for a date between the range", async () => {
         const conditions = [
           {
@@ -4095,7 +4991,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBetween: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a date outside the range", async () => {
@@ -4111,7 +5009,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBetween: "2020-01-01" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid date", async () => {
@@ -4127,7 +5027,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isDateBetween: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4153,45 +5055,77 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTimeAfterOperator(text, time)).toBeFalsy();
     });
 
-    describe("RuleEngine isTimeAfter Operator", () => {
+    describe("ruleEngine isTimeAfter Operator", () => {
       it("should return true for a time after the specified time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeAfter", operator: Operators.TimeAfter, value: "11:00" }],
+            and: [
+              {
+                field: "isTimeAfter",
+                operator: Operators.TimeAfter,
+                value: "11:00",
+              },
+            ],
           },
         ];
         const data = { isTimeAfter: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a time before the specified time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeAfter", operator: Operators.TimeAfter, value: "13:00" }],
+            and: [
+              {
+                field: "isTimeAfter",
+                operator: Operators.TimeAfter,
+                value: "13:00",
+              },
+            ],
           },
         ];
         const data = { isTimeAfter: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an equal time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeAfter", operator: Operators.TimeAfter, value: "12:00" }],
+            and: [
+              {
+                field: "isTimeAfter",
+                operator: Operators.TimeAfter,
+                value: "12:00",
+              },
+            ],
           },
         ];
         const data = { isTimeAfter: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeAfter", operator: Operators.TimeAfter, value: "11:00" }],
+            and: [
+              {
+                field: "isTimeAfter",
+                operator: Operators.TimeAfter,
+                value: "11:00",
+              },
+            ],
           },
         ];
         const data = { isTimeAfter: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4217,45 +5151,77 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTimeBeforeOperator(text, time)).toBeFalsy();
     });
 
-    describe("RuleEngine isTimeBefore Operator", () => {
+    describe("ruleEngine isTimeBefore Operator", () => {
       it("should return true for a time before the specified time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeBefore", operator: Operators.TimeBefore, value: "13:00" }],
+            and: [
+              {
+                field: "isTimeBefore",
+                operator: Operators.TimeBefore,
+                value: "13:00",
+              },
+            ],
           },
         ];
         const data = { isTimeBefore: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a time after the specified time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeBefore", operator: Operators.TimeBefore, value: "11:00" }],
+            and: [
+              {
+                field: "isTimeBefore",
+                operator: Operators.TimeBefore,
+                value: "11:00",
+              },
+            ],
           },
         ];
         const data = { isTimeBefore: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an equal time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeBefore", operator: Operators.TimeBefore, value: "12:00" }],
+            and: [
+              {
+                field: "isTimeBefore",
+                operator: Operators.TimeBefore,
+                value: "12:00",
+              },
+            ],
           },
         ];
         const data = { isTimeBefore: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeBefore", operator: Operators.TimeBefore, value: "13:00" }],
+            and: [
+              {
+                field: "isTimeBefore",
+                operator: Operators.TimeBefore,
+                value: "13:00",
+              },
+            ],
           },
         ];
         const data = { isTimeBefore: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4281,7 +5247,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTimeAfterOrEqualsOperator(leftTime, rightTime)).toBeFalsy();
     });
 
-    describe("RuleEngine isTimeAfterOrEqual Operator", () => {
+    describe("ruleEngine isTimeAfterOrEqual Operator", () => {
       it("should return true for a time after the specified time", async () => {
         const conditions = [
           {
@@ -4295,7 +5261,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeAfterOrEqual: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return true for an equal time", async () => {
@@ -4311,7 +5279,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeAfterOrEqual: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a time before the specified time", async () => {
@@ -4327,7 +5297,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeAfterOrEqual: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid time", async () => {
@@ -4343,7 +5315,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeAfterOrEqual: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4375,7 +5349,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTimeBeforeOrEqualsOperator(text, time)).toBeFalsy();
     });
 
-    describe("RuleEngine isTimeBeforeOrEqual Operator", () => {
+    describe("ruleEngine isTimeBeforeOrEqual Operator", () => {
       it("should return true for a time before the specified time", async () => {
         const conditions = [
           {
@@ -4389,7 +5363,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBeforeOrEqual: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return true for an equal time", async () => {
@@ -4405,7 +5381,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBeforeOrEqual: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a time after the specified time", async () => {
@@ -4421,7 +5399,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBeforeOrEqual: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid time", async () => {
@@ -4437,7 +5417,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBeforeOrEqual: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4464,35 +5446,59 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTimeEqualsOperator(text, time)).toBeFalsy();
     });
 
-    describe("RuleEngine isTimeEquals Operator", () => {
+    describe("ruleEngine isTimeEquals Operator", () => {
       it("should return true for equal times", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeEquals", operator: Operators.TimeEquals, value: "12:00" }],
+            and: [
+              {
+                field: "isTimeEquals",
+                operator: Operators.TimeEquals,
+                value: "12:00",
+              },
+            ],
           },
         ];
         const data = { isTimeEquals: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for non-equal times", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeEquals", operator: Operators.TimeEquals, value: "13:00" }],
+            and: [
+              {
+                field: "isTimeEquals",
+                operator: Operators.TimeEquals,
+                value: "13:00",
+              },
+            ],
           },
         ];
         const data = { isTimeEquals: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid time", async () => {
         const conditions = [
           {
-            and: [{ field: "isTimeEquals", operator: Operators.TimeEquals, value: "12:00" }],
+            and: [
+              {
+                field: "isTimeEquals",
+                operator: Operators.TimeEquals,
+                value: "12:00",
+              },
+            ],
           },
         ];
         const data = { isTimeEquals: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });
@@ -4522,7 +5528,7 @@ describe("Rule Engine Evaluation Operators", () => {
       expect(isTimeBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("RuleEngine isTimeBetween Operator", () => {
+    describe("ruleEngine isTimeBetween Operator", () => {
       it("should return true for a time between the range", async () => {
         const conditions = [
           {
@@ -4536,7 +5542,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBetween: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeTruthy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeTruthy();
       });
 
       it("should return false for a time outside the range", async () => {
@@ -4552,7 +5560,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBetween: "12:00" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
 
       it("should return false for an invalid time", async () => {
@@ -4568,7 +5578,9 @@ describe("Rule Engine Evaluation Operators", () => {
           },
         ];
         const data = { isTimeBetween: "invalid" };
-        expect(await RuleEngine.getEvaluateResult({ conditions }, data)).toBeFalsy();
+        expect(
+          await RuleEngine.getEvaluateResult({ conditions }, data),
+        ).toBeFalsy();
       });
     });
   });

@@ -1,12 +1,12 @@
-import { bench, describe } from "vitest";
+import { describe, bench } from "vitest";
 import { RuleEngine, ObjectDiscovery } from "../src";
 // Rules
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("RuleEngine JSON Path correctly", () => {
+describe("ruleEngine JSON Path correctly", () => {
   const discovery = new ObjectDiscovery();
   bench(
-    "Resolves simple field definitions in a Text",
+    "resolves simple field definitions in a Text",
     async () => {
       discovery.resolveTextPathExpressions(
         "Password is invalid and contains username($.username), name($.name) and family($.family)",
@@ -28,7 +28,7 @@ describe("RuleEngine JSON Path correctly", () => {
   );
 
   bench(
-    "Resolves complex nested field definitions in a Text",
+    "resolves complex nested field definitions in a Text",
     async () => {
       const data = {
         store: {
@@ -76,7 +76,7 @@ describe("RuleEngine JSON Path correctly", () => {
   );
 
   bench(
-    "RuleEngine evaluate and return the resolved message correctly",
+    "ruleEngine evaluate and return the resolved message correctly",
     async () => {
       await RuleEngine.evaluate(selfFieldsConstraintsJson, {
         meta: {

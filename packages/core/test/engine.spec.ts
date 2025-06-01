@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { Operators, OperatorsType, RuleEngine, RuleError } from "../src";
+import { it, expect, describe } from "vitest";
+import type { OperatorsType } from "@root";
+import { RuleError, RuleEngine, Operators } from "@root";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 import { valid2Json } from "./rulesets/valid2.json";
@@ -9,22 +10,26 @@ import { valid13Json } from "./rulesets/valid13.json";
 import { invalid2Json } from "./rulesets/invalid2.json";
 import { Valid10Json } from "./rulesets/valid10.json";
 import {
-  selfFieldsConstraintsJson,
   selfFieldsConstraintsJsonWithNoResult,
+  selfFieldsConstraintsJson,
 } from "./rulesets/self-fields-constraints.json";
 import { Valid11Json } from "./rulesets/valid11.json";
 import { valid4Json } from "./rulesets/valid4.json";
 import { RegexRulesJson } from "./rulesets/regex-rules.json";
 import { PasswordRuleJson } from "./rulesets/password-rule.json";
 
-describe("RuleEngine engine works correctly", () => {
-  it("Evaluates a simple ruleset", async () => {
+describe("ruleEngine engine works correctly", () => {
+  it("evaluates a simple ruleset", async () => {
     expect(
-      await RuleEngine.getEvaluateResult(valid1Json, { payload: { ProfitPercentage: 9 } }),
+      await RuleEngine.getEvaluateResult(valid1Json, {
+        payload: { ProfitPercentage: 9 },
+      }),
     ).toEqual(false);
 
     expect(
-      await RuleEngine.getEvaluateResult(valid1Json, { payload: { ProfitPercentage: 11 } }),
+      await RuleEngine.getEvaluateResult(valid1Json, {
+        payload: { ProfitPercentage: 11 },
+      }),
     ).toEqual(true);
 
     expect(
@@ -45,13 +50,19 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(true);
   });
 
-  it("Evaluates to false if operator is unknown", async () => {
+  it("evaluates to false if operator is unknown", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "name", operator: "foo" as OperatorsType, value: "test" }],
+              and: [
+                {
+                  field: "name",
+                  operator: "foo" as OperatorsType,
+                  value: "test",
+                },
+              ],
             },
           ],
         },
@@ -61,14 +72,16 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Evaluates to false if condition type is unknown", async () => {
+  it("evaluates to false if condition type is unknown", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
               // @ts-ignore
-              any: [{ field: "name", operator: Operators.Equals, value: "test" }],
+              any: [
+                { field: "name", operator: Operators.Equals, value: "test" },
+              ],
             },
           ],
         },
@@ -78,13 +91,19 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Resolves nested field definitions", async () => {
+  it("resolves nested field definitions", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "$.foo.bar", operator: Operators.Equals, value: "test" }],
+              and: [
+                {
+                  field: "$.foo.bar",
+                  operator: Operators.Equals,
+                  value: "test",
+                },
+              ],
             },
           ],
         },
@@ -97,13 +116,15 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(true);
   });
 
-  it("Handles missing nested field definitions", async () => {
+  it("handles missing nested field definitions", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "foo.foo", operator: Operators.Equals, value: "test" }],
+              and: [
+                { field: "foo.foo", operator: Operators.Equals, value: "test" },
+              ],
             },
           ],
         },
@@ -116,13 +137,19 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Handles array of criteria properly", async () => {
+  it("handles array of criteria properly", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
           conditions: [
             {
-              and: [{ field: "$.foo.bar", operator: Operators.Equals, value: "bar" }],
+              and: [
+                {
+                  field: "$.foo.bar",
+                  operator: Operators.Equals,
+                  value: "bar",
+                },
+              ],
             },
           ],
         },
@@ -143,24 +170,34 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual([false, true, false]);
   });
 
-  it("Throws an error on invalid not runnable ruleset", () => {
-    expect(async () => await RuleEngine.getEvaluateResult({ conditions: [] }, {})).rejects.toThrow(
-      RuleError,
+  it("throws an error on invalid not runnable ruleset", () => {
+    expect(
+      async () => await RuleEngine.getEvaluateResult({ conditions: [] }, {}),
+    ).rejects.toThrow(RuleError);
+  });
+
+  it("evaluates a simple ruleset with a single condition", async () => {
+    expect(await RuleEngine.getEvaluateResult(valid13Json, {}, false)).toEqual(
+      2,
     );
   });
 
-  it("Evaluates a simple ruleset with a single condition", async () => {
-    expect(await RuleEngine.getEvaluateResult(valid13Json, {}, false)).toEqual(2);
-  });
-
-  it("Evaluates a nested ruleset", async () => {
+  it("evaluates a nested ruleset", async () => {
     expect(await RuleEngine.getEvaluateResult(valid3Json, {})).toEqual(2);
-    expect(await RuleEngine.getEvaluateResult(valid3Json, { Leverage: 1000 })).toEqual(3);
-    expect(await RuleEngine.getEvaluateResult(valid3Json, { Leverage: 999 })).toEqual(2);
+    expect(
+      await RuleEngine.getEvaluateResult(valid3Json, { Leverage: 1000 }),
+    ).toEqual(3);
+    expect(
+      await RuleEngine.getEvaluateResult(valid3Json, { Leverage: 999 }),
+    ).toEqual(2);
 
-    expect(await RuleEngine.getEvaluateResult(valid3Json, { Category: "Islamic" })).toEqual(4);
+    expect(
+      await RuleEngine.getEvaluateResult(valid3Json, { Category: "Islamic" }),
+    ).toEqual(4);
 
-    expect(await RuleEngine.getEvaluateResult(valid3Json, { Monetization: "Real" })).toEqual(2);
+    expect(
+      await RuleEngine.getEvaluateResult(valid3Json, { Monetization: "Real" }),
+    ).toEqual(2);
 
     expect(
       await RuleEngine.getEvaluateResult(valid3Json, {
@@ -181,17 +218,23 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(3);
   });
 
-  it("Evaluates invalid rulesets", async () => {
+  it("evaluates invalid rulesets", async () => {
     expect(
-      async () => await RuleEngine.getEvaluateResult(invalid2Json, { foo: true }, false),
+      async () =>
+        await RuleEngine.getEvaluateResult(invalid2Json, { foo: true }, false),
     ).rejects.toThrow(RuleError);
 
     expect(
-      async () => await RuleEngine.getEvaluateResult(invalid2Json, { Category: "Islamic" }, false),
+      async () =>
+        await RuleEngine.getEvaluateResult(
+          invalid2Json,
+          { Category: "Islamic" },
+          false,
+        ),
     ).rejects.toThrow(RuleError);
   });
 
-  it("Evaluates a simple ruleset with none type condition", async () => {
+  it("evaluates a simple ruleset with none type condition", async () => {
     expect(
       await RuleEngine.getEvaluateResult(valid2Json, {
         Leverage: 100,
@@ -210,18 +253,26 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(true);
   });
 
-  it("Evaluates a simple ruleset with a Contains and ContainsAny any condition", async () => {
-    expect(await RuleEngine.getEvaluateResult(valid5Json, { countries: ["US", "FR"] })).toEqual(
-      true,
-    );
+  it("evaluates a simple ruleset with a Contains and ContainsAny any condition", async () => {
+    expect(
+      await RuleEngine.getEvaluateResult(valid5Json, {
+        countries: ["US", "FR"],
+      }),
+    ).toEqual(true);
 
-    expect(await RuleEngine.getEvaluateResult(valid5Json, { countries: ["GB", "DE"] })).toEqual(
-      false,
-    );
+    expect(
+      await RuleEngine.getEvaluateResult(valid5Json, {
+        countries: ["GB", "DE"],
+      }),
+    ).toEqual(false);
 
-    expect(await RuleEngine.getEvaluateResult(valid5Json, { states: ["CA", "TN"] })).toEqual(true);
+    expect(
+      await RuleEngine.getEvaluateResult(valid5Json, { states: ["CA", "TN"] }),
+    ).toEqual(true);
 
-    expect(await RuleEngine.getEvaluateResult(valid5Json, { states: ["NY", "WI"] })).toEqual(false);
+    expect(
+      await RuleEngine.getEvaluateResult(valid5Json, { states: ["NY", "WI"] }),
+    ).toEqual(false);
 
     expect(
       await RuleEngine.getEvaluateResult(valid5Json, {
@@ -230,7 +281,7 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Evaluates a self ruleset with a SelfContainsAll and SelfContainsAny", async () => {
+  it("evaluates a self ruleset with a SelfContainsAll and SelfContainsAny", async () => {
     expect(
       await RuleEngine.evaluate(selfFieldsConstraintsJson, {
         meta: {
@@ -245,7 +296,8 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual({
       isPassed: false,
       value: false,
-      message: "Password is invalid and contains username(john-doe), name(john) and family(doe)",
+      message:
+        "Password is invalid and contains username(john-doe), name(john) and family(doe)",
     });
     expect(
       await RuleEngine.evaluate(selfFieldsConstraintsJsonWithNoResult, {
@@ -261,7 +313,8 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual({
       isPassed: false,
       value: false,
-      message: "Password is invalid and contains username(john-doe), name(john) and family(doe)",
+      message:
+        "Password is invalid and contains username(john-doe), name(john) and family(doe)",
     });
 
     expect(
@@ -278,7 +331,8 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual({
       isPassed: true,
       value: true,
-      message: "Password is valid and contains username(john-doe), name(john) and family(doe)",
+      message:
+        "Password is valid and contains username(john-doe), name(john) and family(doe)",
     });
 
     expect(
@@ -298,7 +352,7 @@ describe("RuleEngine engine works correctly", () => {
     });
   });
 
-  it("Evaluates a simple ruleset with Exists and NotExists conditions", async () => {
+  it("evaluates a simple ruleset with Exists and NotExists conditions", async () => {
     expect(
       await RuleEngine.getEvaluateResult(Valid10Json, {
         name: "John",
@@ -309,14 +363,14 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Evaluates a simple ruleset with Priority based conditions", async () => {
+  it("evaluates a simple ruleset with Priority based conditions", async () => {
     expect(
       await RuleEngine.evaluate(Valid11Json, {
         payload: {
           depositAmount: "3",
         },
         metadata: {
-          tenantId: "1",
+          levelId: 1,
         },
       }),
     ).toEqual({
@@ -326,7 +380,7 @@ describe("RuleEngine engine works correctly", () => {
     });
   });
 
-  it("Evaluates a nested ruleset with Priority based conditions", async () => {
+  it("evaluates a nested ruleset with Priority based conditions", async () => {
     expect(
       await RuleEngine.getEvaluateResult(valid4Json, {
         CountryIso: "GB",
@@ -350,7 +404,7 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(3);
   });
 
-  it("Evaluates a nested regex ruleset", async () => {
+  it("evaluates a nested regex ruleset", async () => {
     expect(
       await RuleEngine.evaluate(RegexRulesJson, {
         payload: {
@@ -412,7 +466,7 @@ describe("RuleEngine engine works correctly", () => {
     });
   });
 
-  it("Evaluates a simple password ruleset", async () => {
+  it("evaluates a simple password ruleset", async () => {
     expect(
       await RuleEngine.evaluate(PasswordRuleJson, {
         payload: {
@@ -428,7 +482,7 @@ describe("RuleEngine engine works correctly", () => {
     });
   });
 
-  it("Resolve constraints message in and condition", async () => {
+  it("resolve constraints message in and condition", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
@@ -452,7 +506,7 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Evaluate a none condition", async () => {
+  it("evaluate a none condition", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
@@ -491,7 +545,7 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Should return false if field is undefined", async () => {
+  it("should return false if field is undefined", async () => {
     expect(
       await RuleEngine.getEvaluateResult(
         {
@@ -513,8 +567,8 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(false);
   });
 
-  it("Should return true for checkIsPassed method", async () => {
-    const engine = new RuleEngine();
+  it("should return true for checkIsPassed method", async () => {
+    const engine = RuleEngine.getInstance();
     expect(
       await engine.checkIsPassed(
         {
@@ -556,10 +610,10 @@ describe("RuleEngine engine works correctly", () => {
     ).toEqual(true);
   });
 
-  it("Should return true for evaluate multiple rules", async () => {
-    const engine = new RuleEngine();
+  it("should return true for evaluate multiple rules", async () => {
+    const engine = RuleEngine.getInstance();
     expect(
-      await engine.evaluateMultiple(
+      await engine.evaluateMany(
         [
           {
             conditions: [

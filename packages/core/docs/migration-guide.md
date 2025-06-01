@@ -72,6 +72,9 @@ This guide helps you migrate from other rule engines to @usex/rule-engine.
 
 ```javascript
 // json-rules-engine
+// @usex/rule-engine
+import { RuleEngine } from '@usex/rule-engine';
+
 const Engine = require('json-rules-engine');
 const engine = new Engine();
 
@@ -97,9 +100,6 @@ engine.addRule({
 
 const facts = { account: { balance: 150, type: 'basic' } };
 const { events } = await engine.run(facts);
-
-// @usex/rule-engine
-import { RuleEngine } from '@usex/rule-engine';
 
 const rule = {
   conditions: {
