@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo } from "react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -23,6 +23,7 @@ import type { Condition, Constraint, ConditionType } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
 import { cn } from "../lib/utils";
 import { toast } from "sonner";
+import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
 
 interface TreeConditionGroupProps {
   condition: Condition;
@@ -67,7 +68,9 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
   labels = {},
   colors = {},
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const { isGroupExpanded, toggleGroupExpanded } = useEnhancedRuleStore();
+  const groupPath = path.join('-');
+  const isExpanded = depth === 0 ? true : isGroupExpanded(groupPath);
 
   const conditionType = Object.keys(condition).find(
     (key) => key === "or" || key === "and" || key === "none"
@@ -178,7 +181,8 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
                 variant="ghost"
                 size="sm"
                 className="h-6 w-6 p-0"
-                onClick={() => setIsExpanded(!isExpanded)}
+                onClick={() => depth > 0 && toggleGroupExpanded(groupPath)}
+                disabled={depth === 0}
               >
                 {isExpanded ? (
                   <ChevronDown className="h-4 w-4" />

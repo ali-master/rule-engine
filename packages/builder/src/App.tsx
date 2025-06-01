@@ -16,7 +16,7 @@ import {
   SheetTrigger,
 } from "./components/ui/sheet";
 import { Textarea } from "./components/ui/textarea";
-import { useRuleStore } from "./stores/rule-store";
+import { useEnhancedRuleStore } from "./stores/enhanced-rule-store";
 import "./styles/globals.css";
 
 const sampleData = {
@@ -54,7 +54,7 @@ const sampleData = {
 };
 
 function AppContent() {
-  const { rule } = useRuleStore();
+  const { rule } = useEnhancedRuleStore();
   const [testData, setTestData] = useState(JSON.stringify(sampleData, null, 2));
   const [testResult, setTestResult] = useState<any>(null);
   const [isTestRunning, setIsTestRunning] = useState(false);
