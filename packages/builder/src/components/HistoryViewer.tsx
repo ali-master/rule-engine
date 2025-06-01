@@ -1,36 +1,34 @@
-import React, { useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
+import type { HistoryEntry } from "../stores/enhanced-rule-store";
+import { format, formatDistanceToNow } from "date-fns";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  Eye,
+  GitBranch,
+  RotateCcw,
+  Search,
+  XCircle,
+} from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { cn } from "../lib/utils";
+import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
+import { JsonViewer } from "./JsonVisualizer";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./ui/dialog";
-import {
-  Clock,
-  GitBranch,
-  Search,
-  CheckCircle,
-  XCircle,
-  ArrowLeft,
-  ArrowRight,
-  RotateCcw,
-  Eye,
-  Code2,
-  Filter,
-} from "lucide-react";
-import { format, formatDistanceToNow } from "date-fns";
-import { cn } from "../lib/utils";
-import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
-import type { HistoryEntry } from "../stores/enhanced-rule-store";
-import { toast } from "sonner";
+  ZoomDialog,
+  ZoomDialogContent,
+  ZoomDialogDescription,
+  ZoomDialogHeader,
+  ZoomDialogTitle,
+} from "./ui/zoom-dialog";
 
 interface HistoryViewerProps {
   className?: string;
@@ -42,16 +40,9 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
   const [filterAction, setFilterAction] = useState<string>("all");
   const [selectedEntry, setSelectedEntry] = useState<HistoryEntry | null>(null);
   const [compareEntry, setCompareEntry] = useState<HistoryEntry | null>(null);
-  
-  const {
-    history,
-    historyIndex,
-    setRule,
-    canUndo,
-    canRedo,
-    undo,
-    redo,
-  } = useEnhancedRuleStore();
+
+  const { history, historyIndex, setRule, canUndo, canRedo, undo, redo } =
+    useEnhancedRuleStore();
 
   // Filter history entries
   const filteredHistory = useMemo(() => {
@@ -60,21 +51,26 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
         ? entry.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
           entry.action.toLowerCase().includes(searchTerm.toLowerCase())
         : true;
-      
-      const matchesFilter = filterAction === "all" || entry.action === filterAction;
-      
+
+      const matchesFilter =
+        filterAction === "all" || entry.action === filterAction;
+
       return matchesSearch && matchesFilter;
     });
   }, [history, searchTerm, filterAction]);
 
   // Get unique actions for filter
   const uniqueActions = useMemo(() => {
-    const actions = new Set(history.map(entry => entry.action));
+    const actions = new Set(history.map((entry) => entry.action));
     return ["all", ...Array.from(actions)];
   }, [history]);
 
   const handleCheckout = (entry: HistoryEntry, index: number) => {
-    setRule(entry.rule, "Checkout", `Checked out to version from ${format(entry.timestamp, 'PPp')}`);
+    setRule(
+      entry.rule,
+      "Checkout",
+      `Checked out to version from ${format(entry.timestamp, "PPp")}`,
+    );
     toast.success(`Checked out to version ${index + 1}`);
     setOpen(false);
   };
@@ -83,11 +79,11 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
     // Simple JSON diff visualization
     const beforeStr = JSON.stringify(before, null, 2);
     const afterStr = JSON.stringify(after, null, 2);
-    
+
     if (beforeStr === afterStr) {
       return "No changes";
     }
-    
+
     // For a more sophisticated diff, you could use a library like diff
     return `Before:\n${beforeStr}\n\nAfter:\n${afterStr}`;
   };
@@ -120,14 +116,14 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
         History
       </Button>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-6xl h-[80vh]">
-          <DialogHeader>
-            <DialogTitle>Version History</DialogTitle>
-            <DialogDescription>
+      <ZoomDialog open={open} onOpenChange={setOpen}>
+        <ZoomDialogContent className="max-w-6xl h-[80vh]">
+          <ZoomDialogHeader>
+            <ZoomDialogTitle>Version History</ZoomDialogTitle>
+            <ZoomDialogDescription>
               View and manage the history of changes to your rule
-            </DialogDescription>
-          </DialogHeader>
+            </ZoomDialogDescription>
+          </ZoomDialogHeader>
 
           <div className="flex-1 flex flex-col gap-4">
             {/* Controls */}
@@ -146,7 +142,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                 onChange={(e) => setFilterAction(e.target.value)}
                 className="h-10 px-3 rounded-md border border-input bg-background text-sm"
               >
-                {uniqueActions.map(action => (
+                {uniqueActions.map((action) => (
                   <option key={action} value={action}>
                     {action === "all" ? "All Actions" : action}
                   </option>
@@ -186,11 +182,11 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                 <CardContent className="flex-1 p-0">
                   <ScrollArea className="h-full">
                     <div className="p-4 space-y-2">
-                      {filteredHistory.map((entry, index) => {
+                      {filteredHistory.map((entry) => {
                         const actualIndex = history.indexOf(entry);
                         const isCurrent = actualIndex === historyIndex;
                         const isPast = actualIndex < historyIndex;
-                        
+
                         return (
                           <Card
                             key={entry.timestamp}
@@ -199,7 +195,7 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                               "hover:bg-accent",
                               isCurrent && "ring-2 ring-primary",
                               selectedEntry === entry && "bg-accent",
-                              isPast && "opacity-60"
+                              isPast && "opacity-60",
                             )}
                             onClick={() => setSelectedEntry(entry)}
                           >
@@ -211,7 +207,10 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                                     {entry.action}
                                   </h4>
                                   {isCurrent && (
-                                    <Badge variant="secondary" className="text-xs">
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
                                       Current
                                     </Badge>
                                   )}
@@ -221,7 +220,9 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                                 </p>
                                 <div className="flex items-center gap-2 mt-1">
                                   <span className="text-xs text-muted-foreground">
-                                    {formatDistanceToNow(entry.timestamp, { addSuffix: true })}
+                                    {formatDistanceToNow(entry.timestamp, {
+                                      addSuffix: true,
+                                    })}
                                   </span>
                                   <span className="text-xs text-muted-foreground">
                                     •
@@ -249,7 +250,9 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                                   size="sm"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    setCompareEntry(entry === compareEntry ? null : entry);
+                                    setCompareEntry(
+                                      entry === compareEntry ? null : entry,
+                                    );
                                   }}
                                   title="Compare with selected"
                                 >
@@ -272,50 +275,72 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                 </CardHeader>
                 <CardContent className="flex-1 p-0">
                   {selectedEntry ? (
-                    <Tabs defaultValue="details" className="h-full flex flex-col">
+                    <Tabs
+                      defaultValue="details"
+                      className="h-full flex flex-col"
+                    >
                       <TabsList className="m-4 mb-0">
                         <TabsTrigger value="details">Details</TabsTrigger>
                         <TabsTrigger value="changes">Changes</TabsTrigger>
                         <TabsTrigger value="json">JSON</TabsTrigger>
-                        {compareEntry && <TabsTrigger value="compare">Compare</TabsTrigger>}
+                        {compareEntry && (
+                          <TabsTrigger value="compare">Compare</TabsTrigger>
+                        )}
                       </TabsList>
-                      
+
                       <TabsContent value="details" className="flex-1 p-4">
                         <div className="space-y-4">
                           <div>
-                            <h4 className="font-medium text-sm mb-2">Version Information</h4>
+                            <h4 className="font-medium text-sm mb-2">
+                              Version Information
+                            </h4>
                             <div className="space-y-2 text-sm">
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">Version:</span>
-                                <span>v{history.indexOf(selectedEntry) + 1}</span>
+                                <span className="text-muted-foreground">
+                                  Version:
+                                </span>
+                                <span>
+                                  v{history.indexOf(selectedEntry) + 1}
+                                </span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">Action:</span>
+                                <span className="text-muted-foreground">
+                                  Action:
+                                </span>
                                 <span>{selectedEntry.action}</span>
                               </div>
                               <div className="flex justify-between">
-                                <span className="text-muted-foreground">Time:</span>
-                                <span>{format(selectedEntry.timestamp, 'PPp')}</span>
+                                <span className="text-muted-foreground">
+                                  Time:
+                                </span>
+                                <span>
+                                  {format(selectedEntry.timestamp, "PPp")}
+                                </span>
                               </div>
                             </div>
                           </div>
-                          
+
                           <div>
-                            <h4 className="font-medium text-sm mb-2">Description</h4>
+                            <h4 className="font-medium text-sm mb-2">
+                              Description
+                            </h4>
                             <p className="text-sm text-muted-foreground">
                               {selectedEntry.description}
                             </p>
                           </div>
                         </div>
                       </TabsContent>
-                      
+
                       <TabsContent value="changes" className="flex-1 p-0">
                         <ScrollArea className="h-full">
                           <div className="p-4">
                             {selectedEntry.changes ? (
                               <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
                                 <code>
-                                  {getDiff(selectedEntry.changes.before, selectedEntry.changes.after)}
+                                  {getDiff(
+                                    selectedEntry.changes.before,
+                                    selectedEntry.changes.after,
+                                  )}
                                 </code>
                               </pre>
                             ) : (
@@ -326,19 +351,24 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                           </div>
                         </ScrollArea>
                       </TabsContent>
-                      
+
                       <TabsContent value="json" className="flex-1 p-0">
                         <ScrollArea className="h-full">
                           <div className="p-4">
-                            <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-                              <code>
-                                {JSON.stringify(selectedEntry.rule, null, 2)}
-                              </code>
-                            </pre>
+                            <Card className="overflow-hidden">
+                              <CardContent className="p-4">
+                                <JsonViewer
+                                  data={selectedEntry.rule}
+                                  rootName="rule"
+                                  defaultExpanded={true}
+                                  className="max-w-full"
+                                />
+                              </CardContent>
+                            </Card>
                           </div>
                         </ScrollArea>
                       </TabsContent>
-                      
+
                       {compareEntry && (
                         <TabsContent value="compare" className="flex-1 p-0">
                           <ScrollArea className="h-full">
@@ -346,11 +376,16 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                               <div className="space-y-4">
                                 <div>
                                   <h4 className="font-medium text-sm mb-2">
-                                    Comparing v{history.indexOf(selectedEntry) + 1} with v{history.indexOf(compareEntry) + 1}
+                                    Comparing v
+                                    {history.indexOf(selectedEntry) + 1} with v
+                                    {history.indexOf(compareEntry) + 1}
                                   </h4>
                                   <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
                                     <code>
-                                      {getDiff(compareEntry.rule, selectedEntry.rule)}
+                                      {getDiff(
+                                        compareEntry.rule,
+                                        selectedEntry.rule,
+                                      )}
                                     </code>
                                   </pre>
                                 </div>
@@ -369,8 +404,8 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
               </Card>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </ZoomDialogContent>
+      </ZoomDialog>
     </>
   );
 };

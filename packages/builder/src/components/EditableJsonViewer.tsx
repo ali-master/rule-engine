@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import type { RuleType } from "@usex/rule-engine";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -17,8 +18,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { cn } from "../lib/utils";
-import type { RuleType } from "@usex/rule-engine";
 import { toast } from "sonner";
+import { JsonViewer } from "./JsonVisualizer";
 
 interface EditableJsonViewerProps {
   rule: RuleType;
@@ -48,12 +49,6 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
   const jsonString = useMemo(() => {
     return JSON.stringify(rule, null, 2);
   }, [rule]);
-
-  useEffect(() => {
-    if (isEditing) {
-      setEditedJson(jsonString);
-    }
-  }, [isEditing, jsonString]);
 
   const handleCopy = async () => {
     try {
@@ -125,13 +120,18 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
     }
   };
 
+  const handleStartEdit = () => {
+    setEditedJson(jsonString);
+    setIsEditing(true);
+  };
+
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditedJson("");
     setError(null);
   };
 
-  const lineCount = (isEditing ? editedJson : jsonString).split("\n").length;
+  const lineCount = jsonString.split("\n").length;
 
   return (
     <Card className={cn("overflow-hidden", className)}>
@@ -197,7 +197,7 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => setIsEditing(true)}
+                  onClick={handleStartEdit}
                   title="Edit JSON"
                 >
                   <Edit2 className="h-4 w-4" />
@@ -253,7 +253,7 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
         )}
         <div
           className={cn(
-            "overflow-auto bg-muted/50 dark:bg-muted/20",
+            "overflow-auto",
             expanded ? "max-h-[80vh]" : "max-h-[400px]",
           )}
         >
@@ -264,14 +264,19 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
                 setEditedJson(e.target.value);
                 setError(null);
               }}
-              className="min-h-[400px] font-mono text-sm border-0 focus-visible:ring-0 resize-none"
+              className="min-h-[400px] font-mono text-sm border-0 focus-visible:ring-0 resize-none rounded-none"
               style={{ minHeight: expanded ? "70vh" : "400px" }}
               placeholder="Enter valid JSON..."
             />
           ) : (
-            <pre className="p-4 text-sm">
-              <code className="font-mono">{jsonString}</code>
-            </pre>
+            <div className="p-4">
+              <JsonViewer
+                data={rule}
+                rootName="rule"
+                defaultExpanded={true}
+                className="max-w-full"
+              />
+            </div>
           )}
         </div>
       </CardContent>

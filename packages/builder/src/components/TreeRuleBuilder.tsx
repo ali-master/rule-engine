@@ -20,6 +20,7 @@ import { cn } from "../lib/utils";
 import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { EditableJsonViewer } from "./EditableJsonViewer";
+import { JsonViewer } from "./JsonVisualizer";
 import { HistoryViewer } from "./HistoryViewer";
 import { ThemeToggle } from "./ThemeToggle";
 import { TreeConditionGroup } from "./TreeConditionGroup";
@@ -71,6 +72,16 @@ interface TreeRuleBuilderProps {
     and?: string;
     none?: string;
   };
+  keyboardShortcuts?: {
+    undo?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    redo?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    save?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    test?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    addGroup?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    expandAll?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    collapseAll?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    help?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+  };
 }
 
 export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
@@ -89,6 +100,7 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
   theme: _propTheme = "system",
   labels = {},
   colors = {},
+  keyboardShortcuts = {},
 }) => {
   const {
     rule,
@@ -112,17 +124,39 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
   const [isTestSheetOpen, setIsTestSheetOpen] = useState(false);
   const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
 
+  // Default shortcuts
+  const defaultShortcuts = {
+    undo: { key: "z", ctrl: true },
+    redo: { key: "y", ctrl: true },
+    save: { key: "s", ctrl: true },
+    test: { key: "t", ctrl: true },
+    addGroup: { key: "r", ctrl: true },
+    expandAll: { key: "e", ctrl: true, shift: true },
+    collapseAll: { key: "c", ctrl: true, shift: true },
+    help: { key: "?", shift: true },
+  };
+
+  // Merge custom shortcuts with defaults
+  const mergedShortcuts = {
+    undo: keyboardShortcuts.undo || defaultShortcuts.undo,
+    redo: keyboardShortcuts.redo || defaultShortcuts.redo,
+    save: keyboardShortcuts.save || defaultShortcuts.save,
+    test: keyboardShortcuts.test || defaultShortcuts.test,
+    addGroup: keyboardShortcuts.addGroup || defaultShortcuts.addGroup,
+    expandAll: keyboardShortcuts.expandAll || defaultShortcuts.expandAll,
+    collapseAll: keyboardShortcuts.collapseAll || defaultShortcuts.collapseAll,
+    help: keyboardShortcuts.help || defaultShortcuts.help,
+  };
+
   // Keyboard shortcuts
   useKeyboardShortcuts([
     {
-      key: "z",
-      ctrl: true,
+      ...mergedShortcuts.undo,
       handler: () => canUndo() && undo(),
       description: "Undo last action",
     },
     {
-      key: "y",
-      ctrl: true,
+      ...mergedShortcuts.redo,
       handler: () => canRedo() && redo(),
       description: "Redo last action",
     },
@@ -134,40 +168,32 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
       description: "Redo last action",
     },
     {
-      key: "s",
-      ctrl: true,
+      ...mergedShortcuts.save,
       handler: () => onSave && !readOnly && handleSave(),
       description: "Save rule",
     },
     {
-      key: "e",
-      ctrl: true,
-      shift: true,
+      ...mergedShortcuts.expandAll,
       handler: () => expandAll(),
       description: "Expand all groups",
     },
     {
-      key: "c",
-      ctrl: true,
-      shift: true,
+      ...mergedShortcuts.collapseAll,
       handler: () => collapseAll(),
       description: "Collapse all groups",
     },
     {
-      key: "r",
-      ctrl: true,
+      ...mergedShortcuts.addGroup,
       handler: () => !readOnly && addRootConditionGroup(),
       description: "Add new rule group",
     },
     {
-      key: "t",
-      ctrl: true,
+      ...mergedShortcuts.test,
       handler: () => setIsTestSheetOpen(true),
       description: "Test rule",
     },
     {
-      key: "?",
-      shift: true,
+      ...mergedShortcuts.help,
       handler: () => setShowKeyboardShortcuts(true),
       description: "Show keyboard shortcuts",
     },
@@ -363,13 +389,20 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                             </Alert>
 
                             {testResult.success && (
-                              <div>
-                                <label className="text-sm font-medium mb-2 block">
+                              <div className="space-y-2">
+                                <label className="text-sm font-medium block">
                                   Result
                                 </label>
-                                <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-                                  {JSON.stringify(testResult.result, null, 2)}
-                                </pre>
+                                <Card className="overflow-hidden">
+                                  <CardContent className="p-4">
+                                    <JsonViewer
+                                      data={testResult.result}
+                                      rootName="result"
+                                      defaultExpanded={true}
+                                      className="max-w-full"
+                                    />
+                                  </CardContent>
+                                </Card>
                               </div>
                             )}
 

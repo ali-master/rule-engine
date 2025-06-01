@@ -1,6 +1,7 @@
+import type { OperatorsType } from "@usex/rule-engine";
 import type { OperatorSelectorProps } from "../types";
 import { Search } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { cn } from "../lib/utils";
 import {
   getOperatorConfig,
@@ -18,16 +19,15 @@ import {
   SelectValue,
 } from "./ui/select";
 
-export const OperatorSelector: React.FC<
-  OperatorSelectorProps & {
-    customOperators?: Record<string, any>;
-    fieldType?: string;
-  }
-> = ({
+interface ExtendedOperatorSelectorProps extends OperatorSelectorProps {
+  customOperators?: Record<string, any>;
+  fieldType?: string;
+}
+
+export const OperatorSelector: React.FC<ExtendedOperatorSelectorProps> = ({
   value,
   onChange,
   operators = operatorConfigs,
-  field,
   fieldType,
   disabled = false,
   className,
@@ -35,6 +35,7 @@ export const OperatorSelector: React.FC<
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [open, setOpen] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const availableOperators = React.useMemo(() => {
     const fieldOperators = getOperatorsForFieldType(fieldType);
@@ -101,8 +102,19 @@ export const OperatorSelector: React.FC<
     }
   };
 
+  // Keep focus on search input when operators change
+  useEffect(() => {
+    if (open && inputRef.current) {
+      // Use a small timeout to ensure the input is rendered
+      const timeoutId = setTimeout(() => {
+        inputRef.current?.focus();
+      }, 0);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [open, filteredOperators]);
+
   const handleSelect = (newValue: string) => {
-    onChange(newValue);
+    onChange(newValue as OperatorsType);
     setSearchTerm("");
     setOpen(false);
   };
@@ -126,10 +138,12 @@ export const OperatorSelector: React.FC<
           <div className="relative">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
+              ref={inputRef}
               placeholder="Search operators..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-8 h-8"
+              autoFocus
               onKeyDown={(e) => {
                 // Prevent the select from closing on space or enter in search
                 if (e.key === " " || e.key === "Enter") {
