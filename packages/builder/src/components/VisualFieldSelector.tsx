@@ -21,6 +21,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { cn } from "../lib/utils";
+import { JsonViewer } from "./JsonVisualizer";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
@@ -376,10 +377,17 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
         </DialogHeader>
 
         <Tabs defaultValue="visual" className="flex-1 flex flex-col">
-          <TabsList className={cn("grid w-full", allowJsonPath ? "grid-cols-3" : "grid-cols-2")}>
+          <TabsList
+            className={cn(
+              "grid w-full",
+              allowJsonPath ? "grid-cols-3" : "grid-cols-2",
+            )}
+          >
             <TabsTrigger value="visual">Visual Explorer</TabsTrigger>
             <TabsTrigger value="fields">Defined Fields</TabsTrigger>
-            {allowJsonPath && <TabsTrigger value="manual">Manual Entry</TabsTrigger>}
+            {allowJsonPath && (
+              <TabsTrigger value="manual">Manual Entry</TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="visual" className="flex-1 flex flex-col gap-4">
@@ -401,9 +409,13 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                   title="Toggle value preview"
                 >
                   {showValuePreview ? (
-                    <><Eye className="h-4 w-4 mr-1" /> Hide Preview</>
+                    <>
+                      <Eye className="h-4 w-4 mr-1" /> Hide Preview
+                    </>
                   ) : (
-                    <><EyeOff className="h-4 w-4 mr-1" /> Show Preview</>
+                    <>
+                      <EyeOff className="h-4 w-4 mr-1" /> Show Preview
+                    </>
                   )}
                 </Button>
               )}
@@ -436,7 +448,7 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                         Path
                       </Label>
                       <div className="flex items-center gap-2">
-                        <code className="text-sm bg-muted px-2 py-1 rounded flex-1">
+                        <code className="text-sm bg-secondary text-secondary-foreground px-2 py-1 rounded flex-1">
                           {selectedPath || "No selection"}
                         </code>
                         <Button
@@ -459,9 +471,16 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                         <Label className="text-xs text-muted-foreground">
                           Value
                         </Label>
-                        <pre className="text-sm bg-muted px-2 py-1 rounded overflow-auto max-h-32">
-                          {JSON.stringify(previewValue, null, 2)}
-                        </pre>
+                        <Card className="overflow-hidden">
+                          <div className="p-2 max-h-32 overflow-auto">
+                            <JsonViewer
+                              data={previewValue}
+                              rootName="value"
+                              defaultExpanded={true}
+                              className="text-xs"
+                            />
+                          </div>
+                        </Card>
                       </div>
                     )}
                   </div>
@@ -528,55 +547,57 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
 
           {allowJsonPath && (
             <TabsContent value="manual" className="flex-1 flex flex-col gap-4">
-            <div className="space-y-4">
-              <div>
-                <Label>JSON Path Expression</Label>
-                <div className="flex gap-2 mt-2">
-                  <Input
-                    value={manualPath}
-                    onChange={(e) => setManualPath(e.target.value)}
-                    placeholder="$.user.profile.name"
-                    className="font-mono"
-                  />
-                  <Button onClick={handleManualSubmit} disabled={!manualPath}>
-                    Apply
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <h4 className="font-medium text-sm">Common Patterns</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { path: "$.field", desc: "Root field" },
-                    { path: "$.parent.child", desc: "Nested field" },
-                    { path: "$.array[0]", desc: "Array index" },
-                    { path: "$.array[*]", desc: "All array items" },
-                    { path: "$..field", desc: "Recursive search" },
-                    {
-                      path: "$.array[?(@.active)]",
-                      desc: "Filter expression",
-                    },
-                  ].map((example) => (
-                    <Button
-                      key={example.path}
-                      variant="outline"
-                      size="sm"
-                      className="justify-start"
-                      onClick={() => setManualPath(example.path)}
-                    >
-                      <Code2 className="h-3 w-3 mr-2" />
-                      <div className="text-left">
-                        <div className="font-mono text-xs">{example.path}</div>
-                        <div className="text-xs text-muted-foreground">
-                          {example.desc}
-                        </div>
-                      </div>
+              <div className="space-y-4">
+                <div>
+                  <Label>JSON Path Expression</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      value={manualPath}
+                      onChange={(e) => setManualPath(e.target.value)}
+                      placeholder="$.user.profile.name"
+                      className="font-mono"
+                    />
+                    <Button onClick={handleManualSubmit} disabled={!manualPath}>
+                      Apply
                     </Button>
-                  ))}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <h4 className="font-medium text-sm">Common Patterns</h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { path: "$.field", desc: "Root field" },
+                      { path: "$.parent.child", desc: "Nested field" },
+                      { path: "$.array[0]", desc: "Array index" },
+                      { path: "$.array[*]", desc: "All array items" },
+                      { path: "$..field", desc: "Recursive search" },
+                      {
+                        path: "$.array[?(@.active)]",
+                        desc: "Filter expression",
+                      },
+                    ].map((example) => (
+                      <Button
+                        key={example.path}
+                        variant="outline"
+                        size="sm"
+                        className="justify-start"
+                        onClick={() => setManualPath(example.path)}
+                      >
+                        <Code2 className="h-3 w-3 mr-2" />
+                        <div className="text-left">
+                          <div className="font-mono text-xs">
+                            {example.path}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {example.desc}
+                          </div>
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
             </TabsContent>
           )}
         </Tabs>
