@@ -1,5 +1,6 @@
 import type { Constraint } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
+import { Operators } from "@usex/rule-engine";
 import {
   AlertCircle,
   Code2,
@@ -7,6 +8,7 @@ import {
   HelpCircle,
   Info,
   Layers,
+  Regex,
   Trash2,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -16,12 +18,21 @@ import { getOperatorConfig } from "../utils/operators";
 import { DynamicFieldSelector } from "./DynamicFieldSelector";
 import { SmartValueInput } from "./inputs/SmartValueInput";
 import { OperatorSelector } from "./OperatorSelector";
+import { RegexValidator } from "./RegexValidator";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Collapsible, CollapsibleContent } from "./ui/collapsible";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Tooltip,
@@ -196,26 +207,31 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 customOperators={customOperators}
                 className="flex-1"
               />
-              {localConstraint.operator && operatorHelp[localConstraint.operator] && (
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8"
-                        onClick={() => setShowHelp(!showHelp)}
-                      >
-                        <HelpCircle className="h-4 w-4 text-muted-foreground" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
-                      <p className="font-medium">{operatorHelp[localConstraint.operator].name}</p>
-                      <p className="text-xs">{operatorHelp[localConstraint.operator].description}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              )}
+              {localConstraint.operator &&
+                operatorHelp[localConstraint.operator] && (
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => setShowHelp(!showHelp)}
+                        >
+                          <HelpCircle className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p className="font-medium">
+                          {operatorHelp[localConstraint.operator].name}
+                        </p>
+                        <p className="text-xs">
+                          {operatorHelp[localConstraint.operator].description}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )}
             </div>
           </div>
         </div>
@@ -265,7 +281,7 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                     )}
 
                     {operatorHelp[localConstraint.operator].tips &&
-                      operatorHelp[localConstraint.operator].tips.length >
+                      operatorHelp[localConstraint.operator].tips!.length >
                         0 && (
                         <div>
                           <h5 className="text-xs font-medium text-muted-foreground mb-2">
@@ -301,6 +317,41 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 <Badge variant="outline" className="text-xs">
                   {operatorConfig.valueType}
                 </Badge>
+              )}
+              {/* Regex Helper for matches/not matches operators */}
+              {(localConstraint.operator === Operators.Matches ||
+                localConstraint.operator === Operators.NotMatches) && (
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-7 px-2">
+                      <Regex className="h-3 w-3 mr-1" />
+                      Regex Helper
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="w-[500px] sm:max-w-[500px]">
+                    <SheetHeader>
+                      <SheetTitle>Regular Expression Helper</SheetTitle>
+                      <SheetDescription>
+                        Test and validate your regular expression pattern
+                      </SheetDescription>
+                    </SheetHeader>
+                    <div className="mt-6">
+                      <RegexValidator
+                        value={
+                          typeof localConstraint.value === "string"
+                            ? localConstraint.value
+                            : ""
+                        }
+                        onChange={handleValueChange}
+                        testString={
+                          selectedField && sampleData
+                            ? String(sampleData[selectedField.name] || "")
+                            : ""
+                        }
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
               )}
             </div>
             <SmartValueInput
@@ -347,28 +398,39 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 <> {JSON.stringify(localConstraint.value)}</>
               )}
             </div>
-            {localConstraint.operator && operatorHelp[localConstraint.operator] && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="h-3 w-3 text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-sm">
-                    <div className="space-y-2">
-                      <p className="font-medium">{operatorHelp[localConstraint.operator].name}</p>
-                      <p className="text-xs">{operatorHelp[localConstraint.operator].description}</p>
-                      {operatorHelp[localConstraint.operator].tips && operatorHelp[localConstraint.operator].tips.length > 0 && (
-                        <div className="text-xs space-y-1 pt-1 border-t">
-                          {operatorHelp[localConstraint.operator].tips.slice(0, 1).map((tip, i) => (
-                            <p key={i} className="text-muted-foreground">💡 {tip}</p>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
+            {localConstraint.operator &&
+              operatorHelp[localConstraint.operator] && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-sm">
+                      <div className="space-y-2">
+                        <p className="font-medium">
+                          {operatorHelp[localConstraint.operator].name}
+                        </p>
+                        <p className="text-xs">
+                          {operatorHelp[localConstraint.operator].description}
+                        </p>
+                        {operatorHelp[localConstraint.operator].tips &&
+                          operatorHelp[localConstraint.operator].tips!.length >
+                            0 && (
+                            <div className="text-xs space-y-1 pt-1 border-t">
+                              {operatorHelp[localConstraint.operator]
+                                .tips!.slice(0, 1)
+                                .map((tip, i) => (
+                                  <p key={i} className="text-muted-foreground">
+                                    💡 {tip}
+                                  </p>
+                                ))}
+                            </div>
+                          )}
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
           </div>
 
           {!readOnly && (

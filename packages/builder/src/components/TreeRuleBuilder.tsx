@@ -1,7 +1,31 @@
-import React, { useState, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
+import type { Condition } from "@usex/rule-engine";
+import type { FieldConfig } from "../types";
+import { RuleEngine } from "@usex/rule-engine";
+import {
+  AlertCircle,
+  FileJson,
+  GitBranch,
+  Keyboard,
+  Maximize2,
+  Minimize2,
+  PlayCircle,
+  Plus,
+  Save,
+  TestTube2,
+} from "lucide-react";
+import React, { useState } from "react";
+import { toast, Toaster } from "sonner";
+import { useKeyboardShortcuts } from "../hooks/use-keyboard-shortcuts";
+import { cn } from "../lib/utils";
+import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
+import { AnimatedNumber } from "./AnimatedNumber";
+import { EditableJsonViewer } from "./EditableJsonViewer";
+import { ThemeToggle } from "./ThemeToggle";
+import { TreeConditionGroup } from "./TreeConditionGroup";
+import { Alert, AlertDescription } from "./ui/alert";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Separator } from "./ui/separator";
 import {
   Sheet,
@@ -11,32 +35,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
-import { TreeConditionGroup } from "./TreeConditionGroup";
-import { ThemeToggle } from "./ThemeToggle";
-import { JsonViewer } from "./JsonViewer";
 import { Textarea } from "./ui/textarea";
-import { Alert, AlertDescription } from "./ui/alert";
-import { AnimatedNumber } from "./AnimatedNumber";
 import { UndoRedoInfo } from "./UndoRedoInfo";
-import {
-  Plus,
-  Save,
-  FileJson,
-  PlayCircle,
-  AlertCircle,
-  TestTube2,
-  GitBranch,
-  Maximize2,
-  Minimize2,
-  Keyboard,
-} from "lucide-react";
-import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
-import { useKeyboardShortcuts } from "../hooks/use-keyboard-shortcuts";
-import { RuleEngine } from "@usex/rule-engine";
-import type { Condition } from "@usex/rule-engine";
-import type { FieldConfig } from "../types";
-import { cn } from "../lib/utils";
-import { Toaster, toast } from "sonner";
 
 interface TreeRuleBuilderProps {
   fields?: FieldConfig[];
@@ -89,12 +89,12 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
   labels = {},
   colors = {},
 }) => {
-  const { 
-    rule, 
-    updateConditions, 
-    undo, 
-    redo, 
-    canUndo, 
+  const {
+    rule,
+    updateConditions,
+    undo,
+    redo,
+    canUndo,
     canRedo,
     getUndoInfo,
     getRedoInfo,
@@ -113,15 +113,63 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
 
   // Keyboard shortcuts
   useKeyboardShortcuts([
-    { key: 'z', ctrl: true, handler: () => canUndo() && undo(), description: 'Undo last action' },
-    { key: 'y', ctrl: true, handler: () => canRedo() && redo(), description: 'Redo last action' },
-    { key: 'z', ctrl: true, shift: true, handler: () => canRedo() && redo(), description: 'Redo last action' },
-    { key: 's', ctrl: true, handler: () => onSave && !readOnly && handleSave(), description: 'Save rule' },
-    { key: 'e', ctrl: true, shift: true, handler: () => expandAll(), description: 'Expand all groups' },
-    { key: 'c', ctrl: true, shift: true, handler: () => collapseAll(), description: 'Collapse all groups' },
-    { key: 'r', ctrl: true, handler: () => !readOnly && addRootConditionGroup(), description: 'Add new rule group' },
-    { key: 't', ctrl: true, handler: () => setIsTestSheetOpen(true), description: 'Test rule' },
-    { key: '?', shift: true, handler: () => setShowKeyboardShortcuts(true), description: 'Show keyboard shortcuts' },
+    {
+      key: "z",
+      ctrl: true,
+      handler: () => canUndo() && undo(),
+      description: "Undo last action",
+    },
+    {
+      key: "y",
+      ctrl: true,
+      handler: () => canRedo() && redo(),
+      description: "Redo last action",
+    },
+    {
+      key: "z",
+      ctrl: true,
+      shift: true,
+      handler: () => canRedo() && redo(),
+      description: "Redo last action",
+    },
+    {
+      key: "s",
+      ctrl: true,
+      handler: () => onSave && !readOnly && handleSave(),
+      description: "Save rule",
+    },
+    {
+      key: "e",
+      ctrl: true,
+      shift: true,
+      handler: () => expandAll(),
+      description: "Expand all groups",
+    },
+    {
+      key: "c",
+      ctrl: true,
+      shift: true,
+      handler: () => collapseAll(),
+      description: "Collapse all groups",
+    },
+    {
+      key: "r",
+      ctrl: true,
+      handler: () => !readOnly && addRootConditionGroup(),
+      description: "Add new rule group",
+    },
+    {
+      key: "t",
+      ctrl: true,
+      handler: () => setIsTestSheetOpen(true),
+      description: "Test rule",
+    },
+    {
+      key: "?",
+      shift: true,
+      handler: () => setShowKeyboardShortcuts(true),
+      description: "Show keyboard shortcuts",
+    },
   ]);
 
   // Merge default labels
@@ -175,8 +223,10 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
       const engine = new RuleEngine();
       const result = await engine.evaluate(rule, data);
 
-      const isPassed = Array.isArray(result) ? result.some(r => r.isPassed) : result.isPassed;
-      
+      const isPassed = Array.isArray(result)
+        ? result.some((r) => r.isPassed)
+        : result.isPassed;
+
       setTestResult({
         success: true,
         result,
@@ -219,19 +269,19 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
     toast.success("Duplicated condition group");
   };
 
-  const handleSave = async () => {
+  async function handleSave() {
     if (!onSave) return;
 
     setIsSaving(true);
     try {
       await onSave(rule);
       toast.success(mergedLabels.saveSuccess);
-    } catch (error) {
+    } catch {
       toast.error("Failed to save rule");
     } finally {
       setIsSaving(false);
     }
-  };
+  }
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -251,7 +301,10 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
             <div className="flex items-center gap-2">
               {showToolbar && (
                 <>
-                  <Sheet open={isTestSheetOpen} onOpenChange={setIsTestSheetOpen}>
+                  <Sheet
+                    open={isTestSheetOpen}
+                    onOpenChange={setIsTestSheetOpen}
+                  >
                     <SheetTrigger asChild>
                       <Button variant="outline" size="sm">
                         <TestTube2 className="h-4 w-4 mr-2" />
@@ -383,7 +436,7 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                   )}
 
                   <Separator orientation="vertical" className="h-6" />
-                  
+
                   {/* Expand/Collapse buttons */}
                   <Button
                     variant="ghost"
@@ -401,15 +454,18 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                   >
                     <Minimize2 className="h-4 w-4" />
                   </Button>
-                  
+
                   <Separator orientation="vertical" className="h-6" />
-                  
+
                   {/* Keyboard shortcuts */}
-                  <Sheet open={showKeyboardShortcuts} onOpenChange={setShowKeyboardShortcuts}>
+                  <Sheet
+                    open={showKeyboardShortcuts}
+                    onOpenChange={setShowKeyboardShortcuts}
+                  >
                     <SheetTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
+                      <Button
+                        variant="ghost"
+                        size="icon"
                         title="Keyboard shortcuts (?)"
                       >
                         <Keyboard className="h-4 w-4" />
@@ -419,7 +475,8 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                       <SheetHeader>
                         <SheetTitle>Keyboard Shortcuts</SheetTitle>
                         <SheetDescription>
-                          Use these shortcuts to work faster with the rule builder
+                          Use these shortcuts to work faster with the rule
+                          builder
                         </SheetDescription>
                       </SheetHeader>
                       <div className="mt-6 space-y-4">
@@ -428,47 +485,63 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                           <div className="space-y-1 text-sm">
                             <div className="flex justify-between">
                               <span>Undo</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+Z</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+Z
+                              </kbd>
                             </div>
                             <div className="flex justify-between">
                               <span>Redo</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+Y</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+Y
+                              </kbd>
                             </div>
                             <div className="flex justify-between">
                               <span>Save</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+S</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+S
+                              </kbd>
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <h4 className="font-medium">Navigation</h4>
                           <div className="space-y-1 text-sm">
                             <div className="flex justify-between">
                               <span>Expand all</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+Shift+E</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+Shift+E
+                              </kbd>
                             </div>
                             <div className="flex justify-between">
                               <span>Collapse all</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+Shift+C</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+Shift+C
+                              </kbd>
                             </div>
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <h4 className="font-medium">Actions</h4>
                           <div className="space-y-1 text-sm">
                             <div className="flex justify-between">
                               <span>Add rule group</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+R</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+R
+                              </kbd>
                             </div>
                             <div className="flex justify-between">
                               <span>Test rule</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">Ctrl+T</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                Ctrl+T
+                              </kbd>
                             </div>
                             <div className="flex justify-between">
                               <span>Show shortcuts</span>
-                              <kbd className="px-2 py-1 bg-muted rounded text-xs">?</kbd>
+                              <kbd className="px-2 py-1 bg-muted rounded text-xs">
+                                ?
+                              </kbd>
                             </div>
                           </div>
                         </div>
@@ -499,7 +572,7 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                   </p>
                   {!readOnly && (
                     <div className="flex justify-center gap-3">
-                      <Button 
+                      <Button
                         onClick={() => addRootConditionGroup("or")}
                         size="default"
                         className="gap-2"
@@ -561,8 +634,11 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
         {showJsonViewer && (
           <div className="lg:col-span-1">
             <div className="sticky top-4">
-              <JsonViewer
+              <EditableJsonViewer
                 rule={rule}
+                onUpdate={(updatedRule) => {
+                  updateConditions(updatedRule.conditions);
+                }}
                 onImport={(imported) => {
                   if (onImport) {
                     onImport(JSON.stringify(imported), "json");
@@ -572,6 +648,7 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                 }}
                 expanded={expandedJson}
                 onExpandedChange={setExpandedJson}
+                readOnly={readOnly}
               />
             </div>
           </div>

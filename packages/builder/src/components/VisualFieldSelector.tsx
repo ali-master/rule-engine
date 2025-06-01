@@ -376,10 +376,10 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
         </DialogHeader>
 
         <Tabs defaultValue="visual" className="flex-1 flex flex-col">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className={cn("grid w-full", allowJsonPath ? "grid-cols-3" : "grid-cols-2")}>
             <TabsTrigger value="visual">Visual Explorer</TabsTrigger>
             <TabsTrigger value="fields">Defined Fields</TabsTrigger>
-            <TabsTrigger value="manual">Manual Entry</TabsTrigger>
+            {allowJsonPath && <TabsTrigger value="manual">Manual Entry</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="visual" className="flex-1 flex flex-col gap-4">
@@ -393,17 +393,20 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                   className="pl-9"
                 />
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setShowValuePreview(!showValuePreview)}
-              >
-                {showValuePreview ? (
-                  <Eye className="h-4 w-4" />
-                ) : (
-                  <EyeOff className="h-4 w-4" />
-                )}
-              </Button>
+              {showPreview && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowValuePreview(!showValuePreview)}
+                  title="Toggle value preview"
+                >
+                  {showValuePreview ? (
+                    <><Eye className="h-4 w-4 mr-1" /> Hide Preview</>
+                  ) : (
+                    <><EyeOff className="h-4 w-4 mr-1" /> Show Preview</>
+                  )}
+                </Button>
+              )}
             </div>
 
             <div className="flex-1 flex gap-4 min-h-0">
@@ -424,7 +427,7 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                 </ScrollArea>
               </Card>
 
-              {showValuePreview && (
+              {showValuePreview && showPreview && (
                 <Card className="w-80 p-4">
                   <h4 className="font-medium mb-2">Preview</h4>
                   <div className="space-y-2">
@@ -523,7 +526,8 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
             </ScrollArea>
           </TabsContent>
 
-          <TabsContent value="manual" className="flex-1 flex flex-col gap-4">
+          {allowJsonPath && (
+            <TabsContent value="manual" className="flex-1 flex flex-col gap-4">
             <div className="space-y-4">
               <div>
                 <Label>JSON Path Expression</Label>
@@ -573,7 +577,8 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                 </div>
               </div>
             </div>
-          </TabsContent>
+            </TabsContent>
+          )}
         </Tabs>
       </DialogContent>
     </Dialog>
