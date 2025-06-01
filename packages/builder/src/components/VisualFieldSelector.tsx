@@ -440,15 +440,15 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
               </Card>
 
               {showValuePreview && showPreview && (
-                <Card className="w-80 p-4">
+                <Card className="w-96 h-full flex flex-col p-4">
                   <h4 className="font-medium mb-2">Preview</h4>
-                  <div className="space-y-2">
+                  <div className="flex-1 flex flex-col gap-3 min-h-0">
                     <div>
                       <Label className="text-xs text-muted-foreground">
                         Path
                       </Label>
-                      <div className="flex items-center gap-2">
-                        <code className="text-sm bg-secondary text-secondary-foreground px-2 py-1 rounded flex-1">
+                      <div className="flex items-center gap-2 mt-1">
+                        <code className="text-sm bg-secondary text-secondary-foreground px-2 py-1 rounded flex-1 truncate">
                           {selectedPath || "No selection"}
                         </code>
                         <Button
@@ -467,19 +467,21 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                     </div>
 
                     {previewValue !== null && (
-                      <div>
-                        <Label className="text-xs text-muted-foreground">
+                      <div className="flex-1 flex flex-col min-h-0">
+                        <Label className="text-xs text-muted-foreground mb-1">
                           Value
                         </Label>
-                        <Card className="overflow-hidden">
-                          <div className="p-2 max-h-32 overflow-auto">
-                            <JsonViewer
-                              data={previewValue}
-                              rootName="value"
-                              defaultExpanded={true}
-                              className="text-xs"
-                            />
-                          </div>
+                        <Card className="flex-1 overflow-hidden border-muted">
+                          <ScrollArea className="h-full">
+                            <div className="p-3">
+                              <JsonViewer
+                                data={previewValue}
+                                rootName="value"
+                                defaultExpanded={true}
+                                className="text-xs"
+                              />
+                            </div>
+                          </ScrollArea>
                         </Card>
                       </div>
                     )}
