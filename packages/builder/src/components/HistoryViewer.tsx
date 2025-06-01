@@ -15,6 +15,7 @@ import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { cn } from "../lib/utils";
 import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
+import { DiffViewer } from "./DiffViewer";
 import { JsonViewer } from "./JsonVisualizer";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -75,18 +76,6 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
     setOpen(false);
   };
 
-  const getDiff = (before: any, after: any): string => {
-    // Simple JSON diff visualization
-    const beforeStr = JSON.stringify(before, null, 2);
-    const afterStr = JSON.stringify(after, null, 2);
-
-    if (beforeStr === afterStr) {
-      return "No changes";
-    }
-
-    // For a more sophisticated diff, you could use a library like diff
-    return `Before:\n${beforeStr}\n\nAfter:\n${afterStr}`;
-  };
 
   const getActionIcon = (action: string) => {
     switch (action.toLowerCase()) {
@@ -332,24 +321,24 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                       </TabsContent>
 
                       <TabsContent value="changes" className="flex-1 overflow-hidden p-0">
-                        <ScrollArea className="h-full">
-                          <div className="p-4">
-                            {selectedEntry.changes ? (
-                              <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-                                <code>
-                                  {getDiff(
-                                    selectedEntry.changes.before,
-                                    selectedEntry.changes.after,
-                                  )}
-                                </code>
-                              </pre>
-                            ) : (
+                        <div className="h-full p-4">
+                          {selectedEntry.changes ? (
+                            <DiffViewer
+                              oldValue={selectedEntry.changes.before}
+                              newValue={selectedEntry.changes.after}
+                              oldTitle="Before"
+                              newTitle="After"
+                              title="Changes"
+                              className="h-full"
+                            />
+                          ) : (
+                            <div className="h-full flex items-center justify-center">
                               <p className="text-sm text-muted-foreground">
                                 No change details available
                               </p>
-                            )}
-                          </div>
-                        </ScrollArea>
+                            </div>
+                          )}
+                        </div>
                       </TabsContent>
 
                       <TabsContent value="json" className="flex-1 overflow-hidden p-0">
@@ -372,27 +361,16 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
 
                       {compareEntry && (
                         <TabsContent value="compare" className="flex-1 overflow-hidden p-0">
-                          <ScrollArea className="h-full">
-                            <div className="p-4">
-                              <div className="space-y-4">
-                                <div>
-                                  <h4 className="font-medium text-sm mb-2">
-                                    Comparing v
-                                    {history.indexOf(selectedEntry) + 1} with v
-                                    {history.indexOf(compareEntry) + 1}
-                                  </h4>
-                                  <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto">
-                                    <code>
-                                      {getDiff(
-                                        compareEntry.rule,
-                                        selectedEntry.rule,
-                                      )}
-                                    </code>
-                                  </pre>
-                                </div>
-                              </div>
-                            </div>
-                          </ScrollArea>
+                          <div className="h-full p-4">
+                            <DiffViewer
+                              oldValue={compareEntry.rule}
+                              newValue={selectedEntry.rule}
+                              oldTitle={`Version ${history.indexOf(compareEntry) + 1}`}
+                              newTitle={`Version ${history.indexOf(selectedEntry) + 1}`}
+                              title={`Comparing v${history.indexOf(compareEntry) + 1} → v${history.indexOf(selectedEntry) + 1}`}
+                              className="h-full"
+                            />
+                          </div>
                         </TabsContent>
                       )}
                     </Tabs>

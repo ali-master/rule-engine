@@ -1,25 +1,35 @@
-import React, { useState, useMemo } from "react";
-import type { RuleType } from "@usex/rule-engine";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Textarea } from "./ui/textarea";
+import type { EvaluationResult, RuleType } from "@usex/rule-engine";
+import { RuleEngine } from "@usex/rule-engine";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  Copy,
+  Activity,
+  AlertCircle,
   Check,
+  CheckCircle2,
+  Copy,
   Download,
-  Upload,
+  Edit2,
   Maximize2,
   Minimize2,
-  Edit2,
+  Play,
   Save,
+  Upload,
   X,
-  AlertCircle,
+  XCircle,
+  Zap,
 } from "lucide-react";
-import { cn } from "../lib/utils";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
+import { cn } from "../lib/utils";
 import { JsonViewer } from "./JsonVisualizer";
+import { Alert, AlertDescription } from "./ui/alert";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Label } from "./ui/label";
+import { Separator } from "./ui/separator";
+import { Switch } from "./ui/switch";
+import { Textarea } from "./ui/textarea";
 
 interface EditableJsonViewerProps {
   rule: RuleType;
@@ -29,6 +39,8 @@ interface EditableJsonViewerProps {
   expanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
   readOnly?: boolean;
+  sampleData?: any;
+  showEvaluator?: boolean;
 }
 
 export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
@@ -39,12 +51,20 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
   expanded = false,
   onExpandedChange,
   readOnly = false,
+  sampleData,
+  showEvaluator = true,
 }) => {
   const [copied, setCopied] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedJson, setEditedJson] = useState("");
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Evaluator state
+  const [isLiveMode, setIsLiveMode] = useState(false);
+  const [evaluationResult, setEvaluationResult] =
+    useState<EvaluationResult | null>(null);
+  const [isEvaluating, setIsEvaluating] = useState(false);
 
   const jsonString = useMemo(() => {
     return JSON.stringify(rule, null, 2);
@@ -101,12 +121,12 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
   const handleSaveEdit = () => {
     try {
       const parsedRule = JSON.parse(editedJson) as RuleType;
-      
+
       // Basic validation
       if (!parsedRule.conditions) {
         throw new Error("Rule must have conditions");
       }
-      
+
       if (onUpdate) {
         onUpdate(parsedRule);
         setIsEditing(false);
@@ -133,115 +153,227 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
 
   const lineCount = jsonString.split("\n").length;
 
+  // Evaluate rule function
+  const evaluateRule = useCallback(async () => {
+    if (!rule || !rule.conditions || !sampleData) {
+      return;
+    }
+
+    setIsEvaluating(true);
+
+    try {
+      const result = await RuleEngine.evaluate(rule, sampleData);
+      const evalResult = Array.isArray(result) ? result[0] : result;
+      setEvaluationResult(evalResult);
+    } catch {
+      setEvaluationResult(null);
+    } finally {
+      setIsEvaluating(false);
+    }
+  }, [rule, sampleData]);
+
+  // Live evaluation effect
+  useEffect(() => {
+    if (isLiveMode && showEvaluator) {
+      evaluateRule();
+    }
+  }, [isLiveMode, rule, sampleData, evaluateRule, showEvaluator]);
+
   return (
     <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-        <div className="flex items-center gap-2">
-          <CardTitle className="text-base font-medium">Rule JSON</CardTitle>
-          <Badge variant="secondary" className="text-xs">
-            {lineCount} lines
-          </Badge>
-          {isEditing && (
-            <Badge variant="destructive" className="text-xs">
-              Editing
-            </Badge>
-          )}
-        </div>
-        <div className="flex items-center gap-1">
-          {!isEditing && (
-            <>
-              {onImport && (
-                <>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".json,application/json"
-                    onChange={handleImport}
-                    className="hidden"
+      <CardHeader className="space-y-0">
+        {/* Evaluator Row */}
+        {showEvaluator && sampleData && (
+          <>
+            <div className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-3">
+                <Activity className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm font-medium">Rule Evaluation</span>
+                {isEvaluating && (
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      duration: 1,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
+                  >
+                    <Zap className="h-3 w-3 text-yellow-500" />
+                  </motion.div>
+                )}
+                {evaluationResult && (
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={evaluationResult.isPassed ? "pass" : "fail"}
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 30,
+                      }}
+                      className={cn(
+                        "flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium",
+                        evaluationResult.isPassed
+                          ? "bg-green-500/20 text-green-600"
+                          : "bg-red-500/20 text-red-600",
+                      )}
+                    >
+                      {evaluationResult.isPassed ? (
+                        <>
+                          <CheckCircle2 className="h-3 w-3" />
+                          <span>Pass</span>
+                        </>
+                      ) : (
+                        <>
+                          <XCircle className="h-3 w-3" />
+                          <span>Fail</span>
+                        </>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Switch
+                    id="live-eval"
+                    checked={isLiveMode}
+                    onCheckedChange={setIsLiveMode}
+                    className="h-4 w-8"
                   />
+                  <Label htmlFor="live-eval" className="text-xs cursor-pointer">
+                    Live
+                  </Label>
+                </div>
+                {!isLiveMode && (
                   <Button
                     variant="ghost"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={() => fileInputRef.current?.click()}
-                    title="Import JSON"
+                    size="sm"
+                    onClick={evaluateRule}
+                    disabled={isEvaluating}
+                    className="h-7 px-2 text-xs"
                   >
-                    <Upload className="h-4 w-4" />
+                    <Play className="h-3 w-3 mr-1" />
+                    Evaluate
                   </Button>
-                </>
-              )}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={handleExport}
-                title="Export JSON"
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8"
-                onClick={handleCopy}
-                title="Copy JSON"
-              >
-                {copied ? (
-                  <Check className="h-4 w-4 text-green-600" />
-                ) : (
-                  <Copy className="h-4 w-4" />
                 )}
-              </Button>
-              {!readOnly && onUpdate && (
+              </div>
+            </div>
+            <Separator className="mb-3" />
+          </>
+        )}
+
+        {/* Original Header */}
+        <div className="flex flex-row items-center justify-between pb-3">
+          <div className="flex items-center gap-2">
+            <CardTitle className="text-base font-medium">Rule JSON</CardTitle>
+            <Badge variant="secondary" className="text-xs">
+              {lineCount} lines
+            </Badge>
+            {isEditing && (
+              <Badge variant="destructive" className="text-xs">
+                Editing
+              </Badge>
+            )}
+          </div>
+          <div className="flex items-center gap-1">
+            {!isEditing && (
+              <>
+                {onImport && (
+                  <>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".json,application/json"
+                      onChange={handleImport}
+                      className="hidden"
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => fileInputRef.current?.click()}
+                      title="Import JSON"
+                    >
+                      <Upload className="h-4 w-4" />
+                    </Button>
+                  </>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={handleStartEdit}
-                  title="Edit JSON"
+                  onClick={handleExport}
+                  title="Export JSON"
                 >
-                  <Edit2 className="h-4 w-4" />
+                  <Download className="h-4 w-4" />
                 </Button>
-              )}
-            </>
-          )}
-          {isEditing && (
-            <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={handleCopy}
+                  title="Copy JSON"
+                >
+                  {copied ? (
+                    <Check className="h-4 w-4 text-green-600" />
+                  ) : (
+                    <Copy className="h-4 w-4" />
+                  )}
+                </Button>
+                {!readOnly && onUpdate && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8"
+                    onClick={handleStartEdit}
+                    title="Edit JSON"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </>
+            )}
+            {isEditing && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-green-600 hover:text-green-700"
+                  onClick={handleSaveEdit}
+                  title="Save changes"
+                >
+                  <Save className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-destructive hover:text-destructive"
+                  onClick={handleCancelEdit}
+                  title="Cancel editing"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+            {onExpandedChange && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-green-600 hover:text-green-700"
-                onClick={handleSaveEdit}
-                title="Save changes"
+                className="h-8 w-8"
+                onClick={() => onExpandedChange(!expanded)}
+                title={expanded ? "Minimize" : "Maximize"}
               >
-                <Save className="h-4 w-4" />
+                {expanded ? (
+                  <Minimize2 className="h-4 w-4" />
+                ) : (
+                  <Maximize2 className="h-4 w-4" />
+                )}
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-destructive hover:text-destructive"
-                onClick={handleCancelEdit}
-                title="Cancel editing"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </>
-          )}
-          {onExpandedChange && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => onExpandedChange(!expanded)}
-              title={expanded ? "Minimize" : "Maximize"}
-            >
-              {expanded ? (
-                <Minimize2 className="h-4 w-4" />
-              ) : (
-                <Maximize2 className="h-4 w-4" />
-              )}
-            </Button>
-          )}
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent className="p-0">

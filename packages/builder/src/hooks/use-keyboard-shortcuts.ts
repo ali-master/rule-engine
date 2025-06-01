@@ -13,15 +13,15 @@ interface ShortcutConfig {
 export const useKeyboardShortcuts = (shortcuts: ShortcutConfig[]) => {
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
     for (const shortcut of shortcuts) {
-      const isCtrlPressed = shortcut.ctrl ? (event.ctrlKey || event.metaKey) : true;
-      const isCmdPressed = shortcut.cmd ? event.metaKey : true;
-      const isShiftPressed = shortcut.shift ? event.shiftKey : !shortcut.shift || !event.shiftKey;
-      const isAltPressed = shortcut.alt ? event.altKey : !shortcut.alt || !event.altKey;
+      // Check modifier keys
+      const ctrlOrCmd = shortcut.ctrl || shortcut.cmd;
+      const isCtrlOrCmdPressed = ctrlOrCmd ? (event.ctrlKey || event.metaKey) : !(event.ctrlKey || event.metaKey);
+      const isShiftPressed = shortcut.shift ? event.shiftKey : !event.shiftKey;
+      const isAltPressed = shortcut.alt ? event.altKey : !event.altKey;
       
       if (
         event.key.toLowerCase() === shortcut.key.toLowerCase() &&
-        isCtrlPressed &&
-        isCmdPressed &&
+        isCtrlOrCmdPressed &&
         isShiftPressed &&
         isAltPressed
       ) {

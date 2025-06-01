@@ -689,6 +689,8 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                 expanded={expandedJson}
                 onExpandedChange={setExpandedJson}
                 readOnly={readOnly}
+                sampleData={sampleData}
+                showEvaluator={true}
               />
             </div>
           </div>

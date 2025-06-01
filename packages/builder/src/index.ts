@@ -2,9 +2,11 @@
 import "./styles/globals.css";
 
 // Sub-components (for advanced usage)
+export { DiffViewer } from "./components/DiffViewer";
 export { DraggableConditionGroup } from "./components/DraggableConditionGroup";
 export { DynamicFieldSelector } from "./components/DynamicFieldSelector";
 export { FieldSelector } from "./components/FieldSelector";
+export { HistoryViewer } from "./components/HistoryViewer";
 export { ArrayInput } from "./components/inputs/ArrayInput";
 export { BooleanInput } from "./components/inputs/BooleanInput";
 
@@ -19,6 +21,7 @@ export { ModernConstraintEditor } from "./components/ModernConstraintEditor";
 export { ModernRuleBuilder } from "./components/ModernRuleBuilder";
 export { ModernRuleBuilder as RuleBuilder } from "./components/ModernRuleBuilder";
 export { OperatorSelector } from "./components/OperatorSelector";
+export { RuleEvaluator } from "./components/RuleEvaluator";
 
 export { ThemeToggle } from "./components/ThemeToggle";
 export { TreeConditionGroup } from "./components/TreeConditionGroup";
@@ -29,6 +32,7 @@ export { VisualFieldSelector } from "./components/VisualFieldSelector";
 export { useFieldDiscovery } from "./hooks/use-field-discovery";
 export { useTheme } from "./hooks/use-theme";
 // Stores and hooks
+export { useEnhancedRuleStore } from "./stores/enhanced-rule-store";
 export { useRuleStore } from "./stores/rule-store";
 
 // Types

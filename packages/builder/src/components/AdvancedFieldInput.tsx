@@ -178,7 +178,9 @@ function extractFieldsFromData(
           fieldType === "object" || fieldType === "array" ? undefined : value,
         category: "field",
         preview:
-          fieldType === "string" && value ? value.slice(0, 50) : undefined,
+          fieldType === "string" && value
+            ? (value as string).slice(0, 50)
+            : undefined,
       });
 
       if (fieldType === "object" || fieldType === "array") {
