@@ -5,8 +5,6 @@
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
-      <excludeFolder url="file://$MODULE_DIR$/.claude" />
-      <excludeFolder url="file://$MODULE_DIR$/packages/raft/dist" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
