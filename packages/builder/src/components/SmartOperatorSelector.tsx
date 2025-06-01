@@ -104,6 +104,56 @@ const operatorIcons: Record<string, React.ElementType> = {
   falsy: ToggleRight,
 };
 
+const operatorColors: Record<string, string> = {
+  // Comparison
+  equals: "text-blue-600 dark:text-blue-400",
+  "not-equals": "text-blue-600 dark:text-blue-400",
+  "greater-than": "text-green-600 dark:text-green-400",
+  "less-than": "text-green-600 dark:text-green-400",
+  "greater-than-or-equals": "text-green-600 dark:text-green-400",
+  "less-than-or-equals": "text-green-600 dark:text-green-400",
+  between: "text-green-600 dark:text-green-400",
+  "not-between": "text-green-600 dark:text-green-400",
+  
+  // String
+  contains: "text-purple-600 dark:text-purple-400",
+  "not-contains": "text-purple-600 dark:text-purple-400",
+  "contains-any": "text-purple-600 dark:text-purple-400",
+  "contains-all": "text-purple-600 dark:text-purple-400",
+  matches: "text-indigo-600 dark:text-indigo-400",
+  "not-matches": "text-indigo-600 dark:text-indigo-400",
+  like: "text-purple-600 dark:text-purple-400",
+  "not-like": "text-purple-600 dark:text-purple-400",
+  
+  // Array
+  in: "text-yellow-600 dark:text-yellow-400",
+  "not-in": "text-yellow-600 dark:text-yellow-400",
+  "self-contains-any": "text-yellow-600 dark:text-yellow-400",
+  "self-contains-all": "text-yellow-600 dark:text-yellow-400",
+  
+  // Date
+  "date-after": "text-orange-600 dark:text-orange-400",
+  "date-before": "text-orange-600 dark:text-orange-400",
+  "date-between": "text-orange-600 dark:text-orange-400",
+  "date-equals": "text-orange-600 dark:text-orange-400",
+  "date-after-now": "text-orange-600 dark:text-orange-400",
+  "date-before-now": "text-orange-600 dark:text-orange-400",
+  
+  // Boolean
+  truthy: "text-emerald-600 dark:text-emerald-400",
+  falsy: "text-red-600 dark:text-red-400",
+  boolean: "text-emerald-600 dark:text-emerald-400",
+  "not-boolean": "text-emerald-600 dark:text-emerald-400",
+  
+  // Existence
+  exists: "text-teal-600 dark:text-teal-400",
+  "not-exists": "text-teal-600 dark:text-teal-400",
+  empty: "text-gray-600 dark:text-gray-400",
+  "not-empty": "text-gray-600 dark:text-gray-400",
+  "null-or-undefined": "text-gray-600 dark:text-gray-400",
+  "not-null-or-undefined": "text-gray-600 dark:text-gray-400",
+};
+
 export const SmartOperatorSelector: React.FC<ExtendedOperatorSelectorProps> = ({
   value,
   onChange,
@@ -349,7 +399,7 @@ export const SmartOperatorSelector: React.FC<ExtendedOperatorSelectorProps> = ({
             {selectedOperator &&
               operatorIcons[selectedOperator.name] &&
               React.createElement(operatorIcons[selectedOperator.name], {
-                className: "h-4 w-4",
+                className: cn("h-4 w-4", operatorColors[selectedOperator.name]),
               })}
             <span>
               {selectedOperator?.label || value || "Select operator..."}
@@ -421,7 +471,7 @@ export const SmartOperatorSelector: React.FC<ExtendedOperatorSelectorProps> = ({
                             "group",
                           )}
                         >
-                          <OperatorIcon className="mr-2 h-4 w-4" />
+                          <OperatorIcon className={cn("mr-2 h-4 w-4", operatorColors[operator.name])} />
                           <div className="flex-1 text-left">
                             <div className="flex items-center gap-2">
                               <span className="font-medium">
