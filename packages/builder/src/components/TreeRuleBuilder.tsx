@@ -20,6 +20,7 @@ import { cn } from "../lib/utils";
 import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
 import { AnimatedNumber } from "./AnimatedNumber";
 import { EditableJsonViewer } from "./EditableJsonViewer";
+import { HistoryViewer } from "./HistoryViewer";
 import { ThemeToggle } from "./ThemeToggle";
 import { TreeConditionGroup } from "./TreeConditionGroup";
 import { Alert, AlertDescription } from "./ui/alert";
@@ -400,6 +401,11 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                     redoInfo={getRedoInfo()}
                     historyInfo={getHistoryInfo()}
                   />
+                  
+                  <Separator orientation="vertical" className="h-6" />
+                  
+                  {/* History Viewer */}
+                  <HistoryViewer />
 
                   {onSave && (
                     <>

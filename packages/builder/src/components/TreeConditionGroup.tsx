@@ -1,7 +1,22 @@
-import React, { useMemo } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
+import type { Condition, ConditionType, Constraint } from "@usex/rule-engine";
+import type { FieldConfig } from "../types";
+import {
+  ChevronDown,
+  ChevronRight,
+  Copy,
+  GitBranch,
+  Layers,
+  Plus,
+  Trash2,
+} from "lucide-react";
+import React from "react";
+import { toast } from "sonner";
+import { cn } from "../lib/utils";
+import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
+import { TreeConstraintEditor } from "./TreeConstraintEditor";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
 import {
   Select,
   SelectContent,
@@ -9,21 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import {
-  ChevronRight,
-  ChevronDown,
-  Plus,
-  Trash2,
-  Copy,
-  Layers,
-  GitBranch,
-} from "lucide-react";
-import { TreeConstraintEditor } from "./TreeConstraintEditor";
-import type { Condition, Constraint, ConditionType } from "@usex/rule-engine";
-import type { FieldConfig } from "../types";
-import { cn } from "../lib/utils";
-import { toast } from "sonner";
-import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
 
 interface TreeConditionGroupProps {
   condition: Condition;
@@ -69,11 +69,11 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
   colors = {},
 }) => {
   const { isGroupExpanded, toggleGroupExpanded } = useEnhancedRuleStore();
-  const groupPath = path.join('-');
+  const groupPath = path.join("-");
   const isExpanded = depth === 0 ? true : isGroupExpanded(groupPath);
 
   const conditionType = Object.keys(condition).find(
-    (key) => key === "or" || key === "and" || key === "none"
+    (key) => key === "or" || key === "and" || key === "none",
   ) as ConditionType;
 
   const items = condition[conditionType] || [];
@@ -170,7 +170,7 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
           "transition-all duration-200",
           "hover:shadow-sm",
           depth === 0 ? "border-2" : "border",
-          depth === 0 && typeColors[conditionType]
+          depth === 0 && typeColors[conditionType],
         )}
       >
         <div className="p-4">

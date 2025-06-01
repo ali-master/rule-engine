@@ -1,6 +1,12 @@
+import type { OperatorHandlerProps } from "./index";
+import { Hash, Info, Sparkles } from "lucide-react";
 import React from "react";
-import { Input } from "../ui/input";
+import { DynamicFieldSelector } from "../DynamicFieldSelector";
+import { Alert, AlertDescription } from "../ui/alert";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
   Select,
   SelectContent,
@@ -8,18 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Label } from "../ui/label";
-import { Badge } from "../ui/badge";
-import { Info, Sparkles, Hash } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { Alert, AlertDescription } from "../ui/alert";
-import { DynamicFieldSelector } from "../DynamicFieldSelector";
-import type { OperatorHandlerProps } from "./index";
 
 export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
   operator,
@@ -30,11 +30,16 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
   sampleData,
   disabled,
 }) => {
-  const [inputMode, setInputMode] = React.useState<'value' | 'field'>(
-    typeof value === 'string' && value.startsWith('$.') ? 'field' : 'value'
+  const [inputMode, setInputMode] = React.useState<"value" | "field">(
+    typeof value === "string" && value.startsWith("$.") ? "field" : "value",
   );
   const isLikeOperator = operator === "like" || operator === "not-like";
-  const isNumericOperator = ['greater-than', 'less-than', 'greater-than-or-equals', 'less-than-or-equals'].includes(operator);
+  const isNumericOperator = [
+    "greater-than",
+    "less-than",
+    "greater-than-or-equals",
+    "less-than-or-equals",
+  ].includes(operator);
 
   // Common header with mode toggle
   const renderHeader = () => (
@@ -49,20 +54,20 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
       </div>
       <div className="flex items-center gap-1">
         <Button
-          variant={inputMode === 'value' ? 'secondary' : 'ghost'}
+          variant={inputMode === "value" ? "secondary" : "ghost"}
           size="sm"
           className="h-7 px-2"
-          onClick={() => setInputMode('value')}
+          onClick={() => setInputMode("value")}
           disabled={disabled}
         >
           <Hash className="h-3 w-3 mr-1" />
           Static
         </Button>
         <Button
-          variant={inputMode === 'field' ? 'secondary' : 'ghost'}
+          variant={inputMode === "field" ? "secondary" : "ghost"}
           size="sm"
           className="h-7 px-2"
-          onClick={() => setInputMode('field')}
+          onClick={() => setInputMode("field")}
           disabled={disabled}
         >
           <Sparkles className="h-3 w-3 mr-1" />
@@ -77,7 +82,7 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
     return (
       <div className="space-y-3">
         {renderHeader()}
-        {inputMode === 'field' ? (
+        {inputMode === "field" ? (
           <>
             <DynamicFieldSelector
               value={value}
@@ -99,7 +104,11 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
               type="number"
               value={value || ""}
               onChange={(e) =>
-                onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                onChange(
+                  e.target.value
+                    ? Number.parseFloat(e.target.value)
+                    : undefined,
+                )
               }
               placeholder="Enter number"
               disabled={disabled}
@@ -172,13 +181,15 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
           className="font-mono"
         />
         <div className="space-y-2">
-          <Label className="text-xs text-muted-foreground">Quick patterns:</Label>
+          <Label className="text-xs text-muted-foreground">
+            Quick patterns:
+          </Label>
           <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
               size="sm"
               onClick={() => {
-                const currentValue = value?.toString().replace(/%/g, '') || '';
+                const currentValue = value?.toString().replace(/%/g, "") || "";
                 onChange(`%${currentValue}%`);
               }}
               disabled={disabled}
@@ -189,7 +200,7 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
               variant="outline"
               size="sm"
               onClick={() => {
-                const currentValue = value?.toString().replace(/%/g, '') || '';
+                const currentValue = value?.toString().replace(/%/g, "") || "";
                 onChange(`${currentValue}%`);
               }}
               disabled={disabled}
@@ -200,7 +211,7 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
               variant="outline"
               size="sm"
               onClick={() => {
-                const currentValue = value?.toString().replace(/%/g, '') || '';
+                const currentValue = value?.toString().replace(/%/g, "") || "";
                 onChange(`%${currentValue}`);
               }}
               disabled={disabled}
@@ -221,7 +232,8 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
           <Alert>
             <Info className="h-4 w-4" />
             <AlertDescription className="text-xs">
-              Pattern preview: <code className="font-mono bg-muted px-1">{value}</code>
+              Pattern preview:{" "}
+              <code className="font-mono bg-muted px-1">{value}</code>
             </AlertDescription>
           </Alert>
         )}
@@ -233,7 +245,7 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
   return (
     <div className="space-y-3">
       {renderHeader()}
-      {inputMode === 'field' ? (
+      {inputMode === "field" ? (
         <>
           <DynamicFieldSelector
             value={value}
@@ -252,8 +264,12 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
       ) : (
         <>
           {/* Conditional inputs based on field type */}
-          {fieldType === 'boolean' ? (
-            <Select value={value?.toString()} onValueChange={(v) => onChange(v === 'true')} disabled={disabled}>
+          {fieldType === "boolean" ? (
+            <Select
+              value={value?.toString()}
+              onValueChange={(v) => onChange(v === "true")}
+              disabled={disabled}
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select boolean value" />
               </SelectTrigger>
@@ -262,12 +278,16 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
                 <SelectItem value="false">False</SelectItem>
               </SelectContent>
             </Select>
-          ) : fieldType === 'number' ? (
+          ) : fieldType === "number" ? (
             <Input
               type="number"
               value={value || ""}
               onChange={(e) =>
-                onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                onChange(
+                  e.target.value
+                    ? Number.parseFloat(e.target.value)
+                    : undefined,
+                )
               }
               placeholder="Enter number"
               disabled={disabled}
@@ -281,14 +301,14 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
               disabled={disabled}
             />
           )}
-          
+
           {/* Quick values based on field type */}
-          {fieldType === 'string' && (
+          {fieldType === "string" && (
             <div className="flex gap-2">
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onChange('')}
+                onClick={() => onChange("")}
                 disabled={disabled}
               >
                 Empty
@@ -296,7 +316,7 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onChange('null')}
+                onClick={() => onChange("null")}
                 disabled={disabled}
               >
                 "null"
@@ -304,7 +324,7 @@ export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onChange('undefined')}
+                onClick={() => onChange("undefined")}
                 disabled={disabled}
               >
                 "undefined"
