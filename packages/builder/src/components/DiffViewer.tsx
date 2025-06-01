@@ -1,10 +1,12 @@
 import * as Diff from "diff";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  BarChart3,
   ChevronDown,
   ChevronRight,
   Copy,
   FileJson,
+  GitBranch,
   Minus,
   Plus,
 } from "lucide-react";
@@ -15,7 +17,14 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { Separator } from "./ui/separator";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface DiffViewerProps {
   oldValue: any;
@@ -25,6 +34,147 @@ interface DiffViewerProps {
   oldTitle?: string;
   newTitle?: string;
 }
+
+// DiffStats Component
+const DiffStatsComponent: React.FC<{ stats: DiffStats }> = ({ stats }) => {
+  const totalChanges =
+    (stats.addedProperties?.length || 0) +
+    (stats.removedProperties?.length || 0) +
+    (stats.modifiedProperties?.length || 0);
+
+  return (
+    <TooltipProvider>
+      <div className="flex items-center gap-2">
+        {/* Basic Stats */}
+        <div className="flex items-center gap-1 text-sm">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Badge variant="secondary" className="gap-1 cursor-help">
+                <Plus className="h-3 w-3" />
+                {stats.additions}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">{stats.additions} lines added</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Badge variant="secondary" className="gap-1 cursor-help">
+                <Minus className="h-3 w-3" />
+                {stats.deletions}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">{stats.deletions} lines removed</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
+        <Separator orientation="vertical" className="h-4" />
+
+        {/* Property Changes */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge variant="outline" className="gap-1 cursor-help">
+              <GitBranch className="h-3 w-3" />
+              {totalChanges} properties
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs">
+            <div className="space-y-2">
+              <p className="font-semibold text-xs">Property Changes:</p>
+              {stats.addedProperties && stats.addedProperties.length > 0 && (
+                <div className="space-y-1">
+                  <p className="text-xs text-green-600 dark:text-green-400">
+                    Added ({stats.addedProperties.length}):
+                  </p>
+                  <ul className="text-xs space-y-0.5 ml-2">
+                    {stats.addedProperties.slice(0, 5).map((prop, i) => (
+                      <li
+                        key={i}
+                        className="text-green-600 dark:text-green-400"
+                      >
+                        + {prop}
+                      </li>
+                    ))}
+                    {stats.addedProperties.length > 5 && (
+                      <li className="text-muted-foreground">
+                        ...and {stats.addedProperties.length - 5} more
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+              {stats.removedProperties &&
+                stats.removedProperties.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs text-red-600 dark:text-red-400">
+                      Removed ({stats.removedProperties.length}):
+                    </p>
+                    <ul className="text-xs space-y-0.5 ml-2">
+                      {stats.removedProperties.slice(0, 5).map((prop, i) => (
+                        <li key={i} className="text-red-600 dark:text-red-400">
+                          - {prop}
+                        </li>
+                      ))}
+                      {stats.removedProperties.length > 5 && (
+                        <li className="text-muted-foreground">
+                          ...and {stats.removedProperties.length - 5} more
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+              {stats.modifiedProperties &&
+                stats.modifiedProperties.length > 0 && (
+                  <div className="space-y-1">
+                    <p className="text-xs text-blue-600 dark:text-blue-400">
+                      Modified ({stats.modifiedProperties.length}):
+                    </p>
+                    <ul className="text-xs space-y-0.5 ml-2">
+                      {stats.modifiedProperties.slice(0, 5).map((prop, i) => (
+                        <li
+                          key={i}
+                          className="text-blue-600 dark:text-blue-400"
+                        >
+                          ~ {prop}
+                        </li>
+                      ))}
+                      {stats.modifiedProperties.length > 5 && (
+                        <li className="text-muted-foreground">
+                          ...and {stats.modifiedProperties.length - 5} more
+                        </li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+            </div>
+          </TooltipContent>
+        </Tooltip>
+
+        {/* Summary */}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge variant="outline" className="gap-1 cursor-help text-xs">
+              <BarChart3 className="h-3 w-3" />
+              {Math.round(
+                (stats.changes / Math.max(stats.totalLines, 1)) * 100,
+              )}
+              % changed
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p className="text-xs">
+              {stats.changes} of {stats.totalLines} lines changed
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+    </TooltipProvider>
+  );
+};
 
 interface DiffLine {
   type: "added" | "removed" | "unchanged" | "context";
@@ -40,6 +190,10 @@ interface DiffStats {
   additions: number;
   deletions: number;
   changes: number;
+  totalLines: number;
+  addedProperties?: string[];
+  removedProperties?: string[];
+  modifiedProperties?: string[];
 }
 
 export const DiffViewer: React.FC<DiffViewerProps> = ({
@@ -56,14 +210,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   );
 
   // Convert objects to formatted JSON strings
-  const oldJson = useMemo(
-    () => JSON.stringify(oldValue, null, 2),
-    [oldValue],
-  );
-  const newJson = useMemo(
-    () => JSON.stringify(newValue, null, 2),
-    [newValue],
-  );
+  const oldJson = useMemo(() => JSON.stringify(oldValue, null, 2), [oldValue]);
+  const newJson = useMemo(() => JSON.stringify(newValue, null, 2), [newValue]);
+
+  // Helper function to get indentation level
+  const getIndentLevel = (line: string): number => {
+    const match = line.match(/^(\s*)/);
+    return match ? match[1].length / 2 : 0;
+  };
 
   // Calculate diff
   const { diffLines, stats } = useMemo(() => {
@@ -78,7 +232,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     let deletions = 0;
 
     changes.forEach((part) => {
-      const partLines = part.value.split("\n").filter(line => line !== "");
+      const partLines = part.value.split("\n").filter((line) => line !== "");
 
       if (part.added) {
         additions += partLines.length;
@@ -113,12 +267,65 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
       }
     });
 
+    // Calculate property-level changes
+    const oldObj = JSON.parse(oldJson);
+    const newObj = JSON.parse(newJson);
+
+    const analyzeProperties = (obj1: any, obj2: any, path = "") => {
+      const props = {
+        added: [] as string[],
+        removed: [] as string[],
+        modified: [] as string[],
+      };
+
+      const allKeys = new Set([
+        ...Object.keys(obj1 || {}),
+        ...Object.keys(obj2 || {}),
+      ]);
+
+      allKeys.forEach((key) => {
+        const fullPath = path ? `${path}.${key}` : key;
+
+        if (!(key in obj1)) {
+          props.added.push(fullPath);
+        } else if (!(key in obj2)) {
+          props.removed.push(fullPath);
+        } else if (JSON.stringify(obj1[key]) !== JSON.stringify(obj2[key])) {
+          props.modified.push(fullPath);
+
+          // Recursively analyze nested objects
+          if (
+            typeof obj1[key] === "object" &&
+            typeof obj2[key] === "object" &&
+            obj1[key] !== null &&
+            obj2[key] !== null &&
+            !Array.isArray(obj1[key]) &&
+            !Array.isArray(obj2[key])
+          ) {
+            const nested = analyzeProperties(obj1[key], obj2[key], fullPath);
+            props.added.push(...nested.added);
+            props.removed.push(...nested.removed);
+            props.modified = props.modified.filter((p) => p !== fullPath);
+            props.modified.push(...nested.modified);
+          }
+        }
+      });
+
+      return props;
+    };
+
+    const propertyChanges = analyzeProperties(oldObj, newObj);
+
     return {
       diffLines: lines,
       stats: {
         additions,
         deletions,
         changes: Math.min(additions, deletions),
+        totalLines: lines.length,
+        addedProperties: propertyChanges.added,
+        removedProperties: propertyChanges.removed,
+        modifiedProperties: propertyChanges.modified,
       },
     };
   }, [oldJson, newJson]);
@@ -134,11 +341,14 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     let currentGroup: DiffLine[] = [];
     let currentType: "diff" | "context" = "context";
 
-    diffLines.forEach((line, index) => {
+    diffLines.forEach((line) => {
       const isDiff = line.type === "added" || line.type === "removed";
       const groupType = isDiff ? "diff" : "context";
 
-      if (groupType !== currentType || (currentType === "context" && currentGroup.length >= 10)) {
+      if (
+        groupType !== currentType ||
+        (currentType === "context" && currentGroup.length >= 10)
+      ) {
         if (currentGroup.length > 0) {
           groups.push({
             type: currentType,
@@ -164,11 +374,6 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     return groups;
   }, [diffLines]);
 
-  const getIndentLevel = (line: string): number => {
-    const match = line.match(/^(\s*)/);
-    return match ? match[1].length / 2 : 0;
-  };
-
   const toggleSection = (id: string) => {
     setCollapsedSections((prev) => {
       const next = new Set(prev);
@@ -185,21 +390,36 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     try {
       await navigator.clipboard.writeText(text);
       toast.success(`${label} copied to clipboard`);
-    } catch (err) {
+    } catch {
       toast.error("Failed to copy to clipboard");
     }
   };
 
   const renderLineContent = (line: DiffLine) => {
     const content = line.content;
-    
+
     // Syntax highlighting for JSON
     const highlightedContent = content
-      .replace(/("[\w\s-]+")\s*:/g, '<span class="text-blue-600 dark:text-blue-400">$1</span>:')
-      .replace(/:\s*(".*?")/g, ': <span class="text-green-600 dark:text-green-400">$1</span>')
-      .replace(/:\s*(\d+)/g, ': <span class="text-purple-600 dark:text-purple-400">$1</span>')
-      .replace(/:\s*(true|false)/g, ': <span class="text-orange-600 dark:text-orange-400">$1</span>')
-      .replace(/:\s*(null)/g, ': <span class="text-gray-500 dark:text-gray-400">$1</span>');
+      .replace(
+        /("[\w\s-]+")\s*:/g,
+        '<span class="text-blue-600 dark:text-blue-400">$1</span>:',
+      )
+      .replace(
+        /:\s*(".*?")/g,
+        ': <span class="text-green-600 dark:text-green-400">$1</span>',
+      )
+      .replace(
+        /:\s*(\d+)/g,
+        ': <span class="text-purple-600 dark:text-purple-400">$1</span>',
+      )
+      .replace(
+        /:\s*(true|false)/g,
+        ': <span class="text-orange-600 dark:text-orange-400">$1</span>',
+      )
+      .replace(
+        /:\s*(null)/g,
+        ': <span class="text-gray-500 dark:text-gray-400">$1</span>',
+      );
 
     return (
       <span
@@ -214,7 +434,8 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
       <div className="p-4">
         {groupedLines.map((group) => {
           const isCollapsed = collapsedSections.has(group.id);
-          const canCollapse = group.type === "context" && group.lines.length > 3;
+          const canCollapse =
+            group.type === "context" && group.lines.length > 3;
 
           return (
             <div key={group.id} className="mb-2">
@@ -235,7 +456,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
                     : "Hide unchanged lines"}
                 </Button>
               )}
-              
+
               <AnimatePresence mode="wait">
                 {!isCollapsed && (
                   <motion.div
@@ -403,18 +624,9 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             <CardTitle>{title}</CardTitle>
           </div>
           <div className="flex items-center gap-4">
-            {/* Stats */}
-            <div className="flex items-center gap-2 text-sm">
-              <Badge variant="secondary" className="gap-1">
-                <Plus className="h-3 w-3" />
-                {stats.additions}
-              </Badge>
-              <Badge variant="secondary" className="gap-1">
-                <Minus className="h-3 w-3" />
-                {stats.deletions}
-              </Badge>
-            </div>
-            
+            {/* Enhanced Stats */}
+            <DiffStatsComponent stats={stats} />
+
             {/* View Mode Tabs */}
             <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as any)}>
               <TabsList className="h-8">
