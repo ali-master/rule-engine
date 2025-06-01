@@ -17,7 +17,7 @@ import { cn } from "../lib/utils";
 import { getOperatorConfig } from "../utils/operators";
 import { DynamicFieldSelector } from "./DynamicFieldSelector";
 import { SmartValueInput } from "./inputs/SmartValueInput";
-import { OperatorSelector } from "./OperatorSelector";
+import { SmartOperatorSelector } from "./SmartOperatorSelector";
 import { RegexValidator } from "./RegexValidator";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -41,6 +41,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { VisualFieldSelector } from "./VisualFieldSelector";
+import { AdvancedFieldInput } from "./AdvancedFieldInput";
 
 interface TreeConstraintEditorProps {
   constraint: Constraint;
@@ -69,8 +70,8 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
   const [isFieldValid, setIsFieldValid] = useState(true);
   const [isValueValid, setIsValueValid] = useState(true);
   const [fieldSelectorMode, setFieldSelectorMode] = useState<
-    "dynamic" | "visual"
-  >("dynamic");
+    "dynamic" | "visual" | "advanced"
+  >("advanced");
   const [showHelp, setShowHelp] = useState(false);
 
   // Update local state when constraint prop changes
@@ -153,10 +154,14 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 <Tabs
                   value={fieldSelectorMode}
                   onValueChange={(v) =>
-                    setFieldSelectorMode(v as "dynamic" | "visual")
+                    setFieldSelectorMode(v as "dynamic" | "visual" | "advanced")
                   }
                 >
                   <TabsList className="h-7">
+                    <TabsTrigger value="advanced" className="h-6 px-2 text-xs">
+                      <Regex className="h-3 w-3 mr-1" />
+                      Smart
+                    </TabsTrigger>
                     <TabsTrigger value="dynamic" className="h-6 px-2 text-xs">
                       <Code2 className="h-3 w-3 mr-1" />
                       List
@@ -169,7 +174,18 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 </Tabs>
               )}
             </div>
-            {fieldSelectorMode === "dynamic" ? (
+            {fieldSelectorMode === "advanced" ? (
+              <AdvancedFieldInput
+                value={localConstraint.field}
+                onChange={handleFieldChange}
+                fields={fields}
+                sampleData={sampleData}
+                disabled={readOnly}
+                allowJsonPath={true}
+                showPreview={true}
+                placeholder="Type to search or enter field path..."
+              />
+            ) : fieldSelectorMode === "dynamic" ? (
               <DynamicFieldSelector
                 value={localConstraint.field}
                 onChange={handleFieldChange}
@@ -198,10 +214,10 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
           <div className="space-y-2">
             <Label className="text-sm font-medium">Operator</Label>
             <div className="flex items-center gap-2">
-              <OperatorSelector
+              <SmartOperatorSelector
                 value={localConstraint.operator}
                 onChange={handleOperatorChange}
-                field={localConstraint.field}
+                fieldName={localConstraint.field}
                 fieldType={selectedField?.type}
                 disabled={readOnly}
                 customOperators={customOperators}
