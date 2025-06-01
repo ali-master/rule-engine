@@ -10,7 +10,7 @@ import {
 import { useTheme } from '../hooks/use-theme';
 
 export const ThemeToggle: React.FC = () => {
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>

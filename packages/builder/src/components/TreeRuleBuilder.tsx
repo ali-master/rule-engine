@@ -16,6 +16,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { JsonViewer } from "./JsonViewer";
 import { Textarea } from "./ui/textarea";
 import { Alert, AlertDescription } from "./ui/alert";
+import { AnimatedNumber } from "./AnimatedNumber";
 import {
   Plus,
   Undo2,
@@ -215,7 +216,10 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <CardTitle>Rule Builder</CardTitle>
-              <Badge variant="outline">{conditions.length} groups</Badge>
+              <Badge variant="outline">
+                <AnimatedNumber value={conditions.length} />
+                <span className="ml-1">groups</span>
+              </Badge>
             </div>
             <div className="flex items-center gap-2">
               {showToolbar && (

@@ -1,29 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { Card } from "./ui/card";
-import { Button } from "./ui/button";
+import type { Constraint } from "@usex/rule-engine";
+import type { FieldConfig } from "../types";
+import {
+  AlertCircle,
+  Code2,
+  Copy,
+  HelpCircle,
+  Info,
+  Layers,
+  Trash2,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { operatorHelp } from "../constants/operator-help";
+import { cn } from "../lib/utils";
+import { getOperatorConfig } from "../utils/operators";
+import { DynamicFieldSelector } from "./DynamicFieldSelector";
+import { SmartValueInput } from "./inputs/SmartValueInput";
+import { OperatorSelector } from "./OperatorSelector";
 import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Card } from "./ui/card";
+import { Collapsible, CollapsibleContent } from "./ui/collapsible";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Trash2, Copy, Info, AlertCircle, Layers, Code2 } from "lucide-react";
-import { DynamicFieldSelector } from "./DynamicFieldSelector";
-import { VisualFieldSelector } from "./VisualFieldSelector";
-import { OperatorSelector } from "./OperatorSelector";
-import { SmartValueInput } from "./inputs/SmartValueInput";
+import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from "./ui/tabs";
-import type { Constraint } from "@usex/rule-engine";
-import type { FieldConfig } from "../types";
-import { getOperatorConfig } from "../utils/operators";
-import { cn } from "../lib/utils";
+import { VisualFieldSelector } from "./VisualFieldSelector";
 
 interface TreeConstraintEditorProps {
   constraint: Constraint;
@@ -39,7 +45,7 @@ interface TreeConstraintEditorProps {
 
 export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
   constraint,
-  path,
+  path: _path,
   fields,
   sampleData,
   customOperators,
@@ -51,7 +57,10 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
   const [localConstraint, setLocalConstraint] = useState(constraint);
   const [isFieldValid, setIsFieldValid] = useState(true);
   const [isValueValid, setIsValueValid] = useState(true);
-  const [fieldSelectorMode, setFieldSelectorMode] = useState<'dynamic' | 'visual'>('dynamic');
+  const [fieldSelectorMode, setFieldSelectorMode] = useState<
+    "dynamic" | "visual"
+  >("dynamic");
+  const [showHelp, setShowHelp] = useState(false);
 
   // Update local state when constraint prop changes
   useEffect(() => {
@@ -70,13 +79,13 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
 
   const handleOperatorChange = (operator: any) => {
     const updated = { ...localConstraint, operator };
-    
+
     // Reset value if operator changes to one that doesn't need a value
     const newOperatorConfig = getOperatorConfig(operator);
-    if (newOperatorConfig?.valueType === 'none') {
+    if (newOperatorConfig?.valueType === "none") {
       updated.value = undefined;
     }
-    
+
     setLocalConstraint(updated);
     onUpdate(updated);
   };
@@ -85,37 +94,37 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
     const updated = { ...localConstraint, value };
     setLocalConstraint(updated);
     onUpdate(updated);
-    setIsValueValid(value !== undefined && value !== '');
+    setIsValueValid(value !== undefined && value !== "");
   };
 
   const handleMessageChange = (message: string) => {
-    const updated = { 
-      ...localConstraint, 
-      message: message || undefined 
+    const updated = {
+      ...localConstraint,
+      message: message || undefined,
     };
     setLocalConstraint(updated);
     onUpdate(updated);
   };
 
   // Validate constraint
-  const needsValue = operatorConfig?.valueType !== 'none';
+  const needsValue = operatorConfig?.valueType !== "none";
   const isValid = isFieldValid && (!needsValue || isValueValid);
 
   return (
-    <Card className={cn(
-      "overflow-hidden transition-all",
-      "hover:shadow-sm",
-      !isValid && "border-destructive"
-    )}>
+    <Card
+      className={cn(
+        "overflow-hidden transition-all",
+        "hover:shadow-sm",
+        !isValid && "border-destructive",
+      )}
+    >
       <div className="p-4 space-y-4">
         {/* Field and Operator Row */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Label className="text-sm font-medium">
-                  Field
-                </Label>
+                <Label className="text-sm font-medium">Field</Label>
                 {selectedField?.description && (
                   <TooltipProvider>
                     <Tooltip>
@@ -130,7 +139,12 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 )}
               </div>
               {sampleData && (
-                <Tabs value={fieldSelectorMode} onValueChange={(v) => setFieldSelectorMode(v as 'dynamic' | 'visual')}>
+                <Tabs
+                  value={fieldSelectorMode}
+                  onValueChange={(v) =>
+                    setFieldSelectorMode(v as "dynamic" | "visual")
+                  }
+                >
                   <TabsList className="h-7">
                     <TabsTrigger value="dynamic" className="h-6 px-2 text-xs">
                       <Code2 className="h-3 w-3 mr-1" />
@@ -144,7 +158,7 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
                 </Tabs>
               )}
             </div>
-            {fieldSelectorMode === 'dynamic' ? (
+            {fieldSelectorMode === "dynamic" ? (
               <DynamicFieldSelector
                 value={localConstraint.field}
                 onChange={handleFieldChange}
@@ -171,9 +185,21 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-sm font-medium">
-              Operator
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label className="text-sm font-medium">Operator</Label>
+              {localConstraint.operator &&
+                operatorHelp[localConstraint.operator] && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2"
+                    onClick={() => setShowHelp(!showHelp)}
+                  >
+                    <HelpCircle className="h-3 w-3 mr-1" />
+                    Help
+                  </Button>
+                )}
+            </div>
             <OperatorSelector
               value={localConstraint.operator}
               onChange={handleOperatorChange}
@@ -185,13 +211,83 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
           </div>
         </div>
 
+        {/* Operator Help Section */}
+        {showHelp &&
+          localConstraint.operator &&
+          operatorHelp[localConstraint.operator] && (
+            <Collapsible open={showHelp}>
+              <CollapsibleContent>
+                <Card className="bg-muted/50 border-muted">
+                  <div className="p-4 space-y-3">
+                    <div>
+                      <h4 className="font-semibold text-sm">
+                        {operatorHelp[localConstraint.operator].name}
+                      </h4>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {operatorHelp[localConstraint.operator].description}
+                      </p>
+                    </div>
+
+                    {operatorHelp[localConstraint.operator].examples.length >
+                      0 && (
+                      <div>
+                        <h5 className="text-xs font-medium text-muted-foreground mb-2">
+                          Examples:
+                        </h5>
+                        <div className="space-y-2">
+                          {operatorHelp[localConstraint.operator].examples.map(
+                            (example, index) => (
+                              <div
+                                key={index}
+                                className="bg-background rounded-md p-2 text-xs"
+                              >
+                                <code className="text-primary">
+                                  {example.field} {localConstraint.operator}{" "}
+                                  {JSON.stringify(example.value)}
+                                </code>
+                                <p className="text-muted-foreground mt-1">
+                                  {example.explanation}
+                                </p>
+                              </div>
+                            ),
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {operatorHelp[localConstraint.operator].tips &&
+                      operatorHelp[localConstraint.operator].tips.length >
+                        0 && (
+                        <div>
+                          <h5 className="text-xs font-medium text-muted-foreground mb-2">
+                            Tips:
+                          </h5>
+                          <ul className="space-y-1">
+                            {operatorHelp[localConstraint.operator].tips!.map(
+                              (tip, index) => (
+                                <li
+                                  key={index}
+                                  className="text-xs text-muted-foreground flex items-start"
+                                >
+                                  <span className="mr-2">•</span>
+                                  <span>{tip}</span>
+                                </li>
+                              ),
+                            )}
+                          </ul>
+                        </div>
+                      )}
+                  </div>
+                </Card>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+
         {/* Value Input */}
         {operatorConfig?.valueType !== "none" && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Label className="text-sm font-medium">
-                Value
-              </Label>
+              <Label className="text-sm font-medium">Value</Label>
               {operatorConfig?.valueType && (
                 <Badge variant="outline" className="text-xs">
                   {operatorConfig.valueType}
@@ -215,9 +311,7 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
         {/* Error Message */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium">
-              Error Message
-            </Label>
+            <Label className="text-sm font-medium">Error Message</Label>
             <Badge variant="outline" className="text-xs">
               Optional
             </Badge>
@@ -237,7 +331,8 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
         {/* Actions and Preview */}
         <div className="flex items-center justify-between pt-2">
           <div className="text-xs text-muted-foreground font-mono">
-            {localConstraint.field} {operatorConfig?.label || localConstraint.operator}
+            {localConstraint.field}{" "}
+            {operatorConfig?.label || localConstraint.operator}
             {localConstraint.value !== undefined && (
               <> {JSON.stringify(localConstraint.value)}</>
             )}

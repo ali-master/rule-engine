@@ -1,7 +1,7 @@
 import React from 'react';
 import { Input } from '../ui/input';
 import { DateInput } from './DateInput';
-import { NumberInput } from './NumberInput';
+import { AnimatedNumberInput } from './AnimatedNumberInput';
 import { BooleanInput } from './BooleanInput';
 import { ArrayInput } from './ArrayInput';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -141,18 +141,26 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
       <div className={cn('space-y-2', className)}>
         <div>
           <label className="text-xs text-muted-foreground">From</label>
-          <NumberInput
+          <AnimatedNumberInput
             value={rangeValue[0]}
             onChange={(newValue) => onChange([newValue, rangeValue[1]])}
             disabled={disabled}
+            format={{
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            }}
           />
         </div>
         <div>
           <label className="text-xs text-muted-foreground">To</label>
-          <NumberInput
+          <AnimatedNumberInput
             value={rangeValue[1]}
             onChange={(newValue) => onChange([rangeValue[0], newValue])}
             disabled={disabled}
+            format={{
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 2,
+            }}
           />
         </div>
       </div>
@@ -186,11 +194,15 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
 
   if (field?.type === 'number' || operator.includes('length') || ['min', 'max'].includes(operator)) {
     return (
-      <NumberInput
+      <AnimatedNumberInput
         value={value}
         onChange={onChange}
         disabled={disabled}
         className={className}
+        format={{
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        }}
       />
     );
   }
