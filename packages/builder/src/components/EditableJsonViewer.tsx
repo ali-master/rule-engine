@@ -9,6 +9,7 @@ import {
   Copy,
   Download,
   Edit2,
+  Info,
   Maximize2,
   Minimize2,
   Play,
@@ -30,6 +31,12 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Switch } from "./ui/switch";
 import { Textarea } from "./ui/textarea";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 
 interface EditableJsonViewerProps {
   rule: RuleType;
@@ -179,6 +186,33 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
     }
   }, [isLiveMode, rule, sampleData, evaluateRule, showEvaluator]);
 
+  // Keyboard shortcuts
+  useEffect(() => {
+    if (!showEvaluator || !sampleData) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.userAgent.toUpperCase().includes('MAC');
+      const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+      // Toggle live mode: Ctrl/Cmd + E
+      if (ctrlOrCmd && e.key === 'e' && !e.shiftKey) {
+        e.preventDefault();
+        setIsLiveMode(prev => !prev);
+      }
+      
+      // Run evaluation once: Ctrl/Cmd + Shift + E
+      if (ctrlOrCmd && e.shiftKey && e.key === 'E') {
+        e.preventDefault();
+        if (!isLiveMode) {
+          evaluateRule();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showEvaluator, sampleData, isLiveMode, evaluateRule]);
+
   return (
     <Card className={cn("overflow-hidden", className)}>
       <CardHeader className="space-y-0">
@@ -189,6 +223,28 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
               <div className="flex items-center gap-3">
                 <Activity className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm font-medium">Rule Evaluation</span>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" className="max-w-xs">
+                      <div className="space-y-2">
+                        <p className="text-sm">Evaluate your rule against sample data in real-time</p>
+                        <div className="space-y-1 text-xs">
+                          <div className="flex items-center gap-2">
+                            <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">Ctrl/Cmd + E</kbd>
+                            <span>Toggle live mode</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">Ctrl/Cmd + Shift + E</kbd>
+                            <span>Run once</span>
+                          </div>
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 {isEvaluating && (
                   <motion.div
                     animate={{ rotate: 360 }}
@@ -237,15 +293,15 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
+                  <Label htmlFor="live-eval" className="text-xs cursor-pointer select-none">
+                    Live
+                  </Label>
                   <Switch
                     id="live-eval"
                     checked={isLiveMode}
                     onCheckedChange={setIsLiveMode}
-                    className="h-4 w-8"
+                    className="data-[state=checked]:bg-primary"
                   />
-                  <Label htmlFor="live-eval" className="text-xs cursor-pointer">
-                    Live
-                  </Label>
                 </div>
                 {!isLiveMode && (
                   <Button
