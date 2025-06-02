@@ -1,8 +1,7 @@
 import { expect, describe, bench } from "vitest";
-import { RuleEngine } from "../src";
-import { Operators, ConditionTypes } from "../src/enums";
+import { RuleEngine, Operators, ConditionTypes } from "@root";
 
-describe("ruleEngine builder correctly", () => {
+describe("builder correctly", () => {
   bench(
     "creates a valid ruleset",
     () => {
@@ -24,7 +23,7 @@ describe("ruleEngine builder correctly", () => {
   bench(
     "creates a complex ruleset properly",
     () => {
-      const builder = RuleEngine.builder<number>();
+      const builder = RuleEngine.builder();
 
       const rule = builder
         .add(

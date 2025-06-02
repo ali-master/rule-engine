@@ -1,6 +1,6 @@
 // Utilities
 import axios from "axios";
-import { RuleEngine, Operators } from "../src";
+import { RuleEngine, Operators } from "@root";
 import { vi, it, expect, describe, beforeEach, afterEach } from "vitest";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
@@ -40,7 +40,7 @@ const criteria = [
   },
 ];
 
-describe("ruleEngine mutator correctly", () => {
+describe("mutator correctly", () => {
   beforeEach(() => {
     console.debug = vi.fn();
     process.env.DEBUG = "true";

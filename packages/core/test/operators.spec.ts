@@ -308,7 +308,7 @@ describe("rule Engine Evaluation Operators", () => {
       });
     });
 
-    describe("ruleEngine Like Operator", () => {
+    describe("like Operator", () => {
       it("should match a simple pattern with wildcards", async () => {
         const conditions = [
           {
@@ -664,7 +664,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(matchesOperator(text, pattern)).toBeTruthy();
     });
 
-    describe("ruleEngine Matches Operator", () => {
+    describe("matches Operator", () => {
       it("should match a simple pattern", async () => {
         const conditions = [
           {
@@ -884,7 +884,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isNullOrWhiteSpaceOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isNullOrWhiteSpace Operator", () => {
+    describe("isNullOrWhiteSpace Operator", () => {
       it("should return true for null", async () => {
         const conditions = [
           {
@@ -951,7 +951,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isNumericOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isNumeric Operator", () => {
+    describe("isNumeric Operator", () => {
       it("should return true for a number", async () => {
         const conditions = [
           {
@@ -1036,7 +1036,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isBooleanOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isBoolean Operator", () => {
+    describe("isBoolean Operator", () => {
       it("should return true for true", async () => {
         const conditions = [
           {
@@ -1121,7 +1121,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateOperator(text2)).toBeFalsy();
     });
 
-    describe("ruleEngine isDate Operator", () => {
+    describe("isDate Operator", () => {
       it("should return true for a date string", async () => {
         const conditions = [
           {
@@ -1185,7 +1185,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isEmailOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isEmail Operator", () => {
+    describe("isEmail Operator", () => {
       it("should return true for a valid email", async () => {
         const conditions = [
           {
@@ -1234,7 +1234,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isUrlOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isUrl Operator", () => {
+    describe("isUrl Operator", () => {
       it("should return true for a valid url", async () => {
         const conditions = [
           {
@@ -1295,7 +1295,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isUuidOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isUuid Operator", () => {
+    describe("isUuid Operator", () => {
       it("should return true for a valid UUID", async () => {
         const conditions = [
           {
@@ -1352,7 +1352,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isAlphaOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isAlpha Operator", () => {
+    describe("isAlpha Operator", () => {
       it("should return true for a valid alpha", async () => {
         const conditions = [
           {
@@ -1413,7 +1413,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isPersianAlphaOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isPersianAlpha Operator", () => {
+    describe("isPersianAlpha Operator", () => {
       it("should return true for a valid persian alpha", async () => {
         const conditions = [
           {
@@ -1482,7 +1482,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isAlphaNumericOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isAlphaNumeric Operator", () => {
+    describe("isAlphaNumeric Operator", () => {
       it("should return true for a valid alpha numeric", async () => {
         const conditions = [
           {
@@ -1539,7 +1539,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isPersianAlphaNumericOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isPersianAlphaNumeric Operator", () => {
+    describe("isPersianAlphaNumeric Operator", () => {
       it("should return true for a valid persian alpha numeric", async () => {
         const conditions = [
           {
@@ -1611,7 +1611,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isLowerCaseOperator(text)).toBeTruthy();
     });
 
-    describe("ruleEngine isLowerCase Operator", () => {
+    describe("isLowerCase Operator", () => {
       it("should return true for a valid lower case", async () => {
         const conditions = [
           {
@@ -1668,7 +1668,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isUpperCaseOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isUpperCase Operator", () => {
+    describe("isUpperCase Operator", () => {
       it("should return true for a valid upper case", async () => {
         const conditions = [
           {
@@ -1725,7 +1725,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isStringOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isString Operator", () => {
+    describe("isString Operator", () => {
       it("should return true for a string", async () => {
         const conditions = [
           {
@@ -1782,7 +1782,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isObjectOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isObject Operator", () => {
+    describe("isObject Operator", () => {
       it("should return true for an object", async () => {
         const conditions = [
           {
@@ -1839,7 +1839,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isArrayOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isArray Operator", () => {
+    describe("isArray Operator", () => {
       it("should return true for an array", async () => {
         const conditions = [
           {
@@ -1896,7 +1896,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isBooleanStringOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isBooleanString Operator", () => {
+    describe("isBooleanString Operator", () => {
       it("should return true for a valid boolean string", async () => {
         const conditions = [
           {
@@ -1953,7 +1953,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isBooleanNumberOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isBooleanNumber Operator", () => {
+    describe("isBooleanNumber Operator", () => {
       it("should return true for a valid boolean number", async () => {
         const conditions = [
           {
@@ -2010,7 +2010,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isBooleanNumberStringOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isBooleanNumberString Operator", () => {
+    describe("isBooleanNumberString Operator", () => {
       it("should return true for a valid boolean number string", async () => {
         const conditions = [
           {
@@ -2092,7 +2092,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isNumberOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isNumber Operator", () => {
+    describe("isNumber Operator", () => {
       it("should return true for a number", async () => {
         const conditions = [
           {
@@ -2179,7 +2179,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isIntegerOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isInteger Operator", () => {
+    describe("isInteger Operator", () => {
       it("should return true for an integer", async () => {
         const conditions = [
           {
@@ -2236,7 +2236,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isFloatOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isFloat Operator", () => {
+    describe("isFloat Operator", () => {
       it("should return true for a float", async () => {
         const conditions = [
           {
@@ -2293,7 +2293,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isPositiveOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isPositive Operator", () => {
+    describe("isPositive Operator", () => {
       it("should return true for a positive number", async () => {
         const conditions = [
           {
@@ -2350,7 +2350,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isNegativeOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isNegative Operator", () => {
+    describe("isNegative Operator", () => {
       it("should return true for a negative number", async () => {
         const conditions = [
           {
@@ -2411,7 +2411,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isZeroOperator(text)).toBeFalsy();
     });
 
-    describe("ruleEngine isZero Operator", () => {
+    describe("isZero Operator", () => {
       it("should return true for zero", async () => {
         const conditions = [
           {
@@ -2486,7 +2486,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isNumberBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("ruleEngine isNumberBetween Operator", () => {
+    describe("isNumberBetween Operator", () => {
       it("should return true for a number between the range", async () => {
         const conditions = [
           {
@@ -2564,7 +2564,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isLengthOperator(text, length)).toBeFalsy();
     });
 
-    describe("ruleEngine isStringLength Operator", () => {
+    describe("isStringLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
@@ -2642,7 +2642,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isMinLengthOperator(text, length)).toBeFalsy();
     });
 
-    describe("ruleEngine isMinLength Operator", () => {
+    describe("isMinLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
@@ -2708,7 +2708,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isMaxLengthOperator(text, length)).toBeFalsy();
     });
 
-    describe("ruleEngine isMaxLength Operator", () => {
+    describe("isMaxLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
@@ -2777,7 +2777,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(IsLengthBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("ruleEngine isBetweenLength Operator", () => {
+    describe("isBetweenLength Operator", () => {
       it("should return true for a string with the correct length", async () => {
         const conditions = [
           {
@@ -2855,7 +2855,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isMinOperator(text, min)).toBeFalsy();
     });
 
-    describe("ruleEngine isMin Operator", () => {
+    describe("isMin Operator", () => {
       it("should return true for a number greater than the minimum", async () => {
         const conditions = [
           {
@@ -2915,7 +2915,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isMaxOperator(text, max)).toBeFalsy();
     });
 
-    describe("ruleEngine isMax Operator", () => {
+    describe("isMax Operator", () => {
       it("should return true for a number less than the maximum", async () => {
         const conditions = [
           {
@@ -2978,7 +2978,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("ruleEngine isBetween Operator", () => {
+    describe("isBetween Operator", () => {
       it("should return true for a number between the range", async () => {
         const conditions = [
           {
@@ -3045,7 +3045,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isFalsyOperator([])).toBeFalsy();
     });
 
-    describe("ruleEngine isFalsy Operator", () => {
+    describe("isFalsy Operator", () => {
       it("should return true for a falsy value", async () => {
         const conditions = [
           {
@@ -3135,7 +3135,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTruthyOperator(Number.NaN)).toBeFalsy();
     });
 
-    describe("ruleEngine isTruthy Operator", () => {
+    describe("isTruthy Operator", () => {
       it("should return true for a truthy value", async () => {
         const conditions = [
           {
@@ -3227,7 +3227,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(inOperator(text, [])).toBeFalsy();
     });
 
-    describe("ruleEngine in Operator", () => {
+    describe("in Operator", () => {
       it("should return true for a value in the list", async () => {
         const conditions = [
           {
@@ -3298,7 +3298,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(containsOperator([], value)).toBeFalsy();
     });
 
-    describe("ruleEngine contains Operator", () => {
+    describe("contains Operator", () => {
       it("should return true for a value in the list", async () => {
         const conditions = [
           {
@@ -3363,7 +3363,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(selfContainsAllOperator([], values)).toBeFalsy();
     });
 
-    describe("ruleEngine selfContainsAll Operator", () => {
+    describe("selfContainsAll Operator", () => {
       it("should return false for all values in the list", async () => {
         const conditions = [
           {
@@ -3440,7 +3440,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(selfContainsAnyOperator([], values)).toBeFalsy();
     });
 
-    describe("ruleEngine selfContainsAny Operator", () => {
+    describe("selfContainsAny Operator", () => {
       it("should return false for any value in the list", async () => {
         const conditions = [
           {
@@ -3517,7 +3517,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(containsAnyOperator([], values)).toBeFalsy();
     });
 
-    describe("ruleEngine containsAny Operator", () => {
+    describe("containsAny Operator", () => {
       it("should return true for any value in the list", async () => {
         const conditions = [
           {
@@ -3594,7 +3594,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(containsAllOperator([], values)).toBeFalsy();
     });
 
-    describe("ruleEngine containsAll Operator", () => {
+    describe("containsAll Operator", () => {
       it("should return true for all values in the list", async () => {
         const conditions = [
           {
@@ -3741,7 +3741,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(equalsOperator(text, value)).toBeFalsy();
     });
 
-    describe("ruleEngine equals Operator", () => {
+    describe("equals Operator", () => {
       it("should return true for equal values", async () => {
         const conditions = [
           {
@@ -3953,7 +3953,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(greaterThanOperator(5, "5")).toBeFalsy();
     });
 
-    describe("ruleEngine greaterThan Operator", () => {
+    describe("greaterThan Operator", () => {
       it("should return true for a greater value", async () => {
         const conditions = [
           {
@@ -4040,7 +4040,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(greaterThanOrEqualsOperator(null, null)).toBeFalsy();
     });
 
-    describe("ruleEngine greaterThanOrEqual Operator", () => {
+    describe("greaterThanOrEqual Operator", () => {
       it("should return true for a greater value", async () => {
         const conditions = [
           {
@@ -4127,7 +4127,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(lessThanOperator(5, "5")).toBeFalsy();
     });
 
-    describe("ruleEngine lessThan Operator", () => {
+    describe("lessThan Operator", () => {
       it("should return true for a lesser value", async () => {
         const conditions = [
           {
@@ -4202,7 +4202,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(lessThanOrEqualsOperator(null, null)).toBeFalsy();
     });
 
-    describe("ruleEngine lessThanOrEqual Operator", () => {
+    describe("lessThanOrEqual Operator", () => {
       it("should return true for a lesser value", async () => {
         const conditions = [
           {
@@ -4300,7 +4300,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isExistsInObjectOperator(text, obj)).toBeFalsy();
     });
 
-    describe("ruleEngine isExistentInObject Operator", () => {
+    describe("isExistentInObject Operator", () => {
       it("should return true for a value in the object", async () => {
         const conditions = [
           {
@@ -4424,7 +4424,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isNullOrUndefinedOperator("")).toBeFalsy();
     });
 
-    describe("ruleEngine isNullOrUndefined Operator", () => {
+    describe("isNullOrUndefined Operator", () => {
       it("should return true for a null value", async () => {
         const conditions = [
           {
@@ -4531,7 +4531,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateAfterOperator(dateA, dateB)).toBeFalsy();
     });
 
-    describe("ruleEngine isDateAfter Operator", () => {
+    describe("isDateAfter Operator", () => {
       it("should return true for a date after the specified date", async () => {
         const conditions = [
           {
@@ -4637,7 +4637,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateBeforeOperator(dateA, dateB)).toBeFalsy();
     });
 
-    describe("ruleEngine isDateBefore Operator", () => {
+    describe("isDateBefore Operator", () => {
       it("should return true for a date before the specified date", async () => {
         const conditions = [
           {
@@ -4733,7 +4733,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateAfterOrEqualsOperator(text, date)).toBeFalsy();
     });
 
-    describe("ruleEngine isDateAfterOrEqual Operator", () => {
+    describe("isDateAfterOrEqual Operator", () => {
       it("should return true for a date after the specified date", async () => {
         const conditions = [
           {
@@ -4829,7 +4829,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateBeforeOrEqualsOperator(text, date)).toBeFalsy();
     });
 
-    describe("ruleEngine isDateBeforeOrEqual Operator", () => {
+    describe("isDateBeforeOrEqual Operator", () => {
       it("should return true for a date before the specified date", async () => {
         const conditions = [
           {
@@ -4920,7 +4920,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateEqualsOperator(text, date)).toBeFalsy();
     });
 
-    describe("ruleEngine isDateEquals Operator", () => {
+    describe("isDateEquals Operator", () => {
       it("should return true for equal dates", async () => {
         const conditions = [
           {
@@ -4977,7 +4977,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isDateBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("ruleEngine isDateBetween Operator", () => {
+    describe("isDateBetween Operator", () => {
       it("should return true for a date between the range", async () => {
         const conditions = [
           {
@@ -5055,7 +5055,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTimeAfterOperator(text, time)).toBeFalsy();
     });
 
-    describe("ruleEngine isTimeAfter Operator", () => {
+    describe("isTimeAfter Operator", () => {
       it("should return true for a time after the specified time", async () => {
         const conditions = [
           {
@@ -5151,7 +5151,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTimeBeforeOperator(text, time)).toBeFalsy();
     });
 
-    describe("ruleEngine isTimeBefore Operator", () => {
+    describe("isTimeBefore Operator", () => {
       it("should return true for a time before the specified time", async () => {
         const conditions = [
           {
@@ -5247,7 +5247,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTimeAfterOrEqualsOperator(leftTime, rightTime)).toBeFalsy();
     });
 
-    describe("ruleEngine isTimeAfterOrEqual Operator", () => {
+    describe("isTimeAfterOrEqual Operator", () => {
       it("should return true for a time after the specified time", async () => {
         const conditions = [
           {
@@ -5349,7 +5349,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTimeBeforeOrEqualsOperator(text, time)).toBeFalsy();
     });
 
-    describe("ruleEngine isTimeBeforeOrEqual Operator", () => {
+    describe("isTimeBeforeOrEqual Operator", () => {
       it("should return true for a time before the specified time", async () => {
         const conditions = [
           {
@@ -5446,7 +5446,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTimeEqualsOperator(text, time)).toBeFalsy();
     });
 
-    describe("ruleEngine isTimeEquals Operator", () => {
+    describe("isTimeEquals Operator", () => {
       it("should return true for equal times", async () => {
         const conditions = [
           {
@@ -5528,7 +5528,7 @@ describe("rule Engine Evaluation Operators", () => {
       expect(isTimeBetweenOperator(text, [min, max])).toBeFalsy();
     });
 
-    describe("ruleEngine isTimeBetween Operator", () => {
+    describe("isTimeBetween Operator", () => {
       it("should return true for a time between the range", async () => {
         const conditions = [
           {

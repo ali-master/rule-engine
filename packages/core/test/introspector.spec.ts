@@ -1,5 +1,5 @@
 import { it, expect, describe } from "vitest";
-import { RuleTypeError, RuleEngine } from "../src";
+import { RuleTypeError, RuleEngine } from "@root";
 // Assets
 import { valid2Json } from "./rulesets/valid2.json";
 import { valid3Json } from "./rulesets/valid3.json";
@@ -10,7 +10,7 @@ import { valid8Json } from "./rulesets/valid8.json";
 import { valid9Json } from "./rulesets/valid9.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("ruleEngine introspector correctly", () => {
+describe("introspector correctly", () => {
   it("detects invalid rules", async () => {
     expect(() => RuleEngine.introspect(valid2Json)).toThrow(RuleTypeError);
   });

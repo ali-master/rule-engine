@@ -1,7 +1,7 @@
 import { it, expect, describe } from "vitest";
-import { RuleEngine, Operators, ConditionTypes } from "../src";
+import { RuleEngine, Operators, ConditionTypes } from "@root";
 
-describe("ruleEngine builder correctly", () => {
+describe("builder correctly", () => {
   it("creates a valid ruleset", () => {
     const builder = RuleEngine.builder();
     expect(
@@ -18,7 +18,7 @@ describe("ruleEngine builder correctly", () => {
   });
 
   it("creates a complex ruleset properly", () => {
-    const builder = RuleEngine.builder<number>();
+    const builder = RuleEngine.builder();
 
     const rule = builder
       .add(

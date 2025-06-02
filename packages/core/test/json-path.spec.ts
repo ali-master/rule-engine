@@ -1,9 +1,9 @@
-import { RuleEngine, ObjectDiscovery } from "../src";
 import { vi, it, expect, describe, beforeEach } from "vitest";
+import { RuleEngine, ObjectDiscovery } from "@root";
 
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("ruleEngine JSON Path correctly", () => {
+describe("json path correctly", () => {
   beforeEach(() => {
     console.debug = vi.fn();
     process.env.DEBUG = "true";

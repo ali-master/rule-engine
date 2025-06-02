@@ -1,17 +1,13 @@
-/**
- * Tests for RuleEngine V2 with Strategy pattern
- */
-
 import { it, expect, describe, beforeAll } from "vitest";
 import {
   RuleEngine,
   registerCustomOperator,
   OperatorCategory,
   BaseOperatorStrategy,
-} from "../src";
-import type { OperatorMetadata, OperatorContext } from "../src";
+} from "@root";
+import type { OperatorMetadata, OperatorContext } from "@root";
 
-describe("ruleEngine V2", () => {
+describe("rule engine", () => {
   let engine: RuleEngine;
 
   beforeAll(() => {

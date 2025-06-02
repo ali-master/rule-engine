@@ -18,7 +18,7 @@ import { valid4Json } from "./rulesets/valid4.json";
 import { RegexRulesJson } from "./rulesets/regex-rules.json";
 import { PasswordRuleJson } from "./rulesets/password-rule.json";
 
-describe("ruleEngine engine works correctly", () => {
+describe("engine works correctly", () => {
   it("evaluates a simple ruleset", async () => {
     expect(
       await RuleEngine.getEvaluateResult(valid1Json, {

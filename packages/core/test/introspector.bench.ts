@@ -1,10 +1,10 @@
 import { describe, bench } from "vitest";
-import { RuleEngine } from "../src";
+import { RuleEngine } from "@root";
 // Assets
 import { valid2Json } from "./rulesets/valid2.json";
 import { valid6Json } from "./rulesets/valid6.json";
 
-describe("ruleEngine introspector correctly", () => {
+describe("introspector correctly", () => {
   bench(
     "detects invalid rule",
     async () => {

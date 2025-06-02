@@ -12,7 +12,7 @@ import { Valid10Json } from "./rulesets/valid10.json";
 import { Valid11Json } from "./rulesets/valid11.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("ruleEngine engine works correctly", () => {
+describe("engine works correctly", () => {
   bench(
     "evaluates a simple ruleset A",
     async () => {

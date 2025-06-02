@@ -1,13 +1,13 @@
 import { it, expect, describe } from "vitest";
-import type { OperatorsType, Constraint, Condition } from "../src";
-import { RuleEngine, Operators } from "../src";
+import { RuleEngine, Operators } from "@root";
+import type { OperatorsType, Constraint, Condition } from "@root";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 import { valid3Json } from "./rulesets/valid3.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 import { RegexRulesJson } from "./rulesets/regex-rules.json";
 
-describe("ruleEngine validator correctly", () => {
+describe("validator correctly", () => {
   it("identifies a bad operator", () => {
     expect(
       RuleEngine.validate({

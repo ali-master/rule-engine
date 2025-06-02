@@ -1,9 +1,9 @@
 import { describe, bench } from "vitest";
-import { RuleEngine, ObjectDiscovery } from "../src";
+import { RuleEngine, ObjectDiscovery } from "@root";
 // Rules
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("ruleEngine JSON Path correctly", () => {
+describe("json path correctly", () => {
   const discovery = new ObjectDiscovery();
   bench(
     "resolves simple field definitions in a Text",

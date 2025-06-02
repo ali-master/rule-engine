@@ -1,11 +1,11 @@
 import { describe, bench } from "vitest";
-import { RuleEngine, Operators } from "../src";
+import { RuleEngine, Operators } from "@root";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 import { valid3Json } from "./rulesets/valid3.json";
 import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
 
-describe("ruleEngine validator correctly", () => {
+describe("validator correctly", () => {
   bench(
     "validates a correct rule",
     () => {

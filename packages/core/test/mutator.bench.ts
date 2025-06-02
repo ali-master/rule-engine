@@ -1,10 +1,10 @@
 // Utilities
 import { describe, bench } from "vitest";
-import { RuleEngine, Operators } from "../src";
+import { RuleEngine, Operators } from "@root";
 // Assets
 import { valid1Json } from "./rulesets/valid1.json";
 
-describe("ruleEngine mutator correctly", () => {
+describe("mutator correctly", () => {
   bench(
     "performs multiple mutations",
     async () => {
