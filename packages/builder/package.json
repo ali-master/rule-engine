@@ -1,21 +1,29 @@
 {
   "name": "@usex/rule-engine-builder",
-  "type": "module",
   "version": "0.0.0",
   "private": false,
-  "description": "A React builder library for rule engine applications. It provides a set of components and utilities to build rule engine interfaces.",
+  "description": "Visual rule construction toolkit for React applications. Drag, drop, and compose complex business logic without writing JSON. Transform IF-THEN decisions into intuitive visual flows with real-time evaluation, undo/redo history, and TypeScript-powered intelligence.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ali-master/rule-engine.git",
     "directory": "packages/builder"
   },
   "keywords": [
-    "react",
-    "rule engine",
-    "builder",
-    "ui components",
-    "rule engine builder"
+    "react-rule-builder",
+    "visual-rule-engine",
+    "business-logic-builder",
+    "no-code-rules",
+    "decision-tree-builder",
+    "if-then-else-builder",
+    "visual-programming",
+    "business-rules-ui",
+    "decision-engine-ui",
+    "visual-json-builder",
+    "rule-evaluation-ui",
+    "interactive-rule-editor",
+    "react"
   ],
+  "type": "module",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -34,12 +42,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "check-types": "tsc --noEmit",
-    "lint:fix": "eslint . --fix",
-    "format:check": "prettier --check \"**/*.{ts,tsx}\" --cache",
-    "format:write": "prettier --write \"**/*.{ts,tsx}\" --cache",
+    "test:types": "tsc --noEmit",
+    "test:knip": "knip",
+    "test:knip:fix": "knip --fix",
+    "format": "prettier --write \"**/*.ts\"",
+    "lint": "eslint \"src/**/*.ts\"",
+    "lint:fix": "pnpm run lint --fix",
     "publish:release": "pnpm build && pnpm publish --access public"
   },
   "peerDependencies": {

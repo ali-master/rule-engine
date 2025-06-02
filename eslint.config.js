@@ -19,7 +19,15 @@ export default antfu({
   react: true,
   gitignore: true,
 }).append({
-  ignores: ["README.md", "packages/*/README.md"],
+  ignores: [
+    "README.md",
+    "packages/*/README.md",
+    "packages/*/CHANGELOG.md",
+    "packages/*/dist",
+    "packages/*/node_modules",
+    "packages/*/coverage",
+    "**/*.json",
+  ],
   files: ["./packages/**/*.ts"],
   rules: {
     eqeqeq: "off",

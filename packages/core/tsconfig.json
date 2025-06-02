@@ -1,15 +1,45 @@
 {
-  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./",
+    "target": "ESNext",
+    "lib": ["es2022", "esnext"],
+    "moduleDetection": "force",
+    "module": "preserve",
+    "strictNullChecks": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "noUnusedLocals": false,
+    "strictBindCallApply": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "incremental": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "outDir": "dist",
     "paths": {
       "@root": ["./src"],
       "@root/*": ["./src/*"]
-    },
-    "strictNullChecks": true,
-    "outDir": "dist"
+    }
   },
-  "include": ["src/**/*", "test/**/*", "scripts/**/*"],
-  "exclude": ["node_modules", "dist", "coverage", ".idea", ".vscode","**/*.d.ts", "**/dist/*"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    ".idea",
+    ".vscode",
+    "**/*.d.ts"
+  ]
 }

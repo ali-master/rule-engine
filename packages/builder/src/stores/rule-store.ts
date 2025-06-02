@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { RuleType, Condition, EngineResult } from "@usex/rule-engine";
+import type { RuleType, EngineResult, Condition } from "@usex/rule-engine";
 
 interface RuleStore {
   // State

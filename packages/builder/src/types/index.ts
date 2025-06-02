@@ -1,4 +1,4 @@
-import type { RuleType, Condition, Constraint, OperatorsType, ConditionType, EngineResult } from '@usex/rule-engine';
+import type { RuleType, OperatorsType, EngineResult, Constraint, ConditionType, Condition } from '@usex/rule-engine';
 
 export interface RuleBuilderState {
   rule: RuleType;

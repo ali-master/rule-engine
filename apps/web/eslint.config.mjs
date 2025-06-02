@@ -20,6 +20,9 @@ const eslintConfig = [
     },
   },
   {
+    ignores: ["**/node_modules/**", "**/.next/**", "**/dist/**"],
+  },
+  {
     plugins: {
       "simple-import-sort": simpleImportSort,
     },

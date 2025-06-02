@@ -8,3 +8,4 @@
 **/*.env*
 .husky
 .claude
+apps/*/.next/

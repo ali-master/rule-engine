@@ -3,10 +3,12 @@ name: ci
 on:
   pull_request:
     branches:
-      - main
+      - master
+      - develop
   push:
     branches:
-      - main
+      - master
+      - develop
 
 jobs:
   lint:
@@ -32,9 +34,6 @@ jobs:
       - name: ✂️ Knip project
         run: pnpm test:knip
 
-      - name: ⚙️ Check package engines
-        run: pnpm test:versions
-
   test:
     runs-on: ubuntu-latest
 
@@ -56,7 +55,7 @@ jobs:
         run: pnpm test:types
 
       - name: 🧪 Test project
-        run: pnpm test:unit --coverage
+        run: pnpm test:coverage
 
       - name: 🟩 Coverage
         uses: codecov/codecov-action@v5

@@ -1,7 +1,6 @@
 {
   "name": "rule-engine-monorepo",
   "preview": true,
-  "type": "module",
   "packageManager": "pnpm@10.11.0",
   "description": "A monorepo of Rule Engine implementation for NodeJS and Browser. It includes a core rule engine and various plugins.",
   "author": {
@@ -10,12 +9,16 @@
     "url": "https://github.com/ali-master"
   },
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "format": "pnpm -r format",
     "test:unit": "pnpm -r test:unit",
     "test:types": "pnpm -r test:types",
-    "test:knip": "knip",
+    "test:knip": "pnpm -r test:knip",
+    "test:coverage": "pnpm -r test:coverage",
     "postinstall": "simple-git-hooks install"
   },
   "devDependencies": {
@@ -49,7 +52,7 @@
   },
   "lint-staged": {
     "*.{js,ts,mjs,cjs,json,.*rc}": [
-      "pnpm eslint --fix"
+      "pnpm lint:fix"
     ]
   }
 }
