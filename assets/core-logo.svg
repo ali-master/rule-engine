@@ -1,0 +1,121 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!--Core Gradient: Electric Blue to Purple-->
+        <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1"/>
+            <stop offset="50%" style="stop-color:#6366f1;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1"/>
+        </linearGradient>
+        <!--Success Path: Green-->
+        <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#059669;stop-opacity:1"/>
+        </linearGradient>
+        <!--Error Path: Orange to Red-->
+        <linearGradient id="errorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1"/>
+            <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1"/>
+        </linearGradient>
+        <!--Glow Effect-->
+        <filter id="coreGlow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <!--Shadow-->
+        <filter id="coreShadow">
+            <feDropShadow dx="0" dy="2" stdDeviation="6" flood-opacity="0.2"/>
+        </filter>
+    </defs>
+    <!--Background-->
+    <circle cx="100" cy="100" r="90" fill="url(#coreGradient)" opacity="0.05"/>
+    <!--IF-THEN-ELSE Decision Flow Structure-->
+    <!--Central Decision Diamond (IF)-->
+    <g transform="translate(100,100)">
+        <path d="M 0 -20 L 20 0 L 0 20 L -20 0 Z" fill="url(#coreGradient)" filter="url(#coreGlow)"/>
+        <path d="M 0 -12 L 12 0 L 0 12 L -12 0 Z" fill="white" opacity="0.3"/>
+        <text x="0" y="4" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="bold" fill="white">IF</text>
+    </g>
+    <!--Input Flow (Data Coming In)-->
+    <g transform="translate(100,40)">
+        <!--Data Input Box-->
+        <rect x="-15" y="-8" width="30" height="16" rx="8" fill="url(#coreGradient)" opacity="0.8" filter="url(#coreShadow)"/>
+        <rect x="-10" y="-3" width="20" height="6" rx="3" fill="white" opacity="0.4"/>
+        <text x="0" y="1" text-anchor="middle" font-family="monospace" font-size="6" fill="white" opacity="0.9">{data}</text>
+        <!--Flow Arrow Down-->
+        <path d="M 0 8 L 0 30" stroke="url(#coreGradient)" stroke-width="2" fill="none" opacity="0.8"/>
+        <polygon points="0,30 -3,25 3,25" fill="url(#coreGradient)" opacity="0.8"/>
+    </g>
+    <!--TRUE Path (Left Branch)-->
+    <g transform="translate(60,140)">
+        <!--THEN Block-->
+        <rect x="-20" y="-10" width="40" height="20" rx="10" fill="url(#successGradient)" filter="url(#coreGlow)"/>
+        <rect x="-15" y="-5" width="30" height="10" rx="5" fill="white" opacity="0.3"/>
+        <text x="0" y="2" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="white">THEN</text>
+        <!--Success Result-->
+        <circle cx="0" cy="25" r="8" fill="url(#successGradient)" opacity="0.9"/>
+        <text x="0" y="28" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="6" fill="white">✓</text>
+    </g>
+    <!--FALSE Path (Right Branch)-->
+    <g transform="translate(140,140)">
+        <!--ELSE Block-->
+        <rect x="-20" y="-10" width="40" height="20" rx="10" fill="url(#errorGradient)" filter="url(#coreGlow)"/>
+        <rect x="-15" y="-5" width="30" height="10" rx="5" fill="white" opacity="0.3"/>
+        <text x="0" y="2" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="white">ELSE</text>
+        <!--Alternative Result-->
+        <circle cx="0" cy="25" r="8" fill="url(#errorGradient)" opacity="0.9"/>
+        <text x="0" y="28" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="6" fill="white">✗</text>
+    </g>
+    <!--Decision Flow Lines-->
+    <!--IF to THEN (TRUE)-->
+    <path d="M 85 110 Q 70 120 60 130" stroke="url(#successGradient)" stroke-width="3" fill="none" opacity="0.8" stroke-linecap="round"/>
+    <text x="70" y="118" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="bold" fill="url(#successGradient)">TRUE</text>
+    <!--IF to ELSE (FALSE)-->
+    <path d="M 115 110 Q 130 120 140 130" stroke="url(#errorGradient)" stroke-width="3" fill="none" opacity="0.8" stroke-linecap="round"/>
+    <text x="130" y="118" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="7" font-weight="bold" fill="url(#errorGradient)">FALSE</text>
+    <!--Animated Data Flow-->
+    <g opacity="0.9">
+        <!--Data Processing Pulse-->
+        <circle r="2" fill="url(#coreGradient)">
+            <animateMotion dur="3s" repeatCount="indefinite">
+                <path d="M 100 48 L 100 80"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;0" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <!--TRUE Path Flow-->
+        <circle r="1.5" fill="url(#successGradient)">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="1s">
+                <path d="M 85 110 Q 70 120 60 130"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1s"/>
+        </circle>
+        <!--FALSE Path Flow-->
+        <circle r="1.5" fill="url(#errorGradient)">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="1.5s">
+                <path d="M 115 110 Q 130 120 140 130"/>
+            </animateMotion>
+            <animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite" begin="1.5s"/>
+        </circle>
+    </g>
+    <!--Rule Evaluation Indicators-->
+    <!--Condition Operators-->
+    <g transform="translate(40,100)" opacity="0.6">
+        <circle cx="0" cy="0" r="3" fill="url(#coreGradient)"/>
+        <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="4" fill="white">=</text>
+    </g>
+    <g transform="translate(160,100)" opacity="0.6">
+        <circle cx="0" cy="0" r="3" fill="url(#coreGradient)"/>
+        <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="4" fill="white">&gt;</text>
+    </g>
+    <g transform="translate(100,160)" opacity="0.6">
+        <circle cx="0" cy="0" r="3" fill="url(#coreGradient)"/>
+        <text x="0" y="2" text-anchor="middle" font-family="monospace" font-size="4" fill="white">&amp;</text>
+    </g>
+    <!--Processing State Ring-->
+    <circle cx="100" cy="100" r="75" stroke="url(#coreGradient)" stroke-width="1" fill="none" opacity="0.15">
+        <animate attributeName="stroke-dasharray" values="0 471;235 236;0 471" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.1;0.3;0.1" dur="4s" repeatCount="indefinite"/>
+    </circle>
+</svg>

@@ -1,776 +1,696 @@
-# @usex/rule-engine-builder
+<div align="center">
+  <img src="../../assets/builder-logo.svg" alt="Rule Engine Builder Logo" width="120" />
 
-A comprehensive React component library for building visual rule engine interfaces. Create complex business rules with an intuitive drag-and-drop interface, real-time evaluation, and full customization support.
+  <h1>@usex/rule-engine-builder</h1>
+  <p><strong>🎨 Visual Rule Constructor for React Applications</strong></p>
 
-## Table of Contents
+  <p>
+    <a href="https://www.npmjs.com/package/@usex/rule-engine-builder"><img src="https://img.shields.io/npm/v/@usex/rule-engine-builder?style=flat-square" alt="npm version" /></a>
+    <a href="https://github.com/ali-master/rule-engine/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@usex/rule-engine-builder?style=flat-square" alt="license" /></a>
+    <a href="https://www.npmjs.com/package/@usex/rule-engine-builder"><img src="https://img.shields.io/npm/dm/@usex/rule-engine-builder?style=flat-square" alt="downloads" /></a>
+    <a href="https://github.com/ali-master/rule-engine"><img src="https://img.shields.io/github/stars/ali-master/rule-engine?style=flat-square" alt="stars" /></a>
+  </p>
 
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Components](#components)
-- [API Reference](#api-reference)
-- [Hooks](#hooks)
-- [Advanced Usage](#advanced-usage)
-- [Examples](#examples)
-- [Customization](#customization)
-- [TypeScript Support](#typescript-support)
-- [Contributing](#contributing)
-- [License](#license)
+  <p>
+    <a href="#-quick-start">Quick Start</a> •
+    <a href="./docs/components.md">Components</a> •
+    <a href="./docs/examples.md">Examples</a> •
+    <a href="#-why-visual-builder">Why Visual Builder?</a>
+  </p>
+</div>
 
-## Features
+---
 
-- 🎨 **Visual Rule Builder** - Intuitive tree-based interface with drag-and-drop
-- 🔄 **Real-time Evaluation** - Test rules instantly with sample data
-- 📈 **History Management** - Undo/redo with 100-entry history and version comparison
-- 🎯 **126+ Operators** - Comprehensive operator set for all data types
-- 🌲 **Nested Conditions** - Complex AND/OR/NONE logic trees with unlimited depth
-- 📝 **JSONPath Support** - Advanced field referencing and data navigation
+Create complex business rules with an intuitive drag-and-drop interface. No more JSON wrestling - build rules visually and export to your rule engine.
+
+```typescript
+// Instead of writing complex JSON...
+const rule = {
+  conditions: [
+    {
+      and: [
+        { field: "$.user.tier", operator: "equals", value: "premium" },
+        { field: "$.order.total", operator: "greater-than", value: 100 }
+      ],
+      result: { discount: 0.15, shipping: "free" }
+    }
+  ]
+};
+
+// Just drag, drop, and configure visually! 🎨
+<RuleBuilder 
+  onRuleChange={setRule}
+  availableFields={fields}
+  theme="dark"
+/>
+```
+
+## 🚀 Why Visual Builder?
+
+**Intuitive Visual Interface**
+- 🎨 **Drag & Drop** - Build rules by dragging components onto a canvas
+- 🌲 **Tree Structure** - Visual representation of complex nested logic
+- 📦 **Component Palette** - Pre-built operators, fields, and logic blocks
+- 🎯 **Drop Zones** - Smart targeting for precise rule construction
+
+**Developer-Friendly Experience**
+- ⚡ **Real-time Preview** - See JSON output as you build
+- 🔄 **Live Evaluation** - Test rules instantly with sample data
+- 📈 **History Management** - Undo/redo with 100-entry history
+- ⌨️ **Keyboard Shortcuts** - Professional keyboard navigation
+
+**Production-Ready Features**
+- 🛡️ **TypeScript Native** - Full type safety and IntelliSense support
 - 🎨 **Theme System** - Light/dark modes with full customization
-- ⌨️ **Keyboard Shortcuts** - Professional keyboard navigation and shortcuts
-- 📦 **Type-Safe** - Full TypeScript support with comprehensive types
 - ♿ **Accessible** - WCAG compliant with screen reader support
-- ⚡ **Performance** - Optimized rendering with virtualization support
-- 🔧 **Extensible** - Custom operators, fields, and UI components
+- 📱 **Responsive** - Works on desktop, tablet, and mobile devices
 
-## Installation
+**Extensible & Customizable**
+- 🔧 **Custom Operators** - Add your own business-specific operators
+- 🎛️ **Field Discovery** - Auto-suggest fields from your data schema
+- 🌈 **Custom Themes** - Match your application's design system
+- 📊 **Export Options** - JSON, TypeScript, or custom formats
+
+## 🎬 Quick Start
 
 ```bash
-# npm
-npm install @usex/rule-engine-builder @usex/rule-engine
-
-# yarn
-yarn add @usex/rule-engine-builder @usex/rule-engine
-
-# pnpm
-pnpm add @usex/rule-engine-builder @usex/rule-engine
+npm install @usex/rule-engine-builder @usex/rule-engine react
 ```
 
-### Peer Dependencies
-
-```json
-{
-  "react": "^18.0.0 || ^19.0.0",
-  "react-dom": "^18.0.0 || ^19.0.0"
-}
-```
-
-## Quick Start
-
-### Basic Setup
+### Basic Usage
 
 ```tsx
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
-import '@usex/rule-engine-builder/styles';
+import React, { useState } from 'react';
+import { RuleBuilder } from '@usex/rule-engine-builder';
+import { RuleEngine } from '@usex/rule-engine';
 
 function App() {
-  const handleRuleChange = (rule) => {
-    console.log('Rule updated:', rule);
-  };
-
-  const handleSave = (rule) => {
-    console.log('Rule saved:', rule);
-    // Save to backend
-  };
-
-  return (
-    <TreeRuleBuilder
-      onChange={handleRuleChange}
-      onSave={handleSave}
-      showJsonViewer={true}
-      showToolbar={true}
-    />
-  );
-}
-```
-
-### With Custom Fields
-
-```tsx
-import { TreeRuleBuilder, FieldConfig } from '@usex/rule-engine-builder';
-
-const fields: FieldConfig[] = [
-  {
-    name: 'user.email',
-    label: 'Email Address',
-    type: 'string',
-    group: 'User Profile',
-    description: 'User\'s email address'
-  },
-  {
-    name: 'user.age',
-    label: 'Age',
-    type: 'number',
-    group: 'User Profile',
-    description: 'User\'s age in years'
-  },
-  {
-    name: 'order.total',
-    label: 'Order Total',
-    type: 'number',
-    group: 'Order',
-    description: 'Total order amount'
-  },
-  {
-    name: 'order.items',
-    label: 'Order Items',
-    type: 'array',
-    group: 'Order',
-    description: 'List of items in the order'
-  }
-];
-
-function App() {
-  return (
-    <TreeRuleBuilder
-      fields={fields}
-      sampleData={{
-        user: { email: 'john@example.com', age: 25 },
-        order: { total: 150.00, items: ['item1', 'item2'] }
-      }}
-      onChange={(rule) => console.log(rule)}
-    />
-  );
-}
-```
-
-## Components
-
-### Primary Components
-
-| Component | Description | Use Case |
-|-----------|-------------|----------|
-| `TreeRuleBuilder` | Main rule builder with tree interface | Complete rule building solution |
-| `ModernRuleBuilder` | Modern drag-and-drop variant | Enhanced UX with animations |
-| `RuleEvaluator` | Real-time rule evaluation | Testing and validation |
-| `HistoryViewer` | Rule change history | Version control and comparison |
-
-### Editor Components
-
-| Component | Description | Features |
-|-----------|-------------|----------|
-| `TreeConditionGroup` | Nested condition management | AND/OR/NONE logic, drag-and-drop |
-| `TreeConstraintEditor` | Individual constraint editing | Field, operator, value selection |
-| `ModernConstraintEditor` | Enhanced constraint editor | Smart validation, type checking |
-| `FieldSelector` | Field selection interface | Grouped fields, search, JSONPath |
-
-### Input Components
-
-| Component | Type | Features |
-|-----------|------|----------|
-| `SmartValueInput` | Universal | Type-aware, validation, suggestions |
-| `ArrayInput` | Array | Add/remove items, drag reorder |
-| `BooleanInput` | Boolean | Toggle, dropdown, radio options |
-| `DateInput` | Date/Time | Calendar picker, time zones |
-| `NumberInput` | Number | Animated, range validation |
-| `AnimatedNumberInput` | Number | Smooth animations, formatting |
-
-### Utility Components
-
-| Component | Purpose | Features |
-|-----------|---------|----------|
-| `JsonViewer` | JSON visualization | Syntax highlighting, collapsible |
-| `DiffViewer` | Rule comparison | Side-by-side, unified diff views |
-| `ImportExport` | Data management | JSON/YAML import/export |
-| `ThemeToggle` | Theme switching | Light/dark mode toggle |
-
-## API Reference
-
-### TreeRuleBuilder Props
-
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `fields` | `FieldConfig[]` | `[]` | Available fields for selection |
-| `sampleData` | `Record<string, any>` | `{}` | Sample data for testing |
-| `onChange` | `(rule: any) => void` | - | Callback when rule changes |
-| `onSave` | `(rule: any) => void` | - | Callback for save action |
-| `onExport` | `(rule: any, format: string) => void` | - | Callback for export action |
-| `onImport` | `(data: string, format: string) => void` | - | Callback for import action |
-| `readOnly` | `boolean` | `false` | Make builder read-only |
-| `className` | `string` | - | Additional CSS classes |
-| `showJsonViewer` | `boolean` | `true` | Show JSON viewer panel |
-| `showToolbar` | `boolean` | `true` | Show toolbar with actions |
-| `maxNestingDepth` | `number` | `10` | Maximum nesting depth |
-| `customOperators` | `Record<string, any>` | - | Custom operator definitions |
-| `theme` | `'light' \| 'dark' \| 'system'` | `'system'` | Theme preference |
-| `keyboardShortcuts` | `KeyboardShortcuts` | Default shortcuts | Custom keyboard shortcuts |
-
-### FieldConfig Interface
-
-```typescript
-interface FieldConfig {
-  name: string;                    // Field identifier (supports JSONPath)
-  label?: string;                  // Display label
-  type?: FieldType;               // Data type
-  description?: string;           // Field description
-  group?: string;                 // Group name for organization
-  jsonPath?: boolean;            // Enable JSONPath expressions
-  required?: boolean;            // Mark as required field
-  values?: Array<{               // Predefined values
-    value: any;
-    label: string;
-    description?: string;
-  }>;
-  validation?: {                 // Field validation rules
-    min?: number;
-    max?: number;
-    pattern?: string;
-  };
-}
-
-type FieldType = 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object';
-```
-
-### KeyboardShortcuts Configuration
-
-```typescript
-interface KeyboardShortcuts {
-  undo?: ShortcutConfig;
-  redo?: ShortcutConfig;
-  save?: ShortcutConfig;
-  test?: ShortcutConfig;
-  addGroup?: ShortcutConfig;
-  expandAll?: ShortcutConfig;
-  collapseAll?: ShortcutConfig;
-  help?: ShortcutConfig;
-}
-
-interface ShortcutConfig {
-  key: string;
-  ctrl?: boolean;
-  cmd?: boolean;
-  shift?: boolean;
-  alt?: boolean;
-}
-```
-
-### Theme Configuration
-
-```typescript
-interface ThemeConfig {
-  colors?: {
-    or?: string;      // OR group color
-    and?: string;     // AND group color
-    none?: string;    // NONE group color
-  };
-  labels?: {
-    addGroup?: string;
-    addRule?: string;
-    removeGroup?: string;
-    // ... other labels
-  };
-}
-```
-
-## Hooks
-
-### useEnhancedRuleStore
-
-Advanced rule state management with history.
-
-```typescript
-const {
-  rule,              // Current rule
-  history,           // Rule history
-  historyIndex,      // Current history position
-  updateRule,        // Update rule
-  updateConditions,  // Update conditions
-  undo,             // Undo last change
-  redo,             // Redo last change
-  canUndo,          // Can undo?
-  canRedo,          // Can redo?
-  expandAll,        // Expand all groups
-  collapseAll,      // Collapse all groups
-  getHistoryInfo    // Get history metadata
-} = useEnhancedRuleStore();
-```
-
-### useFieldDiscovery
-
-Automatic field discovery from sample data.
-
-```typescript
-const {
-  fields,           // Discovered fields
-  isLoading,        // Discovery in progress
-  discover,         // Trigger discovery
-  addCustomField,   // Add custom field
-  removeField       // Remove field
-} = useFieldDiscovery(sampleData, options);
-```
-
-### useKeyboardShortcuts
-
-Configurable keyboard shortcuts.
-
-```typescript
-useKeyboardShortcuts([
-  {
-    key: 'z',
-    ctrl: true,
-    handler: () => undo(),
-    description: 'Undo last action'
-  },
-  {
-    key: 's',
-    ctrl: true,
-    handler: () => save(),
-    description: 'Save rule'
-  }
-]);
-```
-
-## Advanced Usage
-
-### Custom Field Discovery
-
-```tsx
-import { useFieldDiscovery, TreeRuleBuilder } from '@usex/rule-engine-builder';
-
-function SmartRuleBuilder({ data }) {
-  const { fields, discover } = useFieldDiscovery(data, {
-    maxDepth: 3,
-    includeArrayIndices: true,
-    generateLabels: true
-  });
-
-  return (
-    <TreeRuleBuilder
-      fields={fields}
-      sampleData={data}
-      onChange={(rule) => console.log(rule)}
-    />
-  );
-}
-```
-
-### Real-time Rule Evaluation
-
-```tsx
-import { TreeRuleBuilder, RuleEvaluator } from '@usex/rule-engine-builder';
-
-function EvaluatingRuleBuilder() {
   const [rule, setRule] = useState(null);
-  const [testData, setTestData] = useState({});
+  
+  // Define available fields for your users
+  const availableFields = [
+    { name: '$.user.tier', type: 'string', label: 'User Tier' },
+    { name: '$.user.age', type: 'number', label: 'User Age' },
+    { name: '$.order.total', type: 'number', label: 'Order Total' },
+    { name: '$.order.items', type: 'array', label: 'Order Items' }
+  ];
+
+  // Test data for live evaluation
+  const testData = {
+    user: { tier: 'premium', age: 28 },
+    order: { total: 150, items: ['laptop', 'mouse'] }
+  };
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <TreeRuleBuilder
-        onChange={setRule}
-        sampleData={testData}
-      />
-      <RuleEvaluator
+    <div className="app">
+      <h1>Build Your Business Rules</h1>
+      
+      <RuleBuilder
         rule={rule}
-        data={testData}
-        onDataChange={setTestData}
+        onRuleChange={setRule}
+        availableFields={availableFields}
+        testData={testData}
+        theme="auto"
+        showPreview={true}
+        showHistory={true}
+      />
+      
+      {rule && (
+        <div className="rule-output">
+          <h3>Generated Rule:</h3>
+          <pre>{JSON.stringify(rule, null, 2)}</pre>
+          
+          <button onClick={() => testRule()}>
+            Test Rule
+          </button>
+        </div>
+      )}
+    </div>
+  );
+
+  async function testRule() {
+    if (!rule) return;
+    
+    const result = await RuleEngine.evaluate(rule, testData);
+    console.log('Rule Result:', result);
+  }
+}
+```
+
+## 🏗️ Core Components
+
+### RuleBuilder (Main Component)
+
+The primary visual rule construction interface.
+
+```tsx
+<RuleBuilder
+  rule={rule}                    // Current rule state
+  onRuleChange={setRule}         // Callback when rule changes
+  availableFields={fields}       // Available fields for selection
+  testData={testData}           // Sample data for live testing
+  theme="dark"                  // Theme: 'light' | 'dark' | 'auto'
+  showPreview={true}            // Show JSON preview panel
+  showHistory={true}            // Enable undo/redo functionality
+  customOperators={operators}    // Custom business operators
+  onValidationError={onError}   // Validation error callback
+  className="my-rule-builder"   // Custom CSS classes
+/>
+```
+
+### RuleEvaluator
+
+Real-time rule evaluation with visual feedback.
+
+```tsx
+<RuleEvaluator
+  rule={rule}
+  testData={testData}
+  engine={RuleEngine}
+  onResult={handleResult}
+  showSteps={true}              // Show evaluation steps
+  highlightActive={true}        // Highlight active rule paths
+/>
+```
+
+### ModernConstraintEditor
+
+Advanced constraint editing with intelligent suggestions.
+
+```tsx
+<ModernConstraintEditor
+  constraint={constraint}
+  onConstraintChange={setConstraint}
+  availableFields={fields}
+  operators={operators}
+  showFieldSuggestions={true}
+  allowCustomFields={true}
+/>
+```
+
+## 🔧 Component Showcase
+
+### Building Blocks
+
+The visual builder provides intuitive components for every rule element:
+
+#### Logic Operators
+- **AND** - All conditions must be true
+- **OR** - Any condition must be true  
+- **NONE** - No conditions must be true
+
+#### Comparison Operators
+- **Equals (=)** - Exact value matching
+- **Greater Than (>)** - Numeric comparison
+- **Contains** - Array/string inclusion
+- **Matches** - Regular expression patterns
+
+#### Field Selectors
+- **JSONPath Fields** - `$.user.profile.name`
+- **Nested Properties** - Deep object navigation
+- **Array Elements** - `$.items[0].price`
+- **Custom Fields** - User-defined properties
+
+#### Value Inputs
+- **Static Values** - Fixed strings, numbers, booleans
+- **Dynamic References** - `$.other.field`
+- **Arrays** - Multiple value selection
+- **Date/Time** - Calendar and time pickers
+
+## 🎯 Real-World Examples
+
+### E-commerce Discount Builder
+
+```tsx
+function DiscountRuleBuilder() {
+  const [discountRule, setDiscountRule] = useState(null);
+  
+  const ecommerceFields = [
+    { name: '$.customer.tier', type: 'string', label: 'Customer Tier', 
+      options: ['bronze', 'silver', 'gold', 'platinum'] },
+    { name: '$.cart.total', type: 'number', label: 'Cart Total' },
+    { name: '$.cart.itemCount', type: 'number', label: 'Number of Items' },
+    { name: '$.customer.isFirstOrder', type: 'boolean', label: 'First Order' },
+    { name: '$.promotions.active', type: 'array', label: 'Active Promotions' }
+  ];
+
+  const customOperators = [
+    {
+      name: 'is-weekend',
+      label: 'Is Weekend',
+      category: 'datetime',
+      description: 'Check if current date is weekend'
+    },
+    {
+      name: 'bulk-discount-eligible',
+      label: 'Bulk Discount Eligible',
+      category: 'business',
+      description: 'Check if order qualifies for bulk pricing'
+    }
+  ];
+
+  return (
+    <div className="discount-builder">
+      <h2>Discount Rule Builder</h2>
+      
+      <RuleBuilder
+        rule={discountRule}
+        onRuleChange={setDiscountRule}
+        availableFields={ecommerceFields}
+        customOperators={customOperators}
+        theme="light"
+        resultTemplate={{
+          discount: 0,
+          code: '',
+          message: '',
+          expires: null
+        }}
       />
     </div>
   );
 }
 ```
 
-### Custom Operators
+### User Access Control Builder
 
 ```tsx
-const customOperators = {
-  'custom-contains': {
-    label: 'Custom Contains',
-    category: 'String',
-    description: 'Custom contains logic',
-    valueType: 'string',
-    evaluate: (fieldValue, constraintValue) => {
-      return fieldValue?.toLowerCase().includes(constraintValue?.toLowerCase());
-    }
+function AccessControlBuilder() {
+  const [accessRule, setAccessRule] = useState(null);
+  
+  const accessFields = [
+    { name: '$.user.role', type: 'string', label: 'User Role' },
+    { name: '$.user.department', type: 'string', label: 'Department' },
+    { name: '$.user.clearanceLevel', type: 'number', label: 'Clearance Level' },
+    { name: '$.resource.sensitivity', type: 'string', label: 'Resource Sensitivity' },
+    { name: '$.session.duration', type: 'number', label: 'Session Duration' },
+    { name: '$.time.currentHour', type: 'number', label: 'Current Hour' }
+  ];
+
+  return (
+    <div className="access-builder">
+      <h2>Access Control Rules</h2>
+      
+      <RuleBuilder
+        rule={accessRule}
+        onRuleChange={setAccessRule}
+        availableFields={accessFields}
+        theme="dark"
+        showHistory={true}
+        resultTemplate={{
+          allowed: false,
+          permissions: [],
+          expires: null,
+          reason: ''
+        }}
+      />
+      
+      <RuleEvaluator
+        rule={accessRule}
+        testData={sampleUserSession}
+        showSteps={true}
+        onResult={(result) => {
+          console.log('Access Decision:', result);
+        }}
+      />
+    </div>
+  );
+}
+```
+
+### Form Validation Builder
+
+```tsx
+function ValidationBuilder() {
+  const [validationRules, setValidationRules] = useState([]);
+  
+  const formFields = [
+    { name: 'email', type: 'string', label: 'Email Address' },
+    { name: 'password', type: 'string', label: 'Password' },
+    { name: 'confirmPassword', type: 'string', label: 'Confirm Password' },
+    { name: 'age', type: 'number', label: 'Age' },
+    { name: 'country', type: 'string', label: 'Country' },
+    { name: 'acceptTerms', type: 'boolean', label: 'Accept Terms' }
+  ];
+
+  return (
+    <div className="validation-builder">
+      <h2>Form Validation Rules</h2>
+      
+      {validationRules.map((rule, index) => (
+        <div key={index} className="validation-rule">
+          <h3>Rule {index + 1}</h3>
+          
+          <RuleBuilder
+            rule={rule}
+            onRuleChange={(newRule) => {
+              const updated = [...validationRules];
+              updated[index] = newRule;
+              setValidationRules(updated);
+            }}
+            availableFields={formFields}
+            mode="validation"
+            showPreview={false}
+          />
+        </div>
+      ))}
+      
+      <button onClick={() => addValidationRule()}>
+        Add Validation Rule
+      </button>
+    </div>
+  );
+}
+```
+
+## 🎨 Advanced Features
+
+### Custom Themes
+
+```tsx
+const customTheme = {
+  colors: {
+    primary: '#6366f1',
+    secondary: '#10b981',
+    background: '#f8fafc',
+    surface: '#ffffff',
+    text: '#1f2937',
+    border: '#e5e7eb'
+  },
+  spacing: {
+    sm: '0.5rem',
+    md: '1rem',
+    lg: '1.5rem'
+  },
+  borderRadius: '0.75rem',
+  shadows: {
+    sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    md: '0 4px 6px rgba(0, 0, 0, 0.1)'
   }
 };
 
-<TreeRuleBuilder
-  customOperators={customOperators}
-  onChange={(rule) => console.log(rule)}
+<RuleBuilder
+  rule={rule}
+  onRuleChange={setRule}
+  theme={customTheme}
+  availableFields={fields}
+/>
+```
+
+### Field Discovery
+
+```tsx
+// Auto-discover fields from your data schema
+const fields = useFieldDiscovery(sampleData, {
+  maxDepth: 3,
+  includeArrays: true,
+  typeInference: true
+});
+
+<RuleBuilder
+  rule={rule}
+  onRuleChange={setRule}
+  availableFields={fields}
+  allowFieldDiscovery={true}
+  onFieldDiscovered={(field) => {
+    console.log('New field discovered:', field);
+  }}
 />
 ```
 
 ### History Management
 
 ```tsx
-import { TreeRuleBuilder, HistoryViewer } from '@usex/rule-engine-builder';
-
-function VersionControlledBuilder() {
-  return (
-    <div>
-      <TreeRuleBuilder
-        showToolbar={true}
-        onChange={(rule) => console.log(rule)}
-      />
-      <HistoryViewer className="mt-4" />
-    </div>
-  );
-}
-```
-
-## Examples
-
-### E-commerce Discount Rules
-
-```tsx
-const discountFields: FieldConfig[] = [
-  {
-    name: 'customer.tier',
-    label: 'Customer Tier',
-    type: 'string',
-    group: 'Customer',
-    values: [
-      { value: 'bronze', label: 'Bronze' },
-      { value: 'silver', label: 'Silver' },
-      { value: 'gold', label: 'Gold' },
-      { value: 'platinum', label: 'Platinum' }
-    ]
-  },
-  {
-    name: 'order.total',
-    label: 'Order Total',
-    type: 'number',
-    group: 'Order'
-  },
-  {
-    name: 'order.itemCount',
-    label: 'Item Count',
-    type: 'number',
-    group: 'Order'
-  }
-];
-
-function DiscountRuleBuilder() {
-  const handleRuleChange = (rule) => {
-    // Apply discount logic based on rule
-    console.log('Discount rule:', rule);
-  };
-
-  return (
-    <TreeRuleBuilder
-      fields={discountFields}
-      sampleData={{
-        customer: { tier: 'gold', totalSpent: 1500 },
-        order: { total: 200, itemCount: 3 }
-      }}
-      onChange={handleRuleChange}
-      labels={{
-        addGroup: 'Add Discount Condition',
-        noRules: 'No discount rules defined. Add conditions to create discounts.'
-      }}
-    />
-  );
-}
-```
-
-### Access Control Rules
-
-```tsx
-const accessFields: FieldConfig[] = [
-  {
-    name: 'user.role',
-    label: 'User Role',
-    type: 'string',
-    group: 'User',
-    values: [
-      { value: 'admin', label: 'Administrator' },
-      { value: 'moderator', label: 'Moderator' },
-      { value: 'user', label: 'Regular User' },
-      { value: 'guest', label: 'Guest' }
-    ]
-  },
-  {
-    name: 'user.permissions',
-    label: 'Permissions',
-    type: 'array',
-    group: 'User'
-  },
-  {
-    name: 'resource.type',
-    label: 'Resource Type',
-    type: 'string',
-    group: 'Resource'
-  }
-];
-
-function AccessControlBuilder() {
-  return (
-    <TreeRuleBuilder
-      fields={accessFields}
-      sampleData={{
-        user: { 
-          role: 'moderator', 
-          permissions: ['read', 'write', 'moderate'] 
-        },
-        resource: { type: 'document', owner: 'user123' }
-      }}
-      colors={{
-        and: 'border-green-500/30 bg-green-500/5',
-        or: 'border-blue-500/30 bg-blue-500/5',
-        none: 'border-red-500/30 bg-red-500/5'
-      }}
-    />
-  );
-}
-```
-
-### Form Validation Rules
-
-```tsx
-const validationFields: FieldConfig[] = [
-  {
-    name: 'email',
-    label: 'Email Address',
-    type: 'string',
-    group: 'Contact',
-    validation: { pattern: '^[^@]+@[^@]+\\.[^@]+$' }
-  },
-  {
-    name: 'age',
-    label: 'Age',
-    type: 'number',
-    group: 'Personal',
-    validation: { min: 18, max: 120 }
-  },
-  {
-    name: 'password',
-    label: 'Password',
-    type: 'string',
-    group: 'Security'
-  }
-];
-
-function ValidationRuleBuilder() {
-  const [validationRule, setValidationRule] = useState(null);
-  
-  const validateForm = (formData) => {
-    if (!validationRule) return { isValid: true };
-    
-    // Use RuleEngine to validate
-    return RuleEngine.evaluate(validationRule, formData);
-  };
+function RuleBuilderWithHistory() {
+  const [rule, setRule] = useState(null);
+  const { history, undo, redo, canUndo, canRedo } = useRuleHistory();
 
   return (
     <div>
-      <TreeRuleBuilder
-        fields={validationFields}
-        onChange={setValidationRule}
-        sampleData={{
-          email: 'user@example.com',
-          age: 25,
-          password: 'securePass123'
-        }}
-        labels={{
-          addGroup: 'Add Validation Rule',
-          noRules: 'No validation rules defined.'
-        }}
-      />
-      
-      <div className="mt-4 p-4 bg-gray-100 rounded">
-        <h3>Test Validation</h3>
-        <button onClick={() => {
-          const result = validateForm({
-            email: 'test@example.com',
-            age: 25,
-            password: 'weak'
-          });
-          console.log('Validation result:', result);
-        }}>
-          Test Form Validation
+      <div className="history-controls">
+        <button 
+          onClick={undo} 
+          disabled={!canUndo}
+          title="Undo (Ctrl+Z)"
+        >
+          ↶ Undo
         </button>
+        
+        <button 
+          onClick={redo} 
+          disabled={!canRedo}
+          title="Redo (Ctrl+Y)"
+        >
+          ↷ Redo
+        </button>
+        
+        <span className="history-count">
+          Step {history.currentIndex + 1} of {history.entries.length}
+        </span>
       </div>
+
+      <RuleBuilder
+        rule={rule}
+        onRuleChange={setRule}
+        showHistory={true}
+        maxHistoryEntries={100}
+      />
     </div>
   );
 }
 ```
 
-## Customization
+### Keyboard Shortcuts
 
-### Theme Customization
+The builder supports professional keyboard navigation:
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Z` | Undo last change |
+| `Ctrl+Y` | Redo last undone change |
+| `Ctrl+D` | Duplicate selected component |
+| `Delete` | Remove selected component |
+| `Tab` | Navigate between components |
+| `Enter` | Edit selected component |
+| `Escape` | Cancel current operation |
+| `Ctrl+S` | Export rule (custom handler) |
+
+## 🏎️ Performance & Optimization
+
+### Virtual Scrolling
+
+For large rule sets, the builder uses virtual scrolling:
 
 ```tsx
-const customTheme = {
-  colors: {
-    or: 'border-purple-500/30 bg-purple-500/5 dark:bg-purple-500/10',
-    and: 'border-emerald-500/30 bg-emerald-500/5 dark:bg-emerald-500/10',
-    none: 'border-rose-500/30 bg-rose-500/5 dark:bg-rose-500/10'
-  },
-  labels: {
-    addGroup: 'Add Business Rule',
-    addRule: 'Add Condition',
-    or: 'ANY',
-    and: 'ALL',
-    none: 'EXCEPT'
-  }
-};
-
-<TreeRuleBuilder
-  theme={customTheme}
-  className="custom-rule-builder"
+<RuleBuilder
+  rule={complexRule}
+  onRuleChange={setRule}
+  virtualScrolling={true}
+  itemHeight={60}
+  maxVisibleItems={50}
 />
 ```
 
-### Custom Keyboard Shortcuts
+### Lazy Loading
+
+Components are loaded on-demand for better performance:
 
 ```tsx
-const customShortcuts = {
-  save: { key: 's', ctrl: true, shift: true },
-  test: { key: 't', alt: true },
-  addGroup: { key: 'n', ctrl: true },
-  help: { key: 'F1' }
-};
+const LazyRuleBuilder = lazy(() => import('@usex/rule-engine-builder'));
 
-<TreeRuleBuilder
-  keyboardShortcuts={customShortcuts}
-/>
-```
-
-### Responsive Layout
-
-```tsx
-function ResponsiveRuleBuilder() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
+function App() {
   return (
-    <TreeRuleBuilder
-      showJsonViewer={!isMobile}
-      showToolbar={true}
-      className={isMobile ? 'mobile-layout' : 'desktop-layout'}
-    />
+    <Suspense fallback={<div>Loading rule builder...</div>}>
+      <LazyRuleBuilder />
+    </Suspense>
   );
 }
 ```
 
-## TypeScript Support
-
-### Full Type Safety
-
-```typescript
-import { 
-  TreeRuleBuilder, 
-  FieldConfig, 
-  RuleType, 
-  EvaluationResult 
-} from '@usex/rule-engine-builder';
-
-interface UserData {
-  name: string;
-  age: number;
-  email: string;
-}
-
-interface DiscountResult {
-  discount: number;
-  message: string;
-}
-
-const fields: FieldConfig[] = [
-  { name: 'name', label: 'Name', type: 'string' },
-  { name: 'age', label: 'Age', type: 'number' },
-  { name: 'email', label: 'Email', type: 'string' }
-];
-
-function TypedRuleBuilder() {
-  const handleRuleChange = (rule: RuleType<DiscountResult>) => {
-    // rule is fully typed
-    console.log(rule.conditions);
-  };
-
-  return (
-    <TreeRuleBuilder
-      fields={fields}
-      onChange={handleRuleChange}
-      sampleData={{ 
-        name: 'John', 
-        age: 30, 
-        email: 'john@example.com' 
-      } as UserData}
-    />
-  );
-}
-```
-
-### Custom Hook Types
-
-```typescript
-import { useEnhancedRuleStore } from '@usex/rule-engine-builder';
-
-function useTypedRuleStore() {
-  const store = useEnhancedRuleStore();
-  
-  return {
-    ...store,
-    updateRule: (rule: RuleType<DiscountResult>) => store.updateRule(rule)
-  };
-}
-```
-
-## Performance Considerations
-
-### Optimization Tips
-
-1. **Memoize Field Configs**: Use `useMemo` for static field configurations
-2. **Debounce Changes**: Debounce `onChange` callbacks for better performance
-3. **Limit Nesting Depth**: Set appropriate `maxNestingDepth` values
-4. **Virtual Scrolling**: Enable for large field lists
-5. **Lazy Loading**: Load operators and field data on demand
+### Optimized Rendering
 
 ```tsx
-const fields = useMemo(() => generateFields(), []);
+// Use memo for expensive field calculations
+const availableFields = useMemo(() => 
+  generateFieldsFromSchema(schema), [schema]
+);
+
+// Debounce rule changes to reduce re-renders
 const debouncedOnChange = useMemo(
-  () => debounce((rule) => console.log(rule), 300),
+  () => debounce(setRule, 300),
   []
 );
 
-<TreeRuleBuilder
-  fields={fields}
-  onChange={debouncedOnChange}
-  maxNestingDepth={5}
+<RuleBuilder
+  rule={rule}
+  onRuleChange={debouncedOnChange}
+  availableFields={availableFields}
+  optimizeRendering={true}
 />
 ```
 
-## Browser Support
+## 🎓 TypeScript Support
 
-| Browser | Version |
-|---------|---------|
-| Chrome | ≥ 88 |
-| Firefox | ≥ 85 |
-| Safari | ≥ 14 |
-| Edge | ≥ 88 |
+Full type safety for all components and props:
 
-## Contributing
+```tsx
+interface CustomField {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
+  label: string;
+  description?: string;
+  options?: string[];
+  validation?: {
+    required?: boolean;
+    min?: number;
+    max?: number;
+    pattern?: string;
+  };
+}
 
-We welcome contributions! Please see our [Contributing Guide](../../CONTRIBUTING.md) for details.
+interface CustomRule<T = any> {
+  id: string;
+  conditions: Condition<T>[];
+  result?: T;
+  metadata?: {
+    name: string;
+    description: string;
+    created: Date;
+    modified: Date;
+  };
+}
+
+// Type-safe rule builder
+const Builder = () => {
+  const [rule, setRule] = useState<CustomRule<DiscountResult>>(null);
+  
+  return (
+    <RuleBuilder<DiscountResult>
+      rule={rule}
+      onRuleChange={setRule}
+      availableFields={typedFields}
+      resultType="discount"
+    />
+  );
+};
+```
+
+## 🧪 Testing Components
+
+```tsx
+import { render, screen, fireEvent } from '@testing-library/react';
+import { RuleBuilder } from '@usex/rule-engine-builder';
+
+describe('RuleBuilder', () => {
+  const mockFields = [
+    { name: 'age', type: 'number', label: 'Age' },
+    { name: 'country', type: 'string', label: 'Country' }
+  ];
+
+  it('should render field palette', () => {
+    render(
+      <RuleBuilder
+        availableFields={mockFields}
+        onRuleChange={jest.fn()}
+      />
+    );
+    
+    expect(screen.getByText('Age')).toBeInTheDocument();
+    expect(screen.getByText('Country')).toBeInTheDocument();
+  });
+
+  it('should handle drag and drop', () => {
+    const onChange = jest.fn();
+    
+    render(
+      <RuleBuilder
+        availableFields={mockFields}
+        onRuleChange={onChange}
+      />
+    );
+    
+    const ageField = screen.getByText('Age');
+    const dropZone = screen.getByTestId('drop-zone');
+    
+    fireEvent.dragStart(ageField);
+    fireEvent.drop(dropZone);
+    
+    expect(onChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        conditions: expect.arrayContaining([
+          expect.objectContaining({
+            field: 'age'
+          })
+        ])
+      })
+    );
+  });
+});
+```
+
+## 📚 Documentation & Resources
+
+- 🏗️ **[Component Guide](./docs/components.md)** - Detailed component documentation
+- 🎨 **[Theming Guide](./docs/theming.md)** - Customization and styling
+- ⌨️ **[Keyboard Shortcuts](./docs/shortcuts.md)** - Complete keyboard reference
+- 🔧 **[Integration Examples](./docs/integration.md)** - Framework-specific examples
+- 🎯 **[Best Practices](./docs/best-practices.md)** - Performance and UX guidelines
+- 📋 **[Changelog](./CHANGELOG.md)** - Version history and updates
+
+## 🤝 Contributing
+
+We welcome contributions! Whether it's:
+- 🐛 Bug reports and fixes
+- ✨ New components or features
+- 📖 Documentation improvements
+- 🎨 Theme contributions
+
+See our [Contributing Guide](../../CONTRIBUTING.md) for details.
 
 ### Development Setup
 
 ```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/ali-master/rule-engine.git
+cd rule-engine/packages/builder
 
 # Install dependencies
 pnpm install
 
 # Start development server
-cd packages/builder && pnpm dev
+pnpm dev
 
 # Run tests
 pnpm test
 
-# Build package
+# Build for production
 pnpm build
 ```
 
-## License
+## 🆚 Why Choose This Builder?
+
+| Feature | @usex/rule-engine-builder | React QueryBuilder | React Awesome Query Builder |
+|---------|---------------------------|--------------------|-----------------------------|
+| TypeScript Native | ✅ | ⚠️ Partial | ⚠️ Partial |
+| Drag & Drop | ✅ | ❌ | ✅ |
+| Real-time Evaluation | ✅ | ❌ | ❌ |
+| History/Undo | ✅ | ❌ | ❌ |
+| Custom Themes | ✅ | ⚠️ Limited | ✅ |
+| Mobile Responsive | ✅ | ⚠️ Partial | ❌ |
+| JSONPath Support | ✅ | ❌ | ❌ |
+| Bundle Size | 45KB | 120KB | 180KB |
+| Tree Visualization | ✅ | ❌ | ✅ |
+| Keyboard Shortcuts | ✅ | ❌ | ❌ |
+
+## 📄 License
 
 MIT © [Ali Torki](https://github.com/ali-master)
 
 ---
 
-Made with ❤️ by [Ali Torki](https://github.com/ali-master)
+<div align="center">
+
+**Built with ❤️ for modern React applications**
+
+[⭐ Star us on GitHub](https://github.com/ali-master/rule-engine) • [🐛 Report Issues](https://github.com/ali-master/rule-engine/issues) • [💬 Discussions](https://github.com/ali-master/rule-engine/discussions)
+
+</div>

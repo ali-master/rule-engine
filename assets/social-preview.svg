@@ -1,0 +1,244 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <!-- Background Gradient -->
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#0f172a;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#1e293b;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#334155;stop-opacity:1" />
+        </linearGradient>
+
+        <!-- Core Logo Gradients -->
+        <linearGradient id="coreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#6366f1;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+        </linearGradient>
+
+        <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+        </linearGradient>
+
+        <linearGradient id="errorGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#ef4444;stop-opacity:1" />
+        </linearGradient>
+
+        <!-- Builder Logo Gradients -->
+        <linearGradient id="builderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#f97316;stop-opacity:1" />
+            <stop offset="50%" style="stop-color:#ec4899;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+        </linearGradient>
+
+        <linearGradient id="creationGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+        </linearGradient>
+
+        <linearGradient id="activeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+        </linearGradient>
+
+        <!-- Effects -->
+        <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+
+        <filter id="shadow">
+            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+        </filter>
+    </defs>
+
+    <!-- Background -->
+    <rect width="1280" height="640" fill="url(#bgGradient)"/>
+
+    <!-- Background Pattern -->
+    <defs>
+        <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+            <circle cx="20" cy="20" r="1.5" fill="white" opacity="0.1"/>
+        </pattern>
+    </defs>
+    <rect width="1280" height="640" fill="url(#dots)"/>
+
+    <!-- Main Title -->
+    <text x="640" y="160" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="64" font-weight="900" fill="white" filter="url(#glow)">
+        @usex/rule-engine
+    </text>
+
+    <!-- Subtitle -->
+    <text x="640" y="200" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="600" fill="white" opacity="0.9">
+        🎯 The Developer's Decision Engine
+    </text>
+
+    <!-- Description -->
+    <text x="640" y="240" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="400" fill="white" opacity="0.8">
+        Transform complex business logic into elegant, maintainable JSON rules
+    </text>
+
+    <!-- Core Package Logo (Left Side) - IF-THEN-ELSE Flow -->
+    <g transform="translate(350,370) scale(0.7)">
+        <!-- Central Decision Diamond (IF) -->
+        <path d="M 0 -20 L 20 0 L 0 20 L -20 0 Z" fill="url(#coreGradient)" filter="url(#glow)"/>
+        <text x="0" y="4" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" font-weight="bold" fill="white">IF</text>
+
+        <!-- Input Flow -->
+        <rect x="-15" y="-48" width="30" height="16" rx="8" fill="url(#coreGradient)" opacity="0.8"/>
+        <text x="0" y="-37" text-anchor="middle" font-family="monospace" font-size="6" fill="white">{data}</text>
+        <path d="M 0 -32 L 0 -22" stroke="url(#coreGradient)" stroke-width="2" fill="none"/>
+        <polygon points="0,-22 -3,-27 3,-27" fill="url(#coreGradient)"/>
+
+        <!-- TRUE Path (Left) -->
+        <rect x="-50" y="30" width="40" height="20" rx="10" fill="url(#successGradient)" filter="url(#glow)"/>
+        <text x="-30" y="42" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="white">THEN</text>
+        <circle cx="-30" cy="65" r="8" fill="url(#successGradient)"/>
+        <text x="-30" y="68" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="6" fill="white">✓</text>
+
+        <!-- FALSE Path (Right) -->
+        <rect x="10" y="30" width="40" height="20" rx="10" fill="url(#errorGradient)" filter="url(#glow)"/>
+        <text x="30" y="42" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="8" font-weight="bold" fill="white">ELSE</text>
+        <circle cx="30" cy="65" r="8" fill="url(#errorGradient)"/>
+        <text x="30" y="68" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="6" fill="white">✗</text>
+
+        <!-- Flow Lines -->
+        <path d="M -15 10 Q -25 20 -30 30" stroke="url(#successGradient)" stroke-width="3" fill="none"/>
+        <path d="M 15 10 Q 25 20 30 30" stroke="url(#errorGradient)" stroke-width="3" fill="none"/>
+
+        <!-- Package Label -->
+        <text x="0" y="95" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="url(#coreGradient)">
+            @packages/core
+        </text>
+        <text x="0" y="113" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="white" opacity="0.8">
+            Rule Evaluation Engine
+        </text>
+    </g>
+
+    <!-- Builder Package Logo (Right Side) - Drag & Drop Interface -->
+    <g transform="translate(930,370) scale(0.7)">
+        <!-- Canvas Area -->
+        <rect x="-40" y="-40" width="80" height="60" rx="8" fill="url(#builderGradient)" opacity="0.1" stroke="url(#builderGradient)" stroke-width="1" opacity="0.3"/>
+
+        <!-- Dragging Components -->
+        <g transform="translate(-20,-20)">
+            <rect x="-15" y="-8" width="30" height="16" rx="8" fill="url(#creationGradient)" filter="url(#glow)"/>
+            <text x="0" y="1" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="6" font-weight="bold" fill="white">AND</text>
+        </g>
+
+        <g transform="translate(0,0)">
+            <rect x="-12" y="-6" width="24" height="12" rx="6" fill="url(#activeGradient)" filter="url(#glow)"/>
+            <text x="0" y="1" text-anchor="middle" font-family="monospace" font-size="7" font-weight="bold" fill="white">></text>
+        </g>
+
+        <g transform="translate(20,-10)">
+            <rect x="-18" y="-6" width="36" height="12" rx="6" fill="url(#builderGradient)" filter="url(#glow)"/>
+            <text x="0" y="1" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="5" fill="white">$.user.age</text>
+        </g>
+
+        <!-- Drop Zones -->
+        <rect x="-25" y="25" width="20" height="10" rx="5" fill="none" stroke="url(#creationGradient)" stroke-width="2" stroke-dasharray="2,1"/>
+        <rect x="-5" y="25" width="20" height="10" rx="5" fill="none" stroke="url(#creationGradient)" stroke-width="2" stroke-dasharray="2,1"/>
+        <rect x="15" y="25" width="20" height="10" rx="5" fill="none" stroke="url(#creationGradient)" stroke-width="2" stroke-dasharray="2,1"/>
+
+        <!-- Component Palette -->
+        <rect x="-50" y="45" width="35" height="25" rx="8" fill="white" opacity="0.1" stroke="url(#builderGradient)" stroke-width="1" opacity="0.4"/>
+        <g transform="translate(-42,50)">
+            <rect x="-3" y="-1" width="6" height="3" rx="1" fill="url(#creationGradient)" opacity="0.8"/>
+            <rect x="3" y="-1" width="6" height="3" rx="1" fill="url(#activeGradient)" opacity="0.8"/>
+            <rect x="-3" y="3" width="6" height="3" rx="1" fill="url(#builderGradient)" opacity="0.8"/>
+            <rect x="3" y="3" width="6" height="3" rx="1" fill="url(#creationGradient)" opacity="0.8"/>
+        </g>
+
+        <!-- Hand Cursor -->
+        <g transform="translate(25,5)">
+            <path d="M 0 0 L 0 6 L 1 6 L 1 4 L 2 4 L 2 6 L 3 6 L 3 4 L 4 4 L 4 6 L 5 6 L 5 3 L 4 3 L 4 1 L 3 1 L 3 0 Z"
+                  fill="url(#activeGradient)" filter="url(#glow)"/>
+        </g>
+
+        <!-- Package Label -->
+        <text x="0" y="95" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="url(#builderGradient)">
+            @packages/builder
+        </text>
+        <text x="0" y="113" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="white" opacity="0.8">
+            Visual Rule Constructor
+        </text>
+    </g>
+
+    <!-- Connection Between Packages -->
+    <path d="M 430 370 Q 640 320 850 370" stroke="url(#coreGradient)" stroke-width="3" fill="none" opacity="0.6" stroke-dasharray="8,4"/>
+
+    <!-- Animated Flow -->
+    <circle r="3" fill="url(#activeGradient)" opacity="0.9">
+        <animateMotion dur="3s" repeatCount="indefinite">
+            <path d="M 430 370 Q 640 320 850 370"/>
+        </animateMotion>
+    </circle>
+
+    <!-- Feature Highlights -->
+    <g transform="translate(140,480)">
+        <rect x="0" y="0" width="1000" height="100" rx="16" fill="white" opacity="0.08" filter="url(#shadow)"/>
+
+        <!-- Features Grid -->
+        <g transform="translate(30,30)">
+            <!-- Zero Dependencies -->
+            <g>
+                <circle cx="12" cy="20" r="10" fill="url(#activeGradient)" filter="url(#glow)"/>
+                <text x="12" y="25" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="white">🎯</text>
+                <text x="30" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">Zero Dependencies</text>
+                <text x="30" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="white" opacity="0.8">Pure JavaScript Excellence</text>
+            </g>
+
+            <!-- Performance -->
+            <g transform="translate(200,0)">
+                <circle cx="12" cy="20" r="10" fill="url(#coreGradient)" filter="url(#glow)"/>
+                <text x="12" y="25" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="white">⚡</text>
+                <text x="30" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">117k+ ops/sec</text>
+                <text x="30" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="white" opacity="0.8">Lightning Fast Performance</text>
+            </g>
+
+            <!-- TypeScript -->
+            <g transform="translate(400,0)">
+                <circle cx="12" cy="20" r="10" fill="url(#creationGradient)" filter="url(#glow)"/>
+                <text x="12" y="25" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="white">🛡️</text>
+                <text x="30" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">TypeScript Native</text>
+                <text x="30" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="white" opacity="0.8">Complete Type Safety</text>
+            </g>
+
+            <!-- Operators -->
+            <g transform="translate(600,0)">
+                <circle cx="12" cy="20" r="10" fill="url(#builderGradient)" filter="url(#glow)"/>
+                <text x="12" y="25" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="white">🧩</text>
+                <text x="30" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">121+ Operators</text>
+                <text x="30" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="white" opacity="0.8">Comprehensive Toolkit</text>
+            </g>
+
+            <!-- JSONPath -->
+            <g transform="translate(800,0)">
+                <circle cx="12" cy="20" r="10" fill="url(#successGradient)" filter="url(#glow)"/>
+                <text x="12" y="25" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="white">🔗</text>
+                <text x="30" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">JSONPath Magic</text>
+                <text x="30" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="white" opacity="0.8">Self-Referencing Rules</text>
+            </g>
+        </g>
+    </g>
+
+    <!-- GitHub Link -->
+    <text x="640" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="500" fill="white" opacity="0.7">
+        github.com/ali-master/rule-engine
+    </text>
+
+    <!-- Floating Elements -->
+    <circle cx="150" cy="150" r="3" fill="url(#activeGradient)" opacity="0.6">
+        <animate attributeName="cy" values="150;140;150" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.3;0.8;0.3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+
+    <circle cx="1130" cy="180" r="2" fill="url(#creationGradient)" opacity="0.7">
+        <animate attributeName="cy" values="180;170;180" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.4;0.9;0.4" dur="4s" repeatCount="indefinite"/>
+    </circle>
+</svg>
