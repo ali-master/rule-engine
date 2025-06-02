@@ -2,7 +2,7 @@
 
 A simple yet powerful rule engine for Node.js and the browser. Define complex business rules using JSON structures and evaluate them against your data with full TypeScript support.
 
-> **New in v2**: Strategy pattern for operators, custom operator support, enhanced introspection, and performance optimizations. See the [V2 Migration Guide](./docs/v2-migration-guide.md) for details.
+> **New in v2.1**: Enhanced TypeScript support with method overloads, improved type inference, and better error handling. See the [V2 Migration Guide](./docs/v2-migration-guide.md) and [TypeScript Guide](./docs/typescript-guide.md) for details.
 
 ## Table of Contents
 
@@ -553,6 +553,15 @@ const rule = {
 - **Performance**: Optional caching and lazy operator loading
 
 See the [V2 Migration Guide](./docs/v2-migration-guide.md) for more details.
+
+## Documentation
+
+- **[TypeScript Guide](./docs/typescript-guide.md)** - Comprehensive guide for TypeScript features and best practices
+- **[API Reference v2.1](./docs/api-reference-v2.md)** - Complete API documentation with all method signatures
+- **[Migration Guide](./docs/v2-migration-guide.md)** - Upgrade from v1 to v2 with detailed steps
+- **[Operators Guide](./docs/operators.md)** - Full list of operators with examples
+- **[Best Practices](./docs/best-practices.md)** - Recommended patterns and practices
+- **[Changelog](./CHANGELOG.md)** - Detailed list of changes in each version
 
 ## Contributing
 

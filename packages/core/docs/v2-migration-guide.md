@@ -2,11 +2,14 @@
 
 This guide will help you migrate from the original RuleEngine to the new V2 implementation that uses the Strategy pattern for operators.
 
+> **Updated for v2.1**: This guide now includes information about TypeScript method overloads, improved type inference, and singleton pattern changes.
+
 ## Table of Contents
 
 - [Overview of Changes](#overview-of-changes)
 - [Breaking Changes](#breaking-changes)
 - [New Features](#new-features)
+- [TypeScript Improvements (v2.1)](#typescript-improvements-v21)
 - [Migration Steps](#migration-steps)
 - [API Compatibility](#api-compatibility)
 - [Custom Operators](#custom-operators)
@@ -137,6 +140,79 @@ class EmailDomainOperator extends BaseOperatorStrategy<string, string> {
 
 // Register the operator
 registerCustomOperator(EmailDomainOperator);
+```
+
+## TypeScript Improvements (v2.1)
+
+### 1. Method Overloads for Better Type Inference
+
+All methods that accept `Criteria` now have overloads for automatic type inference:
+
+```typescript
+// Old - Union return type
+const result = await engine.evaluate(rule, criteria);
+// result: EvaluationResult<T> | Array<EvaluationResult<T>>
+// TypeScript doesn't know which type without checking
+
+// New - Overloaded methods with specific return types
+const singleResult = await engine.evaluate(rule, { age: 25 });
+// singleResult: EvaluationResult<T> - TypeScript knows it's a single result
+
+const arrayResults = await engine.evaluate(rule, [{ age: 25 }, { age: 30 }]);
+// arrayResults: Array<EvaluationResult<T>> - TypeScript knows it's an array
+```
+
+### 2. Singleton Pattern Enforcement
+
+The RuleEngine constructor is now private:
+
+```typescript
+// Old - Direct instantiation
+const engine = new RuleEngine();
+
+// New - Singleton pattern
+const engine = RuleEngine.getInstance();
+```
+
+### 3. Enhanced Mutation Management
+
+The `clearMutations()` method now properly removes all mutations:
+
+```typescript
+// Old - Only cleared cache
+engine.clearMutations(); // Only cleared mutation cache
+
+// New - Removes all mutations
+engine.clearMutations(); // Removes all registered mutations
+engine.clearMutationCache(); // Clears only the cache
+```
+
+### 4. Message Priority Fix
+
+Constraint-specific error messages now have proper priority:
+
+```typescript
+// Old behavior - Default rule message had priority
+// When a constraint failed, the rule's default message was returned
+
+// New behavior - Constraint message has priority
+// When a constraint fails, its specific message is returned
+const rule = {
+  conditions: {
+    and: [
+      { 
+        field: "length", 
+        operator: "length-between", 
+        value: [4, 20],
+        message: "Length must be between 4 and 20 characters"
+      }
+    ]
+  },
+  default: { message: "Rule failed" }
+};
+
+// Now returns: "Length must be between 4 and 20 characters"
+// Instead of: "Rule failed"
 ```
 
 ## Migration Steps
