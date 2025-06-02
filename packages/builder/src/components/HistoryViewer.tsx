@@ -23,6 +23,13 @@ import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   ZoomDialog,
@@ -77,7 +84,6 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
     setOpen(false);
   };
 
-
   const getActionIcon = (action: string) => {
     switch (action.toLowerCase()) {
       case "add":
@@ -127,17 +133,18 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
                   className="pl-9"
                 />
               </div>
-              <select
-                value={filterAction}
-                onChange={(e) => setFilterAction(e.target.value)}
-                className="h-10 px-3 rounded-md border border-input bg-background text-sm"
-              >
-                {uniqueActions.map((action) => (
-                  <option key={action} value={action}>
-                    {action === "all" ? "All Actions" : action}
-                  </option>
-                ))}
-              </select>
+              <Select value={filterAction} onValueChange={setFilterAction}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Filter actions" />
+                </SelectTrigger>
+                <SelectContent>
+                  {uniqueActions.map((action) => (
+                    <SelectItem key={action} value={action}>
+                      {action === "all" ? "All Actions" : action}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline"
@@ -173,223 +180,235 @@ export const HistoryViewer: React.FC<HistoryViewerProps> = ({ className }) => {
               >
                 {/* History List */}
                 <Card className="h-full flex flex-col overflow-hidden">
-                <CardHeader className="py-3 shrink-0">
-                  <CardTitle className="text-sm">
-                    History ({filteredHistory.length} entries)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="flex-1 p-0 overflow-hidden">
-                  <ScrollArea className="h-full">
-                    <div className="p-4 space-y-2">
-                      {filteredHistory.map((entry) => {
-                        const actualIndex = history.indexOf(entry);
-                        const isCurrent = actualIndex === historyIndex;
-                        const isPast = actualIndex < historyIndex;
+                  <CardHeader className="py-3 shrink-0">
+                    <CardTitle className="text-sm">
+                      History ({filteredHistory.length} entries)
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-1 p-0 overflow-hidden">
+                    <ScrollArea className="h-full">
+                      <div className="p-4 space-y-2">
+                        {filteredHistory.map((entry) => {
+                          const actualIndex = history.indexOf(entry);
+                          const isCurrent = actualIndex === historyIndex;
+                          const isPast = actualIndex < historyIndex;
 
-                        return (
-                          <Card
-                            key={entry.timestamp}
-                            className={cn(
-                              "p-3 cursor-pointer transition-colors",
-                              "hover:bg-accent",
-                              isCurrent && "ring-2 ring-primary",
-                              selectedEntry === entry && "bg-accent",
-                              isPast && "opacity-60",
-                            )}
-                            onClick={() => setSelectedEntry(entry)}
-                          >
-                            <div className="flex items-start gap-3">
-                              {getActionIcon(entry.action)}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <h4 className="font-medium text-sm truncate">
-                                    {entry.action}
-                                  </h4>
-                                  {isCurrent && (
-                                    <Badge
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      Current
-                                    </Badge>
-                                  )}
+                          return (
+                            <Card
+                              key={entry.timestamp}
+                              className={cn(
+                                "p-3 cursor-pointer transition-colors",
+                                "hover:bg-accent",
+                                isCurrent && "ring-2 ring-primary",
+                                selectedEntry === entry && "bg-accent",
+                                isPast && "opacity-60",
+                              )}
+                              onClick={() => setSelectedEntry(entry)}
+                            >
+                              <div className="flex items-start gap-3">
+                                {getActionIcon(entry.action)}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2">
+                                    <h4 className="font-medium text-sm truncate">
+                                      {entry.action}
+                                    </h4>
+                                    {isCurrent && (
+                                      <Badge
+                                        variant="secondary"
+                                        className="text-xs"
+                                      >
+                                        Current
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <p className="text-xs text-muted-foreground truncate">
+                                    {entry.description}
+                                  </p>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <span className="text-xs text-muted-foreground">
+                                      {formatDistanceToNow(entry.timestamp, {
+                                        addSuffix: true,
+                                      })}
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      •
+                                    </span>
+                                    <span className="text-xs text-muted-foreground">
+                                      v{actualIndex + 1}
+                                    </span>
+                                  </div>
                                 </div>
-                                <p className="text-xs text-muted-foreground truncate">
-                                  {entry.description}
-                                </p>
-                                <div className="flex items-center gap-2 mt-1">
-                                  <span className="text-xs text-muted-foreground">
-                                    {formatDistanceToNow(entry.timestamp, {
-                                      addSuffix: true,
-                                    })}
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    •
-                                  </span>
-                                  <span className="text-xs text-muted-foreground">
-                                    v{actualIndex + 1}
-                                  </span>
+                                <div className="flex gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCheckout(entry, actualIndex);
+                                    }}
+                                    disabled={isCurrent}
+                                    title="Checkout this version"
+                                  >
+                                    <RotateCcw className="h-3 w-3" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setCompareEntry(
+                                        entry === compareEntry ? null : entry,
+                                      );
+                                    }}
+                                    title="Compare with selected"
+                                  >
+                                    <Eye className="h-3 w-3" />
+                                  </Button>
                                 </div>
                               </div>
-                              <div className="flex gap-1">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCheckout(entry, actualIndex);
-                                  }}
-                                  disabled={isCurrent}
-                                  title="Checkout this version"
-                                >
-                                  <RotateCcw className="h-3 w-3" />
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCompareEntry(
-                                      entry === compareEntry ? null : entry,
-                                    );
-                                  }}
-                                  title="Compare with selected"
-                                >
-                                  <Eye className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            </div>
-                          </Card>
-                        );
-                      })}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
+                            </Card>
+                          );
+                        })}
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
                 </Card>
 
                 {/* Details/Diff View */}
                 <Card className="h-full flex flex-col overflow-hidden">
-                <CardHeader className="py-3 shrink-0">
-                  <CardTitle className="text-sm">Details</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-1 p-0 overflow-hidden">
-                  {selectedEntry ? (
-                    <Tabs
-                      defaultValue="details"
-                      className="h-full flex flex-col overflow-hidden"
-                    >
-                      <TabsList className="m-4 mb-0 shrink-0">
-                        <TabsTrigger value="details">Details</TabsTrigger>
-                        <TabsTrigger value="changes">Changes</TabsTrigger>
-                        <TabsTrigger value="json">JSON</TabsTrigger>
-                        {compareEntry && (
-                          <TabsTrigger value="compare">Compare</TabsTrigger>
-                        )}
-                      </TabsList>
+                  <CardHeader className="py-3 shrink-0">
+                    <CardTitle className="text-sm">Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-1 p-0 overflow-hidden">
+                    {selectedEntry ? (
+                      <Tabs
+                        defaultValue="details"
+                        className="h-full flex flex-col overflow-hidden"
+                      >
+                        <TabsList className="m-4 mb-0 shrink-0">
+                          <TabsTrigger value="details">Details</TabsTrigger>
+                          <TabsTrigger value="changes">Changes</TabsTrigger>
+                          <TabsTrigger value="json">JSON</TabsTrigger>
+                          {compareEntry && (
+                            <TabsTrigger value="compare">Compare</TabsTrigger>
+                          )}
+                        </TabsList>
 
-                      <TabsContent value="details" className="flex-1 overflow-auto p-0">
-                        <div className="space-y-4 p-4">
-                          <div>
-                            <h4 className="font-medium text-sm mb-2">
-                              Version Information
-                            </h4>
-                            <div className="space-y-2 text-sm">
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">
-                                  Version:
-                                </span>
-                                <span>
-                                  v{history.indexOf(selectedEntry) + 1}
-                                </span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">
-                                  Action:
-                                </span>
-                                <span>{selectedEntry.action}</span>
-                              </div>
-                              <div className="flex justify-between">
-                                <span className="text-muted-foreground">
-                                  Time:
-                                </span>
-                                <span>
-                                  {format(selectedEntry.timestamp, "PPp")}
-                                </span>
+                        <TabsContent
+                          value="details"
+                          className="flex-1 overflow-auto p-0"
+                        >
+                          <div className="space-y-4 p-4">
+                            <div>
+                              <h4 className="font-medium text-sm mb-2">
+                                Version Information
+                              </h4>
+                              <div className="space-y-2 text-sm">
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">
+                                    Version:
+                                  </span>
+                                  <span>
+                                    v{history.indexOf(selectedEntry) + 1}
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">
+                                    Action:
+                                  </span>
+                                  <span>{selectedEntry.action}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-muted-foreground">
+                                    Time:
+                                  </span>
+                                  <span>
+                                    {format(selectedEntry.timestamp, "PPp")}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
 
-                          <div>
-                            <h4 className="font-medium text-sm mb-2">
-                              Description
-                            </h4>
-                            <p className="text-sm text-muted-foreground">
-                              {selectedEntry.description}
-                            </p>
-                          </div>
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="changes" className="flex-1 overflow-hidden p-0">
-                        <div className="h-full p-4">
-                          {selectedEntry.changes ? (
-                            <DiffViewer
-                              oldValue={selectedEntry.changes.before}
-                              newValue={selectedEntry.changes.after}
-                              oldTitle="Before"
-                              newTitle="After"
-                              title="Changes"
-                              className="h-full"
-                            />
-                          ) : (
-                            <div className="h-full flex items-center justify-center">
+                            <div>
+                              <h4 className="font-medium text-sm mb-2">
+                                Description
+                              </h4>
                               <p className="text-sm text-muted-foreground">
-                                No change details available
+                                {selectedEntry.description}
                               </p>
                             </div>
-                          )}
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="json" className="flex-1 overflow-hidden p-0">
-                        <ScrollArea className="h-full">
-                          <div className="p-4">
-                            <Card className="overflow-hidden">
-                              <CardContent className="p-4">
-                                <JsonViewer
-                                  data={selectedEntry.rule}
-                                  rootName="rule"
-                                  defaultExpanded={true}
-                                  className="max-w-full"
-                                  highlightLogicalOperators={true}
-                                />
-                              </CardContent>
-                            </Card>
-                          </div>
-                        </ScrollArea>
-                      </TabsContent>
-
-                      {compareEntry && (
-                        <TabsContent value="compare" className="flex-1 overflow-hidden p-0">
-                          <div className="h-full p-4">
-                            <DiffViewer
-                              oldValue={compareEntry.rule}
-                              newValue={selectedEntry.rule}
-                              oldTitle={`Version ${history.indexOf(compareEntry) + 1}`}
-                              newTitle={`Version ${history.indexOf(selectedEntry) + 1}`}
-                              title={`Comparing v${history.indexOf(compareEntry) + 1} → v${history.indexOf(selectedEntry) + 1}`}
-                              className="h-full"
-                            />
                           </div>
                         </TabsContent>
-                      )}
-                    </Tabs>
-                  ) : (
-                    <div className="h-full flex items-center justify-center text-muted-foreground p-4">
-                      Select a history entry to view details
-                    </div>
-                  )}
-                </CardContent>
+
+                        <TabsContent
+                          value="changes"
+                          className="flex-1 overflow-hidden p-0"
+                        >
+                          <div className="h-full p-4">
+                            {selectedEntry.changes ? (
+                              <DiffViewer
+                                oldValue={selectedEntry.changes.before}
+                                newValue={selectedEntry.changes.after}
+                                oldTitle="Before"
+                                newTitle="After"
+                                title="Changes"
+                                className="h-full"
+                              />
+                            ) : (
+                              <div className="h-full flex items-center justify-center">
+                                <p className="text-sm text-muted-foreground">
+                                  No change details available
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </TabsContent>
+
+                        <TabsContent
+                          value="json"
+                          className="flex-1 overflow-hidden p-0"
+                        >
+                          <ScrollArea className="h-full">
+                            <div className="p-4">
+                              <Card className="overflow-hidden">
+                                <CardContent className="p-4">
+                                  <JsonViewer
+                                    data={selectedEntry.rule}
+                                    rootName="rule"
+                                    defaultExpanded={true}
+                                    className="max-w-full"
+                                    highlightLogicalOperators={true}
+                                  />
+                                </CardContent>
+                              </Card>
+                            </div>
+                          </ScrollArea>
+                        </TabsContent>
+
+                        {compareEntry && (
+                          <TabsContent
+                            value="compare"
+                            className="flex-1 overflow-hidden p-0"
+                          >
+                            <div className="h-full p-4">
+                              <DiffViewer
+                                oldValue={compareEntry.rule}
+                                newValue={selectedEntry.rule}
+                                oldTitle={`Version ${history.indexOf(compareEntry) + 1}`}
+                                newTitle={`Version ${history.indexOf(selectedEntry) + 1}`}
+                                title={`Comparing v${history.indexOf(compareEntry) + 1} → v${history.indexOf(selectedEntry) + 1}`}
+                                className="h-full"
+                              />
+                            </div>
+                          </TabsContent>
+                        )}
+                      </Tabs>
+                    ) : (
+                      <div className="h-full flex items-center justify-center text-muted-foreground p-4">
+                        Select a history entry to view details
+                      </div>
+                    )}
+                  </CardContent>
                 </Card>
               </ResizablePanel>
             </div>
