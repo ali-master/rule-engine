@@ -104,7 +104,7 @@ export class ObjectDiscovery<T = any> {
     if (!path?.includes("$.") && isObject(json)) {
       return (json as CriteriaObject)[path];
     }
-    const result = JSONPath({ path, json: json as Criteria });
+    const result = JSONPath({ path, json: json as any });
     if (Array.isArray(result) && result.length === 1) {
       return result[0];
     }
@@ -189,7 +189,10 @@ export class ObjectDiscovery<T = any> {
     let result = str;
 
     for (const expression of expressions) {
-      const resolvedExpressionPath = (this as any).resolveProperty(expression, criteria);
+      const resolvedExpressionPath = (this as any).resolveProperty(
+        expression,
+        criteria,
+      );
       result = result.replace(expression, resolvedExpressionPath);
     }
 

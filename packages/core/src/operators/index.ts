@@ -259,7 +259,6 @@ export function isEmailOperator(value: string): boolean {
 
 export function isUrlOperator(value: string): boolean {
   try {
-     
     new URL(value);
     return true;
   } catch {

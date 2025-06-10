@@ -179,7 +179,6 @@ export class Evaluator<T = any> {
             if (!evaluation.isPassed) {
               message = evaluation.message;
             } else {
-               
               break processLoop;
             }
           }
@@ -193,7 +192,7 @@ export class Evaluator<T = any> {
 
             if (!evaluation.isPassed && evaluation.message) {
               message = evaluation.message;
-               
+
               break processLoop;
             }
           }
@@ -203,7 +202,7 @@ export class Evaluator<T = any> {
 
             if (!evaluation.isPassed) {
               message = evaluation.message;
-               
+
               break processLoop;
             }
           }
@@ -249,7 +248,7 @@ export class Evaluator<T = any> {
     // Resolve field value
     const fieldValue = this.discovery.resolveProperty(
       constraint.field,
-      criteria,
+      criteria as any,
     );
 
     // Resolve constraint value (handle self-references)
@@ -330,13 +329,13 @@ export class Evaluator<T = any> {
     if (Array.isArray(value)) {
       return value.map((x) =>
         typeof x === "string" && x.includes("$.")
-          ? this.discovery.resolveProperty(x, criteria)
+          ? this.discovery.resolveProperty(x, criteria as any)
           : x,
       );
     }
 
     if (typeof value === "string" && value.includes("$.")) {
-      return this.discovery.resolveProperty(value, criteria);
+      return this.discovery.resolveProperty(value, criteria as any);
     }
 
     return value;
@@ -383,7 +382,7 @@ export class Evaluator<T = any> {
         value: (payload.value ?? defaultValue) as T,
         message: this.discovery.resolveTextPathExpressions(
           payload.message!,
-          criteria,
+          criteria as any,
         ),
       };
     }

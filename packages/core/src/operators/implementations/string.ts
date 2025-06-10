@@ -536,7 +536,7 @@ export class MatchesOperator extends BaseOperatorStrategy<string, string> {
         if (pattern.startsWith("/") && pattern.endsWith("/")) {
           pattern = pattern.slice(1, -1);
         }
-         
+
         new RegExp(pattern);
       } catch (error) {
         return {
