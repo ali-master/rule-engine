@@ -143,7 +143,7 @@ export function likeOperator(
   caseInsensitive = false,
 ) {
   // Escape special characters in the pattern to prevent SQL injection
-  // eslint-disable-next-line regexp/no-obscure-range
+   
   const escapedPattern = pattern.replace(/([\\%_[\]^$!@#&?()-='">{}])/g, "$1");
 
   // Build the regular expression with pattern handling
@@ -286,7 +286,7 @@ export function isAlphaOperator(value: string): boolean {
   return alphaRegex.test(value);
 }
 export function isPersianAlphaOperator(value: string): boolean {
-  // eslint-disable-next-line regexp/no-obscure-range
+   
   const text = value.replace(/["'-+؟\s.]/g, "");
 
   // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
@@ -299,7 +299,7 @@ export function isAlphaNumericOperator(value: string): boolean {
 }
 
 export function isPersianAlphaNumericOperator(value: string): boolean {
-  // eslint-disable-next-line regexp/no-obscure-range
+   
   const text = value.replace(/["'-+؟\s.]/g, "");
 
   // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
