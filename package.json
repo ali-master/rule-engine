@@ -15,7 +15,7 @@
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm -r lint:fix",
     "format:check": "pnpm -r format:check",
-    "format:write": "pnpm -r format:write",
+    "format": "pnpm -r format",
     "test:unit": "pnpm -r test:unit",
     "test:types": "pnpm -r test:types",
     "test:knip": "pnpm -r test:knip",
