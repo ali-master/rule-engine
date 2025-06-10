@@ -50,7 +50,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,mdx}\"",
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "pnpm run lint --fix",
-    "publish:release": "pnpm build && pnpm publish --access public"
+    "prepublishOnly": "pnpm lint",
+    "release": "cross-env CI=true pnpm run build",
+    "postrelease": "standard-version && pnpm publish --access public && git push --follow-tags origin master",
+    "release:beta": "pnpm run build",
+    "postrelease:beta": "standard-version --prerelease beta && pnpm publish --access public --tag beta && git push --follow-tags origin master"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",

@@ -64,11 +64,15 @@
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "pnpm run lint --fix",
     "prepublishOnly": "pnpm lint && pnpm test",
-    "release": "pnpm test && bumpp && pnpm publish"
+    "prerelease": "pnpm run test",
+    "release": "cross-env CI=true pnpm run build",
+    "postrelease": "standard-version && pnpm publish --access public && git push --follow-tags origin master",
+    "release:beta": "pnpm run build",
+    "postrelease:beta": "standard-version --prerelease beta && pnpm publish --access public --tag beta && git push --follow-tags origin master"
   },
   "peerDependencies": {
     "@persian-tools/persian-tools": "^3.6.0",
-    "date-fns-jalali": "^4.1.0-0",
+    "date-fns": "^4.1.0",
     "eventemitter3": "^5.0.1",
     "jsonpath-plus": "^10.3.0",
     "ramda": "^0.30.1"
