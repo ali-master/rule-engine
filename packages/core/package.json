@@ -1,7 +1,7 @@
 {
   "name": "@usex/rule-engine",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "packageManager": "pnpm@10.12.1",
   "description": "The ultimate JSON-based rule engine that turns complex business logic into declarative configurations. Built for developers who believe code should be expressive, not repetitive.",
   "author": {
