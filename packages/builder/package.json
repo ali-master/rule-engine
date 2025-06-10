@@ -1,7 +1,7 @@
 {
   "name": "@usex/rule-engine-builder",
   "type": "module",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": false,
   "description": "Visual rule construction toolkit for React applications. Drag, drop, and compose complex business logic without writing JSON. Transform IF-THEN decisions into intuitive visual flows with real-time evaluation, undo/redo history, and TypeScript-powered intelligence.",
   "repository": {
