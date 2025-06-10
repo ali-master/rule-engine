@@ -1,14 +1,14 @@
-import React from 'react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Badge } from '../ui/badge';
-import { Plus, X } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import React from "react";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Badge } from "../ui/badge";
+import { X, Plus } from "lucide-react";
+import { cn } from "../../lib/utils";
 
 interface ArrayInputProps {
   value?: any[];
   onChange: (value: any[]) => void;
-  itemType?: 'string' | 'number' | 'boolean';
+  itemType?: "string" | "number" | "boolean";
   placeholder?: string;
   disabled?: boolean;
   className?: string;
@@ -17,26 +17,26 @@ interface ArrayInputProps {
 export const ArrayInput: React.FC<ArrayInputProps> = ({
   value = [],
   onChange,
-  itemType = 'string',
-  placeholder = 'Add item',
+  itemType = "string",
+  placeholder = "Add item",
   disabled = false,
   className,
 }) => {
-  const [inputValue, setInputValue] = React.useState('');
+  const [inputValue, setInputValue] = React.useState("");
 
   const handleAdd = () => {
     if (!inputValue.trim()) return;
 
     let newValue: any = inputValue;
-    if (itemType === 'number') {
-      newValue = parseFloat(inputValue);
-      if (isNaN(newValue)) return;
-    } else if (itemType === 'boolean') {
-      newValue = inputValue.toLowerCase() === 'true';
+    if (itemType === "number") {
+      newValue = Number.parseFloat(inputValue);
+      if (Number.isNaN(newValue)) return;
+    } else if (itemType === "boolean") {
+      newValue = inputValue.toLowerCase() === "true";
     }
 
     onChange([...value, newValue]);
-    setInputValue('');
+    setInputValue("");
   };
 
   const handleRemove = (index: number) => {
@@ -44,14 +44,14 @@ export const ArrayInput: React.FC<ArrayInputProps> = ({
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleAdd();
     }
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn("space-y-2", className)}>
       <div className="flex gap-2">
         <Input
           value={inputValue}
@@ -60,7 +60,7 @@ export const ArrayInput: React.FC<ArrayInputProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           className="flex-1"
-          type={itemType === 'number' ? 'number' : 'text'}
+          type={itemType === "number" ? "number" : "text"}
         />
         <Button
           type="button"
@@ -80,7 +80,7 @@ export const ArrayInput: React.FC<ArrayInputProps> = ({
               className="pl-2 pr-1 py-1 flex items-center gap-1"
             >
               <span className="text-xs font-normal">
-                {typeof item === 'string' ? item : JSON.stringify(item)}
+                {typeof item === "string" ? item : JSON.stringify(item)}
               </span>
               <button
                 type="button"

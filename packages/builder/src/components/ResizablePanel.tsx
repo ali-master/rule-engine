@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "../lib/utils";
 
 interface ResizablePanelProps {
@@ -28,7 +28,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
   const [size, setSize] = useState(() => {
     if (persistId) {
       const saved = localStorage.getItem(`resizable-panel-${persistId}`);
-      return saved ? parseFloat(saved) : defaultSize;
+      return saved ? Number.parseFloat(saved) : defaultSize;
     }
     return defaultSize;
   });
@@ -45,7 +45,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
 
       const container = containerRef.current;
       const rect = container.getBoundingClientRect();
-      
+
       let newSize: number;
       if (direction === "horizontal") {
         const position = ((e.clientX - rect.left) / rect.width) * 100;
@@ -57,12 +57,15 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
 
       setSize(newSize);
       onResize?.(newSize);
-      
+
       if (persistId) {
-        localStorage.setItem(`resizable-panel-${persistId}`, newSize.toString());
+        localStorage.setItem(
+          `resizable-panel-${persistId}`,
+          newSize.toString(),
+        );
       }
     },
-    [isDragging, direction, minSize, maxSize, onResize, persistId]
+    [isDragging, direction, minSize, maxSize, onResize, persistId],
   );
 
   const handleMouseUp = useCallback(() => {
@@ -73,7 +76,8 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
     if (isDragging) {
       document.addEventListener("mousemove", handleMouseMove);
       document.addEventListener("mouseup", handleMouseUp);
-      document.body.style.cursor = direction === "horizontal" ? "col-resize" : "row-resize";
+      document.body.style.cursor =
+        direction === "horizontal" ? "col-resize" : "row-resize";
       document.body.style.userSelect = "none";
 
       return () => {
@@ -93,15 +97,12 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
       className={cn(
         "relative flex h-full w-full",
         isHorizontal ? "flex-row" : "flex-col",
-        className
+        className,
       )}
     >
       {/* First Panel */}
       <div
-        className={cn(
-          "overflow-hidden",
-          isHorizontal ? "h-full" : "w-full"
-        )}
+        className={cn("overflow-hidden", isHorizontal ? "h-full" : "w-full")}
         style={{
           [isHorizontal ? "width" : "height"]: `${size}%`,
         }}
@@ -117,7 +118,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
           isHorizontal ? "w-1 cursor-col-resize" : "h-1 cursor-row-resize",
           "hover:bg-primary/10 transition-colors",
           isDragging && "bg-primary/20",
-          handleClassName
+          handleClassName,
         )}
       >
         {/* Visual indicator */}
@@ -128,15 +129,15 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
             isDragging && "bg-primary",
             isHorizontal
               ? "h-8 w-1 group-hover:w-1.5"
-              : "w-8 h-1 group-hover:h-1.5"
+              : "w-8 h-1 group-hover:h-1.5",
           )}
         />
-        
+
         {/* Draggable area */}
         <div
           className={cn(
             "absolute",
-            isHorizontal ? "inset-y-0 -inset-x-1" : "inset-x-0 -inset-y-1"
+            isHorizontal ? "inset-y-0 -inset-x-1" : "inset-x-0 -inset-y-1",
           )}
         />
       </div>
@@ -145,7 +146,7 @@ export const ResizablePanel: React.FC<ResizablePanelProps> = ({
       <div
         className={cn(
           "flex-1 overflow-hidden",
-          isHorizontal ? "h-full" : "w-full"
+          isHorizontal ? "h-full" : "w-full",
         )}
       >
         {children[1]}

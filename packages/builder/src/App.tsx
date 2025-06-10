@@ -1,19 +1,19 @@
 import { RuleEngine } from "@usex/rule-engine";
-import { AlertCircle, PlayCircle, TestTube } from "lucide-react";
+import { TestTube, PlayCircle, AlertCircle } from "lucide-react";
 import React, { useState } from "react";
-import { toast, Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import { ThemeProvider } from "./components/theme-provider";
 import { ThemeToggle } from "./components/theme-toggle";
 import { TreeRuleBuilder } from "./components/TreeRuleBuilder";
-import { Alert, AlertDescription } from "./components/ui/alert";
+import { AlertDescription, Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
+  SheetTitle,
+  SheetHeader,
+  SheetDescription,
+  SheetContent,
+  Sheet,
 } from "./components/ui/sheet";
 import { Textarea } from "./components/ui/textarea";
 import { useEnhancedRuleStore } from "./stores/enhanced-rule-store";
@@ -66,8 +66,7 @@ function AppContent() {
 
     try {
       const data = JSON.parse(testData);
-      const engine = new RuleEngine();
-      const result = await engine.evaluate(rule, data);
+      const result = await RuleEngine.evaluate(rule, data);
 
       // Handle single result or array of results
       const isPassed = Array.isArray(result)

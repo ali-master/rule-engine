@@ -74,9 +74,7 @@ const CardContent = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & {
   ref?: React.Ref<HTMLDivElement>;
-}) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-);
+}) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />;
 CardContent.displayName = "CardContent";
 
 const CardFooter = ({

@@ -1,29 +1,29 @@
 import * as Diff from "diff";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  BarChart3,
-  ChevronDown,
-  ChevronRight,
-  Copy,
-  FileJson,
-  GitBranch,
-  Minus,
   Plus,
+  Minus,
+  GitBranch,
+  FileJson,
+  Copy,
+  ChevronRight,
+  ChevronDown,
+  BarChart3,
 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { cn } from "../lib/utils";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { TabsTrigger, TabsList, Tabs } from "./ui/tabs";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
 } from "./ui/tooltip";
 
 interface DiffViewerProps {

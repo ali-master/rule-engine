@@ -1,7 +1,7 @@
-import React from 'react';
-import { Input } from '../ui/input';
-import { Slider } from '../ui/slider';
-import { cn } from '../../lib/utils';
+import React from "react";
+import { Input } from "../ui/input";
+import { Slider } from "../ui/slider";
+import { cn } from "../../lib/utils";
 
 interface NumberInputProps {
   value?: number;
@@ -22,13 +22,14 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   max,
   step = 1,
   showSlider = false,
-  placeholder = 'Enter number',
+  placeholder = "Enter number",
   disabled = false,
   className,
 }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value === '' ? 0 : parseFloat(e.target.value);
-    if (!isNaN(newValue)) {
+    const newValue =
+      e.target.value === "" ? 0 : Number.parseFloat(e.target.value);
+    if (!Number.isNaN(newValue)) {
       onChange(newValue);
     }
   };
@@ -38,10 +39,10 @@ export const NumberInput: React.FC<NumberInputProps> = ({
   };
 
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn("space-y-2", className)}>
       <Input
         type="number"
-        value={value ?? ''}
+        value={value ?? ""}
         onChange={handleInputChange}
         min={min}
         max={max}

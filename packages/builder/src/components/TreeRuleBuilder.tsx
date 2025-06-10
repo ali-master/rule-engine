@@ -2,19 +2,19 @@ import type { Condition } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
 import { RuleEngine } from "@usex/rule-engine";
 import {
-  AlertCircle,
-  FileJson,
-  GitBranch,
-  Keyboard,
-  Maximize2,
-  Minimize2,
-  PlayCircle,
-  Plus,
-  Save,
   TestTube2,
+  Save,
+  Plus,
+  PlayCircle,
+  Minimize2,
+  Maximize2,
+  Keyboard,
+  GitBranch,
+  FileJson,
+  AlertCircle,
 } from "lucide-react";
 import React, { useState } from "react";
-import { toast, Toaster } from "sonner";
+import { Toaster, toast } from "sonner";
 import { useKeyboardShortcuts } from "../hooks/use-keyboard-shortcuts";
 import { cn } from "../lib/utils";
 import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
@@ -24,18 +24,18 @@ import { JsonViewer } from "./JsonVisualizer";
 import { HistoryViewer } from "./HistoryViewer";
 import { ThemeToggle } from "./ThemeToggle";
 import { TreeConditionGroup } from "./TreeConditionGroup";
-import { Alert, AlertDescription } from "./ui/alert";
+import { AlertDescription, Alert } from "./ui/alert";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Separator } from "./ui/separator";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
+  SheetTitle,
+  SheetHeader,
+  SheetDescription,
+  SheetContent,
+  Sheet,
 } from "./ui/sheet";
 import { Textarea } from "./ui/textarea";
 import { UndoRedoInfo } from "./UndoRedoInfo";
@@ -73,14 +73,62 @@ interface TreeRuleBuilderProps {
     none?: string;
   };
   keyboardShortcuts?: {
-    undo?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    redo?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    save?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    test?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    addGroup?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    expandAll?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    collapseAll?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
-    help?: { key: string; ctrl?: boolean; cmd?: boolean; shift?: boolean; alt?: boolean };
+    undo?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    redo?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    save?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    test?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    addGroup?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    expandAll?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    collapseAll?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
+    help?: {
+      key: string;
+      ctrl?: boolean;
+      cmd?: boolean;
+      shift?: boolean;
+      alt?: boolean;
+    };
   };
 }
 
@@ -148,6 +196,116 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
     help: keyboardShortcuts.help || defaultShortcuts.help,
   };
 
+  // Merge default labels
+  const mergedLabels = {
+    addGroup: "Add Condition Group",
+    addRule: "Add Rule",
+    removeGroup: "Remove Group",
+    duplicateGroup: "Duplicate Group",
+    or: "OR",
+    and: "AND",
+    none: "NONE",
+    noRules: "No rules defined yet. Start by adding a condition group.",
+    importSuccess: "Rule imported successfully",
+    exportSuccess: "Rule exported successfully",
+    saveSuccess: "Rule saved successfully",
+    ...labels,
+  };
+
+  // Debounce onChange
+  const onChangeTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  React.useEffect(() => {
+    if (onChange) {
+      if (onChangeTimerRef.current) {
+        clearTimeout(onChangeTimerRef.current);
+      }
+
+      onChangeTimerRef.current = setTimeout(() => {
+        onChange(rule);
+      }, 100);
+    }
+
+    return () => {
+      if (onChangeTimerRef.current) {
+        clearTimeout(onChangeTimerRef.current);
+      }
+    };
+  }, [rule]);
+
+  const conditions = React.useMemo(() => {
+    if (!rule.conditions) return [];
+    return Array.isArray(rule.conditions) ? rule.conditions : [rule.conditions];
+  }, [rule.conditions]);
+
+  const addRootConditionGroup = (type: "or" | "and" | "none" = "or") => {
+    const newCondition: Condition = { [type]: [] };
+    updateConditions([...conditions, newCondition]);
+    toast.success("Added new condition group");
+  };
+
+  const handleTestRule = async () => {
+    setIsTestRunning(true);
+    setTestResult(null);
+
+    try {
+      const data = JSON.parse(testData);
+      const result = await RuleEngine.evaluate(rule, data);
+
+      const isPassed = Array.isArray(result)
+        ? result.some((r) => r.isPassed)
+        : result.isPassed;
+
+      setTestResult({
+        success: true,
+        result,
+        passed: isPassed,
+      });
+
+      toast.success(isPassed ? "Rule passed!" : "Rule failed!");
+    } catch (error: any) {
+      setTestResult({
+        success: false,
+        error: error.message,
+      });
+      toast.error("Error evaluating rule");
+    } finally {
+      setIsTestRunning(false);
+    }
+  };
+
+  const updateCondition = (index: number, condition: Condition) => {
+    const updatedConditions = [...conditions];
+    updatedConditions[index] = condition;
+    updateConditions(updatedConditions);
+  };
+
+  const removeCondition = (index: number) => {
+    updateConditions(conditions.filter((_, i) => i !== index));
+    toast.success("Removed condition group");
+  };
+
+  const duplicateCondition = (index: number) => {
+    const conditionToDuplicate = conditions[index];
+    const duplicated = JSON.parse(JSON.stringify(conditionToDuplicate));
+    updateConditions([...conditions, duplicated]);
+    toast.success("Duplicated condition group");
+  };
+
+  async function handleSave() {
+    if (!onSave) return;
+
+    setIsSaving(true);
+    try {
+      await onSave(rule);
+      toast.success(mergedLabels.saveSuccess);
+    } catch {
+      toast.error("Failed to save rule");
+    } finally {
+      setIsSaving(false);
+    }
+  }
+
   // Keyboard shortcuts
   useKeyboardShortcuts([
     {
@@ -198,117 +356,6 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
       description: "Show keyboard shortcuts",
     },
   ]);
-
-  // Merge default labels
-  const mergedLabels = {
-    addGroup: "Add Condition Group",
-    addRule: "Add Rule",
-    removeGroup: "Remove Group",
-    duplicateGroup: "Duplicate Group",
-    or: "OR",
-    and: "AND",
-    none: "NONE",
-    noRules: "No rules defined yet. Start by adding a condition group.",
-    importSuccess: "Rule imported successfully",
-    exportSuccess: "Rule exported successfully",
-    saveSuccess: "Rule saved successfully",
-    ...labels,
-  };
-
-  // Debounce onChange
-  const onChangeTimerRef = React.useRef<NodeJS.Timeout | null>(null);
-
-  React.useEffect(() => {
-    if (onChange) {
-      if (onChangeTimerRef.current) {
-        clearTimeout(onChangeTimerRef.current);
-      }
-
-      onChangeTimerRef.current = setTimeout(() => {
-        onChange(rule);
-      }, 100);
-    }
-
-    return () => {
-      if (onChangeTimerRef.current) {
-        clearTimeout(onChangeTimerRef.current);
-      }
-    };
-  }, [rule]);
-
-  const conditions = React.useMemo(() => {
-    if (!rule.conditions) return [];
-    return Array.isArray(rule.conditions) ? rule.conditions : [rule.conditions];
-  }, [rule.conditions]);
-
-  const handleTestRule = async () => {
-    setIsTestRunning(true);
-    setTestResult(null);
-
-    try {
-      const data = JSON.parse(testData);
-      const engine = new RuleEngine();
-      const result = await engine.evaluate(rule, data);
-
-      const isPassed = Array.isArray(result)
-        ? result.some((r) => r.isPassed)
-        : result.isPassed;
-
-      setTestResult({
-        success: true,
-        result,
-        passed: isPassed,
-      });
-
-      toast.success(isPassed ? "Rule passed!" : "Rule failed!");
-    } catch (error: any) {
-      setTestResult({
-        success: false,
-        error: error.message,
-      });
-      toast.error("Error evaluating rule");
-    } finally {
-      setIsTestRunning(false);
-    }
-  };
-
-  const addRootConditionGroup = (type: "or" | "and" | "none" = "or") => {
-    const newCondition: Condition = { [type]: [] };
-    updateConditions([...conditions, newCondition]);
-    toast.success("Added new condition group");
-  };
-
-  const updateCondition = (index: number, condition: Condition) => {
-    const updatedConditions = [...conditions];
-    updatedConditions[index] = condition;
-    updateConditions(updatedConditions);
-  };
-
-  const removeCondition = (index: number) => {
-    updateConditions(conditions.filter((_, i) => i !== index));
-    toast.success("Removed condition group");
-  };
-
-  const duplicateCondition = (index: number) => {
-    const conditionToDuplicate = conditions[index];
-    const duplicated = JSON.parse(JSON.stringify(conditionToDuplicate));
-    updateConditions([...conditions, duplicated]);
-    toast.success("Duplicated condition group");
-  };
-
-  async function handleSave() {
-    if (!onSave) return;
-
-    setIsSaving(true);
-    try {
-      await onSave(rule);
-      toast.success(mergedLabels.saveSuccess);
-    } catch {
-      toast.error("Failed to save rule");
-    } finally {
-      setIsSaving(false);
-    }
-  }
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -435,9 +482,9 @@ export const TreeRuleBuilder: React.FC<TreeRuleBuilderProps> = ({
                     redoInfo={getRedoInfo()}
                     historyInfo={getHistoryInfo()}
                   />
-                  
+
                   <Separator orientation="vertical" className="h-6" />
-                  
+
                   {/* History Viewer */}
                   <HistoryViewer />
 

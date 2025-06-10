@@ -1,24 +1,24 @@
 import type { FieldConfig } from "../types";
 import {
-  Braces,
-  Calendar,
-  ChevronDown,
-  ChevronRight,
-  Code2,
-  Copy,
-  Eye,
-  EyeOff,
-  FileJson,
-  GripVertical,
-  Hash,
-  Layers,
-  List,
-  Search,
-  ToggleRight,
   Type,
+  ToggleRight,
+  Search,
+  List,
+  Layers,
+  Hash,
+  GripVertical,
+  FileJson,
+  EyeOff,
+  Eye,
+  Copy,
+  Code2,
+  ChevronRight,
+  ChevronDown,
+  Calendar,
+  Braces,
 } from "lucide-react";
-import React, { useCallback, useMemo, useState } from "react";
-import { DndProvider, useDrag, useDrop } from "react-dnd";
+import React, { useState, useMemo, useCallback } from "react";
+import { useDrop, useDrag, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { cn } from "../lib/utils";
 import { JsonViewer } from "./JsonVisualizer";
@@ -26,17 +26,17 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger,
+  DialogTitle,
+  DialogHeader,
+  DialogDescription,
+  DialogContent,
+  Dialog,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ScrollArea } from "./ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { TabsTrigger, TabsList, TabsContent, Tabs } from "./ui/tabs";
 
 interface VisualFieldSelectorProps {
   value: string;
@@ -440,7 +440,10 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
               </Card>
 
               {showValuePreview && showPreview && (
-                <Card className="w-96 flex flex-col p-4" style={{ maxHeight: '500px' }}>
+                <Card
+                  className="w-96 flex flex-col p-4"
+                  style={{ maxHeight: "500px" }}
+                >
                   <h4 className="font-medium mb-2">Preview</h4>
                   <div className="flex-1 flex flex-col gap-3 min-h-0 overflow-hidden">
                     <div className="flex-shrink-0">
@@ -472,7 +475,13 @@ const VisualFieldSelectorInner: React.FC<VisualFieldSelectorProps> = ({
                           Value
                         </Label>
                         <Card className="flex-1 overflow-hidden border-muted">
-                          <div className="h-full overflow-auto scrollbar-none" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                          <div
+                            className="h-full overflow-auto scrollbar-none"
+                            style={{
+                              scrollbarWidth: "none",
+                              msOverflowStyle: "none",
+                            }}
+                          >
                             <div className="p-3">
                               <JsonViewer
                                 data={previewValue}

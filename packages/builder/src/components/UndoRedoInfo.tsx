@@ -1,17 +1,13 @@
-import React from 'react';
-import { Clock, RotateCcw, RotateCw } from 'lucide-react';
-import { Button } from './ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from './ui/popover';
-import { ScrollArea } from './ui/scroll-area';
-import { Separator } from './ui/separator';
-import { Badge } from './ui/badge';
-import { cn } from '../lib/utils';
-import type { HistoryEntry } from '../stores/enhanced-rule-store';
-import { formatDistanceToNow } from 'date-fns';
+import React from "react";
+import { RotateCw, RotateCcw, Clock } from "lucide-react";
+import { Button } from "./ui/button";
+import { PopoverTrigger, PopoverContent, Popover } from "./ui/popover";
+import { ScrollArea } from "./ui/scroll-area";
+import { Separator } from "./ui/separator";
+import { Badge } from "./ui/badge";
+import { cn } from "../lib/utils";
+import type { HistoryEntry } from "../stores/enhanced-rule-store";
+import { formatDistanceToNow } from "date-fns";
 
 interface UndoRedoInfoProps {
   canUndo: boolean;
@@ -43,7 +39,11 @@ export const UndoRedoInfo: React.FC<UndoRedoInfoProps> = ({
             size="icon"
             onClick={onUndo}
             disabled={!canUndo}
-            title={undoInfo ? `Undo: ${undoInfo.description} (Ctrl+Z)` : "Undo (Ctrl+Z)"}
+            title={
+              undoInfo
+                ? `Undo: ${undoInfo.description} (Ctrl+Z)`
+                : "Undo (Ctrl+Z)"
+            }
           >
             <RotateCcw className="h-4 w-4" />
           </Button>
@@ -64,17 +64,22 @@ export const UndoRedoInfo: React.FC<UndoRedoInfoProps> = ({
                     key={index}
                     className={cn(
                       "p-2 rounded-md border text-sm",
-                      index === historyInfo.current && "bg-primary/10 border-primary",
-                      index < historyInfo.current && "opacity-60"
+                      index === historyInfo.current &&
+                        "bg-primary/10 border-primary",
+                      index < historyInfo.current && "opacity-60",
                     )}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-medium">{entry.action}</span>
                       <span className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(entry.timestamp, { addSuffix: true })}
+                        {formatDistanceToNow(entry.timestamp, {
+                          addSuffix: true,
+                        })}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground">{entry.description}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {entry.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -92,19 +97,23 @@ export const UndoRedoInfo: React.FC<UndoRedoInfoProps> = ({
         size="icon"
         onClick={onRedo}
         disabled={!canRedo}
-        title={redoInfo ? `Redo: ${redoInfo.description} (Ctrl+Y)` : "Redo (Ctrl+Y)"}
+        title={
+          redoInfo ? `Redo: ${redoInfo.description} (Ctrl+Y)` : "Redo (Ctrl+Y)"
+        }
       >
         <RotateCw className="h-4 w-4" />
       </Button>
 
       <Separator orientation="vertical" className="h-6 mx-1" />
-      
+
       <div className="flex items-center gap-1 px-2">
         <Clock className="h-3 w-3 text-muted-foreground" />
         <span className="text-xs text-muted-foreground">
-          {historyInfo.entries[historyInfo.current]?.timestamp && 
-            formatDistanceToNow(historyInfo.entries[historyInfo.current].timestamp, { addSuffix: true })
-          }
+          {historyInfo.entries[historyInfo.current]?.timestamp &&
+            formatDistanceToNow(
+              historyInfo.entries[historyInfo.current].timestamp,
+              { addSuffix: true },
+            )}
         </span>
       </div>
     </div>

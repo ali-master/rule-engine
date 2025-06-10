@@ -1,17 +1,28 @@
-import React from 'react';
-import { Input } from '../ui/input';
-import { DateInput } from './DateInput';
-import { AnimatedNumberInput } from './AnimatedNumberInput';
-import { BooleanInput } from './BooleanInput';
-import { ArrayInput } from './ArrayInput';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
-import { Badge } from '../ui/badge';
-import { Info } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
-import { getOperatorConfig } from '../../utils/operators';
-import type { OperatorsType } from '@usex/rule-engine';
-import type { FieldConfig } from '../../types';
-import { cn } from '../../lib/utils';
+import React from "react";
+import { Input } from "../ui/input";
+import { DateInput } from "./DateInput";
+import { AnimatedNumberInput } from "./AnimatedNumberInput";
+import { BooleanInput } from "./BooleanInput";
+import { ArrayInput } from "./ArrayInput";
+import {
+  SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
+} from "../ui/select";
+import { Badge } from "../ui/badge";
+import { Info } from "lucide-react";
+import {
+  TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
+} from "../ui/tooltip";
+import { getOperatorConfig } from "../../utils/operators";
+import type { OperatorsType } from "@usex/rule-engine";
+import type { FieldConfig } from "../../types";
+import { cn } from "../../lib/utils";
 
 interface SmartValueInputProps {
   value: any;
@@ -33,12 +44,17 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
   className,
 }) => {
   const operatorConfig = getOperatorConfig(operator);
-  const valueType = operatorConfig?.valueType || 'single';
+  const valueType = operatorConfig?.valueType || "single";
 
   // No input needed for these operators
-  if (valueType === 'none') {
+  if (valueType === "none") {
     return (
-      <div className={cn('flex items-center gap-2 text-sm text-muted-foreground', className)}>
+      <div
+        className={cn(
+          "flex items-center gap-2 text-sm text-muted-foreground",
+          className,
+        )}
+      >
         <Info className="h-4 w-4" />
         <span>No value needed</span>
       </div>
@@ -47,9 +63,9 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
 
   // For predefined values
   if (field?.values && field.values.length > 0) {
-    if (valueType === 'multiple') {
+    if (valueType === "multiple") {
       return (
-        <div className={cn('space-y-2', className)}>
+        <div className={cn("space-y-2", className)}>
           <Select
             value=""
             onValueChange={(newValue) => {
@@ -75,9 +91,11 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
             <div className="flex flex-wrap gap-1">
               {value.map((v, index) => (
                 <Badge key={index} variant="secondary">
-                  {field.values?.find(opt => opt.value === v)?.label || v}
+                  {field.values?.find((opt) => opt.value === v)?.label || v}
                   <button
-                    onClick={() => onChange(value.filter((_, i) => i !== index))}
+                    onClick={() =>
+                      onChange(value.filter((_, i) => i !== index))
+                    }
                     className="ml-1"
                   >
                     ×
@@ -91,11 +109,7 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
     }
 
     return (
-      <Select
-        value={value}
-        onValueChange={onChange}
-        disabled={disabled}
-      >
+      <Select value={value} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger className={className}>
           <SelectValue placeholder="Select value..." />
         </SelectTrigger>
@@ -111,12 +125,12 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
   }
 
   // For range values (between operators)
-  if (valueType === 'range') {
-    const rangeValue = Array.isArray(value) ? value : [value || '', ''];
-    
-    if (field?.type === 'date' || operator.includes('date')) {
+  if (valueType === "range") {
+    const rangeValue = Array.isArray(value) ? value : [value || "", ""];
+
+    if (field?.type === "date" || operator.includes("date")) {
       return (
-        <div className={cn('space-y-2', className)}>
+        <div className={cn("space-y-2", className)}>
           <div>
             <label className="text-xs text-muted-foreground">From</label>
             <DateInput
@@ -138,7 +152,7 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
     }
 
     return (
-      <div className={cn('space-y-2', className)}>
+      <div className={cn("space-y-2", className)}>
         <div>
           <label className="text-xs text-muted-foreground">From</label>
           <AnimatedNumberInput
@@ -168,7 +182,7 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
   }
 
   // For multiple values (in/not-in operators)
-  if (valueType === 'multiple') {
+  if (valueType === "multiple") {
     return (
       <ArrayInput
         value={value}
@@ -181,7 +195,7 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
   }
 
   // Single value inputs based on field type
-  if (field?.type === 'date' || operator.includes('date')) {
+  if (field?.type === "date" || operator.includes("date")) {
     return (
       <DateInput
         value={value}
@@ -192,7 +206,11 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
     );
   }
 
-  if (field?.type === 'number' || operator.includes('length') || ['min', 'max'].includes(operator)) {
+  if (
+    field?.type === "number" ||
+    operator.includes("length") ||
+    ["min", "max"].includes(operator)
+  ) {
     return (
       <AnimatedNumberInput
         value={value}
@@ -207,7 +225,7 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
     );
   }
 
-  if (field?.type === 'boolean') {
+  if (field?.type === "boolean") {
     return (
       <BooleanInput
         value={value}
@@ -219,25 +237,25 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
   }
 
   // Check if value is a field reference
-  const isFieldReference = typeof value === 'string' && value.startsWith('$.');
-  
+  const isFieldReference = typeof value === "string" && value.startsWith("$.");
+
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn("relative", className)}>
       <Input
-        value={value || ''}
+        value={value || ""}
         onChange={(e) => onChange(e.target.value)}
-        placeholder={operator === 'matches' ? 'Enter regex pattern' : 'Enter value'}
+        placeholder={
+          operator === "matches" ? "Enter regex pattern" : "Enter value"
+        }
         disabled={disabled}
-        className={cn(
-          isFieldReference && 'pr-20 font-mono text-xs'
-        )}
+        className={cn(isFieldReference && "pr-20 font-mono text-xs")}
       />
       {isFieldReference && (
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Badge 
-                variant="outline" 
+              <Badge
+                variant="outline"
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-xs"
               >
                 Field Ref

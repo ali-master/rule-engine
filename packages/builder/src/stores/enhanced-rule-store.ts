@@ -19,12 +19,16 @@ interface EnhancedRuleStore {
   history: HistoryEntry[];
   historyIndex: number;
   expandedGroups: Set<string>;
-  
+
   // Actions
   setRule: (rule: RuleType, action?: string, description?: string) => void;
-  updateConditions: (conditions: Condition | Condition[], action?: string, description?: string) => void;
+  updateConditions: (
+    conditions: Condition | Condition[],
+    action?: string,
+    description?: string,
+  ) => void;
   updateDefaultResult: (result: EngineResult | undefined) => void;
-  
+
   // History
   undo: () => void;
   redo: () => void;
@@ -32,16 +36,25 @@ interface EnhancedRuleStore {
   canRedo: () => boolean;
   getUndoInfo: () => HistoryEntry | null;
   getRedoInfo: () => HistoryEntry | null;
-  getHistoryInfo: () => { current: number; total: number; entries: HistoryEntry[] };
-  
+  getHistoryInfo: () => {
+    current: number;
+    total: number;
+    entries: HistoryEntry[];
+  };
+
   // Expand/Collapse
   toggleGroupExpanded: (path: string) => void;
   isGroupExpanded: (path: string) => boolean;
   expandAll: () => void;
   collapseAll: () => void;
-  
+
   // Helpers
-  addToHistory: (rule: RuleType, action: string, description: string, changes?: any) => void;
+  addToHistory: (
+    rule: RuleType,
+    action: string,
+    description: string,
+    changes?: any,
+  ) => void;
   clearHistory: () => void;
 }
 
@@ -51,34 +64,41 @@ export const useEnhancedRuleStore = create<EnhancedRuleStore>()(
   devtools(
     (set, get) => ({
       rule: { conditions: [] },
-      history: [{
-        rule: { conditions: [] },
-        timestamp: Date.now(),
-        action: "Initialize",
-        description: "Initial empty rule"
-      }],
+      history: [
+        {
+          rule: { conditions: [] },
+          timestamp: Date.now(),
+          action: "Initialize",
+          description: "Initial empty rule",
+        },
+      ],
       historyIndex: 0,
       expandedGroups: new Set<string>(),
 
       setRule: (rule, action = "Set Rule", description = "Rule updated") => {
         const currentRule = get().rule;
-        get().addToHistory(rule, action, description, { before: currentRule, after: rule });
+        get().addToHistory(rule, action, description, {
+          before: currentRule,
+          after: rule,
+        });
         set({ rule });
       },
 
-      updateConditions: (conditions, action = "Update Conditions", description = "Conditions updated") => {
+      updateConditions: (
+        conditions,
+        action = "Update Conditions",
+        description = "Conditions updated",
+      ) => {
         const state = get();
         const newRule = { ...state.rule, conditions };
-        const changeDescription = Array.isArray(conditions) 
+        const changeDescription = Array.isArray(conditions)
           ? `Updated ${conditions.length} condition group(s)`
           : "Updated condition";
-        
-        state.addToHistory(
-          newRule, 
-          action, 
-          description || changeDescription,
-          { before: state.rule.conditions, after: conditions }
-        );
+
+        state.addToHistory(newRule, action, description || changeDescription, {
+          before: state.rule.conditions,
+          after: conditions,
+        });
         set({ rule: newRule });
       },
 
@@ -89,7 +109,7 @@ export const useEnhancedRuleStore = create<EnhancedRuleStore>()(
           newRule,
           "Update Default Result",
           result ? "Set default result" : "Removed default result",
-          { before: state.rule.default, after: result }
+          { before: state.rule.default, after: result },
         );
         set({ rule: newRule });
       },
@@ -126,7 +146,9 @@ export const useEnhancedRuleStore = create<EnhancedRuleStore>()(
 
       getRedoInfo: () => {
         const { history, historyIndex } = get();
-        return historyIndex < history.length - 1 ? history[historyIndex + 1] : null;
+        return historyIndex < history.length - 1
+          ? history[historyIndex + 1]
+          : null;
       },
 
       getHistoryInfo: () => {
@@ -134,7 +156,7 @@ export const useEnhancedRuleStore = create<EnhancedRuleStore>()(
         return {
           current: historyIndex,
           total: history.length,
-          entries: history
+          entries: history,
         };
       },
 
@@ -182,7 +204,7 @@ export const useEnhancedRuleStore = create<EnhancedRuleStore>()(
             timestamp: Date.now(),
             action,
             description,
-            changes
+            changes,
           });
 
           // Limit history size
@@ -200,18 +222,20 @@ export const useEnhancedRuleStore = create<EnhancedRuleStore>()(
       clearHistory: () => {
         const currentRule = get().rule;
         set({
-          history: [{
-            rule: currentRule,
-            timestamp: Date.now(),
-            action: "Clear History",
-            description: "History cleared"
-          }],
+          history: [
+            {
+              rule: currentRule,
+              timestamp: Date.now(),
+              action: "Clear History",
+              description: "History cleared",
+            },
+          ],
           historyIndex: 0,
         });
       },
     }),
     {
-      name: 'rule-builder-store',
-    }
-  )
+      name: "rule-builder-store",
+    },
+  ),
 );

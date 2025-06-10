@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
-import NumberFlow, { useCanAnimate } from '@number-flow/react';
-import { Input } from '../ui/input';
-import { cn } from '../../lib/utils';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import React, { useState, useRef } from "react";
+import NumberFlow, { useCanAnimate } from "@number-flow/react";
+import { Input } from "../ui/input";
+import { cn } from "../../lib/utils";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 interface AnimatedNumberInputProps {
   value?: number | string;
@@ -19,7 +19,7 @@ interface AnimatedNumberInputProps {
 export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
   value,
   onChange,
-  placeholder = 'Enter a number',
+  placeholder = "Enter a number",
   disabled = false,
   className,
   min,
@@ -28,11 +28,12 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
   format = {},
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editValue, setEditValue] = useState('');
+  const [editValue, setEditValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const canAnimate = useCanAnimate();
 
-  const numericValue = typeof value === 'string' ? parseFloat(value) || 0 : value || 0;
+  const numericValue =
+    typeof value === "string" ? Number.parseFloat(value) || 0 : value || 0;
 
   const handleStartEdit = () => {
     setIsEditing(true);
@@ -42,15 +43,15 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    
+
     // Allow empty value, negative sign, and decimal point
-    if (newValue === '' || newValue === '-' || newValue === '.') {
+    if (newValue === "" || newValue === "-" || newValue === ".") {
       setEditValue(newValue);
       return;
     }
 
     // Validate number format
-    const numberRegex = /^-?\d*\.?\d*$/;
+    const numberRegex = /^-?\d*(?:\.\d*)?$/;
     if (!numberRegex.test(newValue)) {
       return;
     }
@@ -59,36 +60,36 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
   };
 
   const handleBlur = () => {
-    const numValue = parseFloat(editValue);
-    
-    if (!isNaN(numValue)) {
+    const numValue = Number.parseFloat(editValue);
+
+    if (!Number.isNaN(numValue)) {
       let finalValue = numValue;
-      
+
       // Apply constraints
       if (min !== undefined && finalValue < min) finalValue = min;
       if (max !== undefined && finalValue > max) finalValue = max;
-      
+
       onChange(finalValue.toString());
     }
-    
+
     setIsEditing(false);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleBlur();
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       setIsEditing(false);
     }
   };
 
   const adjustValue = (delta: number) => {
     const newValue = numericValue + delta;
-    
+
     // Check constraints
     if (min !== undefined && newValue < min) return;
     if (max !== undefined && newValue > max) return;
-    
+
     onChange(newValue.toString());
   };
 
@@ -104,20 +105,20 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={disabled}
-        className={cn('font-mono', className)}
+        className={cn("font-mono", className)}
         autoFocus
       />
     );
   }
 
   return (
-    <div className={cn('relative group', className)}>
+    <div className={cn("relative group", className)}>
       <div
         onClick={handleStartEdit}
         className={cn(
-          'flex items-center justify-between px-3 py-2 text-sm rounded-md border border-input bg-background cursor-text transition-colors',
-          'hover:bg-accent hover:text-accent-foreground',
-          disabled && 'opacity-50 cursor-not-allowed pointer-events-none'
+          "flex items-center justify-between px-3 py-2 text-sm rounded-md border border-input bg-background cursor-text transition-colors",
+          "hover:bg-accent hover:text-accent-foreground",
+          disabled && "opacity-50 cursor-not-allowed pointer-events-none",
         )}
       >
         <div className="font-mono">
@@ -126,9 +127,11 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
               value={numericValue}
               format={{
                 ...format,
-                notation: format.notation === 'scientific' || format.notation === 'engineering' 
-                  ? 'standard' 
-                  : format.notation
+                notation:
+                  format.notation === "scientific" ||
+                  format.notation === "engineering"
+                    ? "standard"
+                    : format.notation,
               }}
               animated
             />
@@ -136,7 +139,7 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
             new Intl.NumberFormat(undefined, format).format(numericValue)
           )}
         </div>
-        
+
         <div className="flex flex-col -space-y-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             type="button"

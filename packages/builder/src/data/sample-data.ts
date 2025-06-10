@@ -19,17 +19,17 @@ export const sampleEcommerceData = {
         notifications: {
           email: true,
           push: false,
-          sms: true
+          sms: true,
         },
         theme: "dark",
         language: "en",
-        timezone: "America/New_York"
+        timezone: "America/New_York",
       },
       social: {
         twitter: "@johndoe",
         linkedin: "john-doe-123",
-        github: "johndoe"
-      }
+        github: "johndoe",
+      },
     },
     address: {
       billing: {
@@ -38,7 +38,7 @@ export const sampleEcommerceData = {
         state: "NY",
         zip: "10001",
         country: "USA",
-        isDefault: true
+        isDefault: true,
       },
       shipping: [
         {
@@ -49,7 +49,7 @@ export const sampleEcommerceData = {
           state: "NY",
           zip: "10001",
           country: "USA",
-          isDefault: true
+          isDefault: true,
         },
         {
           id: "addr_2",
@@ -59,9 +59,9 @@ export const sampleEcommerceData = {
           state: "NY",
           zip: "10002",
           country: "USA",
-          isDefault: false
-        }
-      ]
+          isDefault: false,
+        },
+      ],
     },
     membership: {
       tier: "gold",
@@ -71,9 +71,9 @@ export const sampleEcommerceData = {
       history: [
         { tier: "bronze", startDate: "2023-01-15", endDate: "2023-06-30" },
         { tier: "silver", startDate: "2023-07-01", endDate: "2023-12-31" },
-        { tier: "gold", startDate: "2024-01-01", endDate: null }
-      ]
-    }
+        { tier: "gold", startDate: "2024-01-01", endDate: null },
+      ],
+    },
   },
   cart: {
     id: "cart_789012",
@@ -89,8 +89,8 @@ export const sampleEcommerceData = {
         attributes: {
           color: "black",
           warranty: "2 years",
-          brand: "TechSound"
-        }
+          brand: "TechSound",
+        },
       },
       {
         id: "item_2",
@@ -103,8 +103,8 @@ export const sampleEcommerceData = {
         attributes: {
           color: "silver",
           size: "42mm",
-          brand: "TimeTech"
-        }
+          brand: "TimeTech",
+        },
       },
       {
         id: "item_3",
@@ -117,17 +117,17 @@ export const sampleEcommerceData = {
         attributes: {
           color: "blue",
           size: "10",
-          brand: "RunFast"
-        }
-      }
+          brand: "RunFast",
+        },
+      },
     ],
     subtotal: 839.96,
-    tax: 67.20,
+    tax: 67.2,
     shipping: 9.99,
     discount: 134.99,
     total: 782.16,
     couponCode: "SAVE15",
-    isGift: false
+    isGift: false,
   },
   order: {
     recent: [
@@ -137,7 +137,7 @@ export const sampleEcommerceData = {
         status: "delivered",
         total: 567.89,
         items: 3,
-        trackingNumber: "1Z999AA1234567890"
+        trackingNumber: "1Z999AA1234567890",
       },
       {
         id: "ord_456790",
@@ -145,15 +145,15 @@ export const sampleEcommerceData = {
         status: "delivered",
         total: 234.56,
         items: 2,
-        trackingNumber: "1Z999AA0987654321"
-      }
+        trackingNumber: "1Z999AA0987654321",
+      },
     ],
     statistics: {
       totalOrders: 45,
       totalSpent: 12456.78,
       averageOrderValue: 276.82,
-      lastOrderDaysAgo: 10
-    }
+      lastOrderDaysAgo: 10,
+    },
   },
   payment: {
     methods: [
@@ -165,35 +165,35 @@ export const sampleEcommerceData = {
         expiryMonth: 12,
         expiryYear: 2025,
         isDefault: true,
-        billingAddress: "addr_1"
+        billingAddress: "addr_1",
       },
       {
         id: "pay_002",
         type: "paypal",
         email: "john.doe@example.com",
-        isDefault: false
-      }
+        isDefault: false,
+      },
     ],
     wallet: {
-      balance: 125.50,
+      balance: 125.5,
       currency: "USD",
       transactions: [
         {
           id: "txn_001",
           type: "credit",
-          amount: 50.00,
+          amount: 50.0,
           date: "2024-01-15T10:00:00Z",
-          description: "Refund for order #456788"
+          description: "Refund for order #456788",
         },
         {
           id: "txn_002",
           type: "debit",
-          amount: 25.00,
+          amount: 25.0,
           date: "2024-01-18T14:30:00Z",
-          description: "Applied to order #456791"
-        }
-      ]
-    }
+          description: "Applied to order #456791",
+        },
+      ],
+    },
   },
   recommendations: {
     products: [
@@ -203,7 +203,7 @@ export const sampleEcommerceData = {
         category: "accessories",
         price: 49.99,
         score: 0.95,
-        reason: "frequently_bought_together"
+        reason: "frequently_bought_together",
       },
       {
         id: "prod_rec_002",
@@ -211,11 +211,11 @@ export const sampleEcommerceData = {
         category: "accessories",
         price: 39.99,
         score: 0.89,
-        reason: "similar_interests"
-      }
+        reason: "similar_interests",
+      },
     ],
     categories: ["electronics", "accessories", "sports"],
-    basedOn: ["purchase_history", "browsing_behavior", "similar_users"]
+    basedOn: ["purchase_history", "browsing_behavior", "similar_users"],
   },
   session: {
     id: "sess_abc123",
@@ -226,18 +226,18 @@ export const sampleEcommerceData = {
       type: "desktop",
       browser: "chrome",
       os: "macOS",
-      screenResolution: "2560x1440"
+      screenResolution: "2560x1440",
     },
     location: {
       country: "USA",
       region: "NY",
       city: "New York",
-      ip: "192.168.1.1"
+      ip: "192.168.1.1",
     },
     referrer: "google.com",
     utmSource: "email",
-    utmCampaign: "winter_sale_2024"
-  }
+    utmCampaign: "winter_sale_2024",
+  },
 };
 
 // Field configurations for the rule builder
@@ -247,7 +247,7 @@ export const ecommerceFields: FieldConfig[] = [
     name: "user.age",
     label: "User Age",
     type: "number",
-    description: "Age of the user in years"
+    description: "Age of the user in years",
   },
   {
     name: "user.status",
@@ -256,9 +256,9 @@ export const ecommerceFields: FieldConfig[] = [
     values: [
       { value: "active", label: "Active" },
       { value: "inactive", label: "Inactive" },
-      { value: "suspended", label: "Suspended" }
+      { value: "suspended", label: "Suspended" },
     ],
-    description: "Current account status"
+    description: "Current account status",
   },
   {
     name: "user.role",
@@ -267,9 +267,9 @@ export const ecommerceFields: FieldConfig[] = [
     values: [
       { value: "basic", label: "Basic" },
       { value: "premium", label: "Premium" },
-      { value: "vip", label: "VIP" }
+      { value: "vip", label: "VIP" },
     ],
-    description: "User subscription tier"
+    description: "User subscription tier",
   },
   {
     name: "user.membership.tier",
@@ -279,47 +279,47 @@ export const ecommerceFields: FieldConfig[] = [
       { value: "bronze", label: "Bronze" },
       { value: "silver", label: "Silver" },
       { value: "gold", label: "Gold" },
-      { value: "platinum", label: "Platinum" }
+      { value: "platinum", label: "Platinum" },
     ],
-    description: "Current membership level"
+    description: "Current membership level",
   },
   {
     name: "user.membership.points",
     label: "Loyalty Points",
     type: "number",
-    description: "Total accumulated loyalty points"
+    description: "Total accumulated loyalty points",
   },
   // Cart fields
   {
     name: "cart.total",
     label: "Cart Total",
     type: "number",
-    description: "Total cart value including tax and shipping"
+    description: "Total cart value including tax and shipping",
   },
   {
     name: "cart.items.length",
     label: "Items in Cart",
     type: "number",
-    description: "Number of items in the shopping cart"
+    description: "Number of items in the shopping cart",
   },
   // Order fields
   {
     name: "order.statistics.totalOrders",
     label: "Total Orders",
     type: "number",
-    description: "Lifetime number of orders placed"
+    description: "Lifetime number of orders placed",
   },
   {
     name: "order.statistics.totalSpent",
     label: "Total Spent",
     type: "number",
-    description: "Lifetime amount spent"
+    description: "Lifetime amount spent",
   },
   {
     name: "order.statistics.averageOrderValue",
     label: "Average Order Value",
     type: "number",
-    description: "Average value per order"
+    description: "Average value per order",
   },
   // Session fields
   {
@@ -329,14 +329,14 @@ export const ecommerceFields: FieldConfig[] = [
     values: [
       { value: "desktop", label: "Desktop" },
       { value: "mobile", label: "Mobile" },
-      { value: "tablet", label: "Tablet" }
+      { value: "tablet", label: "Tablet" },
     ],
-    description: "Type of device being used"
+    description: "Type of device being used",
   },
   {
     name: "session.location.country",
     label: "Country",
     type: "string",
-    description: "User's country based on IP"
-  }
+    description: "User's country based on IP",
+  },
 ];

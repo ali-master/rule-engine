@@ -1,22 +1,22 @@
 import type { OperatorsType } from "@usex/rule-engine";
 import type { OperatorSelectorProps } from "../types";
 import { Search } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { cn } from "../lib/utils";
 import {
-  getOperatorConfig,
-  getOperatorsForFieldType,
   operatorConfigs,
+  getOperatorsForFieldType,
+  getOperatorConfig,
 } from "../utils/operators";
 import { Input } from "./ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
   SelectValue,
+  SelectTrigger,
+  SelectLabel,
+  SelectItem,
+  SelectGroup,
+  SelectContent,
+  Select,
 } from "./ui/select";
 
 interface ExtendedOperatorSelectorProps extends OperatorSelectorProps {

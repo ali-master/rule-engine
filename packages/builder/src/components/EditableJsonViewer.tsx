@@ -1,41 +1,41 @@
-import type { EvaluationResult, RuleType } from "@usex/rule-engine";
+import type { RuleType, EvaluationResult } from "@usex/rule-engine";
 import { RuleEngine } from "@usex/rule-engine";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Activity,
-  AlertCircle,
-  Check,
-  CheckCircle2,
-  Copy,
-  Download,
-  Edit2,
-  Info,
-  Maximize2,
-  Minimize2,
-  Play,
-  Save,
-  Upload,
-  X,
-  XCircle,
   Zap,
+  XCircle,
+  X,
+  Upload,
+  Save,
+  Play,
+  Minimize2,
+  Maximize2,
+  Info,
+  Edit2,
+  Download,
+  Copy,
+  CheckCircle2,
+  Check,
+  AlertCircle,
+  Activity,
 } from "lucide-react";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { cn } from "../lib/utils";
 import { JsonViewer } from "./JsonVisualizer";
-import { Alert, AlertDescription } from "./ui/alert";
+import { AlertDescription, Alert } from "./ui/alert";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { Switch } from "./ui/switch";
 import { Textarea } from "./ui/textarea";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
 } from "./ui/tooltip";
 
 interface EditableJsonViewerProps {
@@ -191,17 +191,17 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
     if (!showEvaluator || !sampleData) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      const isMac = navigator.userAgent.toUpperCase().includes('MAC');
+      const isMac = navigator.userAgent.toUpperCase().includes("MAC");
       const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
 
       // Toggle live mode: Ctrl/Cmd + E
-      if (ctrlOrCmd && e.key === 'e' && !e.shiftKey) {
+      if (ctrlOrCmd && e.key === "e" && !e.shiftKey) {
         e.preventDefault();
-        setIsLiveMode(prev => !prev);
+        setIsLiveMode((prev) => !prev);
       }
-      
+
       // Run evaluation once: Ctrl/Cmd + Shift + E
-      if (ctrlOrCmd && e.shiftKey && e.key === 'E') {
+      if (ctrlOrCmd && e.shiftKey && e.key === "E") {
         e.preventDefault();
         if (!isLiveMode) {
           evaluateRule();
@@ -209,8 +209,8 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [showEvaluator, sampleData, isLiveMode, evaluateRule]);
 
   return (
@@ -230,14 +230,20 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
                     </TooltipTrigger>
                     <TooltipContent side="bottom" className="max-w-xs">
                       <div className="space-y-2">
-                        <p className="text-sm">Evaluate your rule against sample data in real-time</p>
+                        <p className="text-sm">
+                          Evaluate your rule against sample data in real-time
+                        </p>
                         <div className="space-y-1 text-xs">
                           <div className="flex items-center gap-2">
-                            <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">Ctrl/Cmd + E</kbd>
+                            <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">
+                              Ctrl/Cmd + E
+                            </kbd>
                             <span>Toggle live mode</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">Ctrl/Cmd + Shift + E</kbd>
+                            <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">
+                              Ctrl/Cmd + Shift + E
+                            </kbd>
                             <span>Run once</span>
                           </div>
                         </div>
@@ -293,7 +299,10 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
-                  <Label htmlFor="live-eval" className="text-xs cursor-pointer select-none">
+                  <Label
+                    htmlFor="live-eval"
+                    className="text-xs cursor-pointer select-none"
+                  >
                     Live
                   </Label>
                   <Switch

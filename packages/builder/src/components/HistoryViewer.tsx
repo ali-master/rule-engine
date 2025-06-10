@@ -1,17 +1,17 @@
 import type { HistoryEntry } from "../stores/enhanced-rule-store";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import {
-  ArrowLeft,
-  ArrowRight,
-  CheckCircle,
-  Clock,
-  Eye,
-  GitBranch,
-  RotateCcw,
-  Search,
   XCircle,
+  Search,
+  RotateCcw,
+  GitBranch,
+  Eye,
+  Clock,
+  CheckCircle,
+  ArrowRight,
+  ArrowLeft,
 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import React, { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { cn } from "../lib/utils";
 import { useEnhancedRuleStore } from "../stores/enhanced-rule-store";
@@ -20,23 +20,23 @@ import { JsonViewer } from "./JsonVisualizer";
 import { ResizablePanel } from "./ResizablePanel";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
   SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
 } from "./ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import { TabsTrigger, TabsList, TabsContent, Tabs } from "./ui/tabs";
 import {
-  ZoomDialog,
-  ZoomDialogContent,
-  ZoomDialogDescription,
-  ZoomDialogHeader,
   ZoomDialogTitle,
+  ZoomDialogHeader,
+  ZoomDialogDescription,
+  ZoomDialogContent,
+  ZoomDialog,
 } from "./ui/zoom-dialog";
 
 interface HistoryViewerProps {

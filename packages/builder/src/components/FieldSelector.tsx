@@ -1,30 +1,30 @@
-import React from 'react';
+import React from "react";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
   SelectValue,
-} from './ui/select';
-import { Input } from './ui/input';
-import type { FieldSelectorProps } from '../types';
-import { cn } from '../lib/utils';
+  SelectTrigger,
+  SelectLabel,
+  SelectItem,
+  SelectGroup,
+  SelectContent,
+  Select,
+} from "./ui/select";
+import { Input } from "./ui/input";
+import type { FieldSelectorProps } from "../types";
+import { cn } from "../lib/utils";
 
 export const FieldSelector: React.FC<FieldSelectorProps> = ({
   value,
   onChange,
   fields = [],
-  placeholder = 'Select or enter field',
+  placeholder = "Select or enter field",
   disabled = false,
   className,
 }) => {
   const [isCustom, setIsCustom] = React.useState(false);
-  const [customValue, setCustomValue] = React.useState(value || '');
+  const [customValue, setCustomValue] = React.useState(value || "");
 
   React.useEffect(() => {
-    if (value && !fields.some(f => f.name === value)) {
+    if (value && !fields.some((f) => f.name === value)) {
       setIsCustom(true);
       setCustomValue(value);
     }
@@ -34,7 +34,7 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
     const groups: Record<string, typeof fields> = {};
     const ungrouped: typeof fields = [];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       if (field.group) {
         if (!groups[field.group]) {
           groups[field.group] = [];
@@ -50,7 +50,7 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
 
   if (isCustom || fields.length === 0) {
     return (
-      <div className={cn('relative', className)}>
+      <div className={cn("relative", className)}>
         <Input
           value={customValue}
           onChange={(e) => {
@@ -60,8 +60,8 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            value?.startsWith('$.') && 'font-mono text-xs',
-            className
+            value?.startsWith("$.") && "font-mono text-xs",
+            className,
           )}
         />
         {fields.length > 0 && (
@@ -69,8 +69,8 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
             type="button"
             onClick={() => {
               setIsCustom(false);
-              setCustomValue('');
-              onChange('');
+              setCustomValue("");
+              onChange("");
             }}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground hover:text-foreground"
             disabled={disabled}
@@ -83,7 +83,7 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
   }
 
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn("relative", className)}>
       <Select value={value} onValueChange={onChange} disabled={disabled}>
         <SelectTrigger className={className}>
           <SelectValue placeholder={placeholder} />
@@ -105,7 +105,7 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
               ))}
             </SelectGroup>
           )}
-          
+
           {Object.entries(groupedFields.groups).map(([group, groupFields]) => (
             <SelectGroup key={group}>
               <SelectLabel>{group}</SelectLabel>
@@ -123,7 +123,7 @@ export const FieldSelector: React.FC<FieldSelectorProps> = ({
               ))}
             </SelectGroup>
           ))}
-          
+
           <SelectGroup>
             <SelectLabel>Advanced</SelectLabel>
             <SelectItem value="__custom__" onSelect={() => setIsCustom(true)}>

@@ -7,15 +7,15 @@ import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
-import { GripVertical, Trash2, Copy, Info, AlertCircle } from "lucide-react";
+import { Trash2, Info, GripVertical, Copy, AlertCircle } from "lucide-react";
 import { DynamicFieldSelector } from "./DynamicFieldSelector";
 import { OperatorSelector } from "./OperatorSelector";
 import { OperatorHandler } from "./operators";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
 } from "./ui/tooltip";
 import type { Constraint } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";

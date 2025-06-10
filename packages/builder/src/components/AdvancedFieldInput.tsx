@@ -3,29 +3,29 @@
 import type { FieldConfig } from "../types";
 import { Command as CommandPrimitive } from "cmdk";
 import {
-  ArrowRight,
-  Braces,
-  Calendar,
-  Clock,
-  Code2,
-  Command,
-  CornerDownLeft,
-  Eye,
-  FileJson,
-  Hash,
-  List,
-  Search,
-  Sparkles,
-  ToggleRight,
-  TrendingUp,
-  Type,
   Zap,
+  Type,
+  TrendingUp,
+  ToggleRight,
+  Sparkles,
+  Search,
+  List,
+  Hash,
+  FileJson,
+  Eye,
+  CornerDownLeft,
+  Command,
+  Code2,
+  Clock,
+  Calendar,
+  Braces,
+  ArrowRight,
 } from "lucide-react";
 import * as React from "react";
 import { cn } from "../lib/utils";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { PopoverTrigger, PopoverContent, Popover } from "./ui/popover";
 import { Separator } from "./ui/separator";
 
 interface AdvancedFieldInputProps {

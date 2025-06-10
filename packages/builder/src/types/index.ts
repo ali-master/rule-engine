@@ -1,4 +1,11 @@
-import type { RuleType, OperatorsType, EngineResult, Constraint, ConditionType, Condition } from '@usex/rule-engine';
+import type {
+  RuleType,
+  OperatorsType,
+  EngineResult,
+  Constraint,
+  ConditionType,
+  Condition,
+} from "@usex/rule-engine";
 
 export interface RuleBuilderState {
   rule: RuleType;
@@ -39,7 +46,7 @@ export interface RuleBuilderProps {
   className?: string;
   showImportExport?: boolean;
   showViewer?: boolean;
-  viewerPosition?: 'right' | 'bottom';
+  viewerPosition?: "right" | "bottom";
   theme?: ThemeConfig;
   fields?: FieldConfig[];
   operators?: OperatorConfig[];
@@ -111,7 +118,7 @@ export interface RuleViewerProps {
 export interface FieldConfig {
   name: string;
   label?: string;
-  type?: 'string' | 'number' | 'boolean' | 'date' | 'array' | 'object';
+  type?: "string" | "number" | "boolean" | "date" | "array" | "object";
   description?: string;
   group?: string;
   jsonPath?: boolean;
@@ -123,8 +130,8 @@ export interface OperatorConfig {
   label?: string;
   category?: string;
   description?: string;
-  valueType?: 'none' | 'single' | 'multiple' | 'range';
-  applicableTypes?: Array<FieldConfig['type']>;
+  valueType?: "none" | "single" | "multiple" | "range";
+  applicableTypes?: Array<FieldConfig["type"]>;
 }
 
 export interface ThemeConfig {
@@ -139,8 +146,8 @@ export interface ThemeConfig {
     card?: string;
     border?: string;
   };
-  radius?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  spacing?: 'compact' | 'normal' | 'comfortable';
+  radius?: "none" | "sm" | "md" | "lg" | "xl";
+  spacing?: "compact" | "normal" | "comfortable";
   fontFamily?: string;
 }
 

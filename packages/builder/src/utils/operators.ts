@@ -1,5 +1,5 @@
-import {  Operators } from "@usex/rule-engine";
-import type {OperatorsType} from "@usex/rule-engine";
+import { Operators } from "@usex/rule-engine";
+import type { OperatorsType } from "@usex/rule-engine";
 import type { OperatorConfig } from "../types";
 
 export const operatorCategories = {

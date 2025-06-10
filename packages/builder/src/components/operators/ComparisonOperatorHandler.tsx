@@ -1,24 +1,24 @@
 import type { OperatorHandlerProps } from "./index";
-import { Hash, Info, Sparkles } from "lucide-react";
+import { Sparkles, Info, Hash } from "lucide-react";
 import React from "react";
 import { DynamicFieldSelector } from "../DynamicFieldSelector";
-import { Alert, AlertDescription } from "../ui/alert";
+import { AlertDescription, Alert } from "../ui/alert";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
   SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
 } from "../ui/select";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
 } from "../ui/tooltip";
 
 export const ComparisonOperatorHandler: React.FC<OperatorHandlerProps> = ({

@@ -1,17 +1,17 @@
-import React from 'react';
-import { Operators, type OperatorsType } from '@usex/rule-engine';
+import React from "react";
+import { type OperatorsType, Operators } from "@usex/rule-engine";
 
 // Import all operator handlers
-import { ComparisonOperatorHandler } from './ComparisonOperatorHandler';
-import { ArrayOperatorHandler } from './ArrayOperatorHandler';
-import { ExistenceOperatorHandler } from './ExistenceOperatorHandler';
-import { DateOperatorHandler } from './DateOperatorHandler';
-import { TypeValidationHandler } from './TypeValidationHandler';
-import { StringValidationHandler } from './StringValidationHandler';
-import { NumberValidationHandler } from './NumberValidationHandler';
-import { LengthValidationHandler } from './LengthValidationHandler';
-import { BooleanValidationHandler } from './BooleanValidationHandler';
-import { SelfReferenceHandler } from './SelfReferenceHandler';
+import { ComparisonOperatorHandler } from "./ComparisonOperatorHandler";
+import { ArrayOperatorHandler } from "./ArrayOperatorHandler";
+import { ExistenceOperatorHandler } from "./ExistenceOperatorHandler";
+import { DateOperatorHandler } from "./DateOperatorHandler";
+import { TypeValidationHandler } from "./TypeValidationHandler";
+import { StringValidationHandler } from "./StringValidationHandler";
+import { NumberValidationHandler } from "./NumberValidationHandler";
+import { LengthValidationHandler } from "./LengthValidationHandler";
+import { BooleanValidationHandler } from "./BooleanValidationHandler";
+import { SelfReferenceHandler } from "./SelfReferenceHandler";
 
 export interface OperatorHandlerProps {
   operator: OperatorsType;
@@ -24,7 +24,9 @@ export interface OperatorHandlerProps {
 }
 
 // Map operators to their specific handlers
-const operatorHandlers: Partial<Record<OperatorsType, React.ComponentType<OperatorHandlerProps>>> = {
+const operatorHandlers: Partial<
+  Record<OperatorsType, React.ComponentType<OperatorHandlerProps>>
+> = {
   // Comparison operators
   [Operators.Equals]: ComparisonOperatorHandler,
   [Operators.NotEquals]: ComparisonOperatorHandler,

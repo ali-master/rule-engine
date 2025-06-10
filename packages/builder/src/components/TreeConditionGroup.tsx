@@ -1,13 +1,13 @@
-import type { Condition, ConditionType, Constraint } from "@usex/rule-engine";
+import type { Constraint, ConditionType, Condition } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
 import {
-  ChevronDown,
-  ChevronRight,
-  Copy,
-  GitBranch,
-  Layers,
-  Plus,
   Trash2,
+  Plus,
+  Layers,
+  GitBranch,
+  Copy,
+  ChevronRight,
+  ChevronDown,
 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
@@ -18,11 +18,11 @@ import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
   SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
 } from "./ui/select";
 
 interface TreeConditionGroupProps {
@@ -84,7 +84,8 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
 
   const typeColors = {
     or: colors.or || "border-blue-500/30 bg-blue-500/5 dark:bg-blue-500/10",
-    and: colors.and || "border-green-500/30 bg-green-500/5 dark:bg-green-500/10",
+    and:
+      colors.and || "border-green-500/30 bg-green-500/5 dark:bg-green-500/10",
     none: colors.none || "border-red-500/30 bg-red-500/5 dark:bg-red-500/10",
   };
 
@@ -156,7 +157,12 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
   });
 
   return (
-    <div className={cn("relative animate-in fade-in-0 slide-in-from-top-2 duration-300", indentClass)}>
+    <div
+      className={cn(
+        "relative animate-in fade-in-0 slide-in-from-top-2 duration-300",
+        indentClass,
+      )}
+    >
       {/* Connection line for nested items */}
       {depth > 0 && (
         <div
@@ -164,7 +170,7 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
             "absolute left-[-16px] top-0 bottom-0 w-px",
             conditionType === "or" && "bg-blue-500/30",
             conditionType === "and" && "bg-green-500/30",
-            conditionType === "none" && "bg-red-500/30"
+            conditionType === "none" && "bg-red-500/30",
           )}
           aria-hidden="true"
         />
@@ -176,7 +182,7 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
           "hover:shadow-md",
           depth === 0 ? "border-2" : "border",
           typeColors[conditionType],
-          "backdrop-blur-sm"
+          "backdrop-blur-sm",
         )}
       >
         <div className="p-4">
@@ -205,18 +211,38 @@ export const TreeConditionGroup: React.FC<TreeConditionGroupProps> = ({
                   }
                   disabled={readOnly}
                 >
-                  <SelectTrigger className={cn(
-                    "h-8 w-24 font-semibold",
-                    conditionType === "or" && "text-blue-600 dark:text-blue-400",
-                    conditionType === "and" && "text-green-600 dark:text-green-400",
-                    conditionType === "none" && "text-red-600 dark:text-red-400"
-                  )}>
+                  <SelectTrigger
+                    className={cn(
+                      "h-8 w-24 font-semibold",
+                      conditionType === "or" &&
+                        "text-blue-600 dark:text-blue-400",
+                      conditionType === "and" &&
+                        "text-green-600 dark:text-green-400",
+                      conditionType === "none" &&
+                        "text-red-600 dark:text-red-400",
+                    )}
+                  >
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="or" className="text-blue-600 dark:text-blue-400 font-semibold">{typeLabels.or}</SelectItem>
-                    <SelectItem value="and" className="text-green-600 dark:text-green-400 font-semibold">{typeLabels.and}</SelectItem>
-                    <SelectItem value="none" className="text-red-600 dark:text-red-400 font-semibold">{typeLabels.none}</SelectItem>
+                    <SelectItem
+                      value="or"
+                      className="text-blue-600 dark:text-blue-400 font-semibold"
+                    >
+                      {typeLabels.or}
+                    </SelectItem>
+                    <SelectItem
+                      value="and"
+                      className="text-green-600 dark:text-green-400 font-semibold"
+                    >
+                      {typeLabels.and}
+                    </SelectItem>
+                    <SelectItem
+                      value="none"
+                      className="text-red-600 dark:text-red-400 font-semibold"
+                    >
+                      {typeLabels.none}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
 

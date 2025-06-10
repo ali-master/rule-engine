@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { Download, Upload } from "lucide-react";
+import { Upload, Download } from "lucide-react";
 import { Input } from "./ui/input";
 import type { ImportExportProps } from "../types";
 import type { RuleType } from "@usex/rule-engine";
@@ -39,7 +39,7 @@ export const ImportExport: React.FC<ImportExportProps> = ({
         onImport(rule);
       } catch (error) {
         console.error("Failed to import rule:", error);
-        alert("Invalid rule JSON file");
+        console.error("Invalid rule JSON file");
       }
     };
     reader.readAsText(file);

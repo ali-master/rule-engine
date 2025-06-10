@@ -1,32 +1,31 @@
-import React from 'react';
-import { Input } from './ui/input';
-import { Button } from './ui/button';
-import { Plus, X } from 'lucide-react';
-import type { ValueInputProps } from '../types';
-import { getOperatorConfig } from '../utils/operators';
-import { cn } from '../lib/utils';
+import React from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
+import { X, Plus } from "lucide-react";
+import type { ValueInputProps } from "../types";
+import { getOperatorConfig } from "../utils/operators";
+import { cn } from "../lib/utils";
 
 export const ValueInput: React.FC<ValueInputProps> = ({
   value,
   onChange,
   operator,
-  field,
   disabled = false,
   className,
-  placeholder = 'Enter value',
+  placeholder = "Enter value",
 }) => {
   const operatorConfig = getOperatorConfig(operator);
-  const valueType = operatorConfig?.valueType || 'single';
+  const valueType = operatorConfig?.valueType || "single";
 
-  if (valueType === 'none') {
+  if (valueType === "none") {
     return null;
   }
 
-  if (valueType === 'multiple') {
+  if (valueType === "multiple") {
     const arrayValue = Array.isArray(value) ? value : value ? [value] : [];
-    
+
     return (
-      <div className={cn('space-y-2', className)}>
+      <div className={cn("space-y-2", className)}>
         {arrayValue.map((item, index) => (
           <div key={index} className="flex gap-2">
             <Input
@@ -58,7 +57,7 @@ export const ValueInput: React.FC<ValueInputProps> = ({
           variant="outline"
           size="sm"
           onClick={() => {
-            onChange([...arrayValue, '']);
+            onChange([...arrayValue, ""]);
           }}
           disabled={disabled}
           className="w-full"
@@ -70,24 +69,24 @@ export const ValueInput: React.FC<ValueInputProps> = ({
     );
   }
 
-  if (valueType === 'range') {
-    const rangeValue = Array.isArray(value) ? value : [value || '', ''];
-    
+  if (valueType === "range") {
+    const rangeValue = Array.isArray(value) ? value : [value || "", ""];
+
     return (
-      <div className={cn('flex gap-2 items-center', className)}>
+      <div className={cn("flex gap-2 items-center", className)}>
         <Input
-          value={rangeValue[0] || ''}
+          value={rangeValue[0] || ""}
           onChange={(e) => {
-            onChange([e.target.value, rangeValue[1] || '']);
+            onChange([e.target.value, rangeValue[1] || ""]);
           }}
           placeholder="From"
           disabled={disabled}
         />
         <span className="text-muted-foreground">to</span>
         <Input
-          value={rangeValue[1] || ''}
+          value={rangeValue[1] || ""}
           onChange={(e) => {
-            onChange([rangeValue[0] || '', e.target.value]);
+            onChange([rangeValue[0] || "", e.target.value]);
           }}
           placeholder="To"
           disabled={disabled}
@@ -97,18 +96,16 @@ export const ValueInput: React.FC<ValueInputProps> = ({
   }
 
   // Check if the value is a field reference (JSONPath)
-  const isFieldReference = typeof value === 'string' && value.startsWith('$.');
-  
+  const isFieldReference = typeof value === "string" && value.startsWith("$.");
+
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn("relative", className)}>
       <Input
-        value={value || ''}
+        value={value || ""}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className={cn(
-          isFieldReference && 'font-mono text-xs pr-20'
-        )}
+        className={cn(isFieldReference && "font-mono text-xs pr-20")}
       />
       {isFieldReference && (
         <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground pointer-events-none">

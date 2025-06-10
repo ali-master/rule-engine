@@ -1,13 +1,26 @@
-import React from 'react';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Card } from './ui/card';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { GripVertical, Plus, Trash2, Copy, ChevronDown, ChevronRight } from 'lucide-react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import type { Condition, ConditionType } from '@usex/rule-engine';
-import { cn } from '../lib/utils';
+import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { Card } from "./ui/card";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import {
+  Trash2,
+  Plus,
+  GripVertical,
+  Copy,
+  ChevronRight,
+  ChevronDown,
+} from "lucide-react";
+import {
+  SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
+} from "./ui/select";
+import type { ConditionType, Condition } from "@usex/rule-engine";
+import { cn } from "../lib/utils";
 
 interface DraggableConditionGroupProps {
   id: string;
@@ -35,7 +48,9 @@ interface DraggableConditionGroupProps {
   enableDragDrop?: boolean;
 }
 
-export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = ({
+export const DraggableConditionGroup: React.FC<
+  DraggableConditionGroupProps
+> = ({
   id,
   condition,
   depth,
@@ -51,28 +66,31 @@ export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = (
   enableDragDrop = true,
 }) => {
   const [collapsed, setCollapsed] = React.useState(false);
-  
-  const conditionConfig = React.useMemo(() => ({
-    or: {
-      label: labels?.or || 'OR',
-      color: colors?.or || 'hsl(var(--rule-or))',
-      bg: 'hsl(var(--rule-or-bg))',
-      description: 'At least one condition must be true',
-    },
-    and: {
-      label: labels?.and || 'AND',
-      color: colors?.and || 'hsl(var(--rule-and))',
-      bg: 'hsl(var(--rule-and-bg))',
-      description: 'All conditions must be true',
-    },
-    none: {
-      label: labels?.none || 'NONE',
-      color: colors?.none || 'hsl(var(--rule-none))',
-      bg: 'hsl(var(--rule-none-bg))',
-      description: 'No conditions should be true',
-    },
-  }), [labels, colors]);
-  
+
+  const conditionConfig = React.useMemo(
+    () => ({
+      or: {
+        label: labels?.or || "OR",
+        color: colors?.or || "hsl(var(--rule-or))",
+        bg: "hsl(var(--rule-or-bg))",
+        description: "At least one condition must be true",
+      },
+      and: {
+        label: labels?.and || "AND",
+        color: colors?.and || "hsl(var(--rule-and))",
+        bg: "hsl(var(--rule-and-bg))",
+        description: "All conditions must be true",
+      },
+      none: {
+        label: labels?.none || "NONE",
+        color: colors?.none || "hsl(var(--rule-none))",
+        bg: "hsl(var(--rule-none-bg))",
+        description: "No conditions should be true",
+      },
+    }),
+    [labels, colors],
+  );
+
   const {
     attributes,
     listeners,
@@ -88,20 +106,20 @@ export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = (
   };
 
   const conditionType = (Object.keys(condition).find(
-    key => key === 'or' || key === 'and' || key === 'none'
-  ) || 'or') as ConditionType;
+    (key) => key === "or" || key === "and" || key === "none",
+  ) || "or") as ConditionType;
 
   const config = conditionConfig[conditionType];
   const items = condition[conditionType] || [];
 
   const handleTypeChange = (newType: ConditionType) => {
     if (newType === conditionType) return;
-    
+
     const newCondition: Condition = {
       [newType]: items,
       result: condition.result,
     };
-    
+
     onUpdate(newCondition);
   };
 
@@ -110,15 +128,15 @@ export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = (
       ref={setNodeRef}
       style={style}
       className={cn(
-        'relative animate-fadeIn',
-        isDragging && 'opacity-50',
-        depth > 0 && 'ml-6'
+        "relative animate-fadeIn",
+        isDragging && "opacity-50",
+        depth > 0 && "ml-6",
       )}
     >
-      <Card 
+      <Card
         className={cn(
-          'border-2 transition-all duration-200',
-          `hover:shadow-lg`
+          "border-2 transition-all duration-200",
+          `hover:shadow-lg`,
         )}
         style={{
           borderColor: config.color,
@@ -138,7 +156,7 @@ export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = (
                   <GripVertical className="h-5 w-5" />
                 </button>
               )}
-              
+
               <button
                 onClick={() => setCollapsed(!collapsed)}
                 className="p-1 hover:bg-background/50 rounded"
@@ -162,7 +180,7 @@ export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = (
                   {Object.entries(conditionConfig).map(([type, conf]) => (
                     <SelectItem key={type} value={type}>
                       <div className="flex items-center gap-2">
-                        <Badge 
+                        <Badge
                           variant={type as any}
                           className="w-12 justify-center"
                         >
@@ -236,15 +254,11 @@ export const DraggableConditionGroup: React.FC<DraggableConditionGroupProps> = (
                         onClick={onAddConstraint}
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        {labels?.addRule || 'Add Rule'}
+                        {labels?.addRule || "Add Rule"}
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={onAddGroup}
-                      >
+                      <Button variant="outline" size="sm" onClick={onAddGroup}>
                         <Plus className="h-4 w-4 mr-2" />
-                        {labels?.addGroup || 'Add Group'}
+                        {labels?.addGroup || "Add Group"}
                       </Button>
                     </div>
                   )}

@@ -1,19 +1,19 @@
 import React from "react";
 import {
-  DndContext,
-  type DragEndEvent,
-  DragOverlay,
-  type DragStartEvent,
-  PointerSensor,
-  useSensor,
   useSensors,
+  useSensor,
+  PointerSensor,
+  type DragStartEvent,
+  DragOverlay,
+  type DragEndEvent,
+  DndContext,
   closestCenter,
 } from "@dnd-kit/core";
 import {
-  SortableContext,
   verticalListSortingStrategy,
+  SortableContext,
 } from "@dnd-kit/sortable";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import { Separator } from "./ui/separator";
@@ -21,10 +21,10 @@ import { JsonViewer } from "./JsonViewer";
 import { DraggableConditionGroup } from "./DraggableConditionGroup";
 import { ModernConstraintEditor } from "./ModernConstraintEditor";
 import { ThemeToggle } from "./ThemeToggle";
-import { Plus, Undo2, Redo2, Save, FileJson, HelpCircle } from "lucide-react";
+import { Undo2, Save, Redo2, Plus, HelpCircle, FileJson } from "lucide-react";
 import { useRuleStore } from "../stores/rule-store";
 import { useTheme } from "../hooks/use-theme";
-import type { Condition, Constraint, ConditionType } from "@usex/rule-engine";
+import type { Constraint, ConditionType, Condition } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
 import { cn } from "../lib/utils";
 import { Toaster } from "./ui/sonner";
@@ -85,7 +85,7 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
   labels = {},
   colors = {},
 }) => {
-  const {} = useTheme();
+  const { theme: _theme } = useTheme();
   const { rule, updateConditions, undo, redo, canUndo, canRedo } =
     useRuleStore();
 
@@ -107,6 +107,10 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
     exportSuccess: "Rule exported successfully",
     saveSuccess: "Rule saved successfully",
     ...labels,
+  };
+
+  const isConstraint = (item: any): item is Constraint => {
+    return "field" in item && "operator" in item;
   };
 
   // Helper functions to find and update nested items
@@ -255,10 +259,10 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
     const { active, over } = event;
     setActiveId(null);
 
-    if (!over || active.id === over.id) return;
-
-    // Handle reordering logic here
-    // This would involve updating the conditions array
+    if (over && active.id !== over.id) {
+      // Handle reordering logic here
+      // This would involve updating the conditions array
+    }
   };
 
   const addRootConditionGroup = (type: "or" | "and" | "none" = "or") => {
@@ -319,10 +323,6 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
     const duplicated = JSON.parse(JSON.stringify(conditionToDuplicate));
     updateConditions([...conditions, duplicated]);
     toast.success("Duplicated condition group");
-  };
-
-  const isConstraint = (item: any): item is Constraint => {
-    return "field" in item && "operator" in item;
   };
 
   const renderItems = (items: any[], parentPath: string, depth: number = 1) => {
@@ -597,7 +597,7 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
                           try {
                             await onSave(rule);
                             toast.success(mergedLabels.saveSuccess);
-                          } catch (error) {
+                          } catch {
                             toast.error("Failed to save rule");
                           } finally {
                             setIsSaving(false);

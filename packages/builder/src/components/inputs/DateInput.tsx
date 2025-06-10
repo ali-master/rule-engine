@@ -1,14 +1,10 @@
-import React from 'react';
-import { format } from 'date-fns';
-import { Calendar as CalendarIcon } from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { Button } from '../ui/button';
-import { Calendar } from '../ui/calendar';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '../ui/popover';
+import React from "react";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { cn } from "../../lib/utils";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
+import { PopoverTrigger, PopoverContent, Popover } from "../ui/popover";
 
 interface DateInputProps {
   value?: string | Date;
@@ -21,17 +17,17 @@ interface DateInputProps {
 export const DateInput: React.FC<DateInputProps> = ({
   value,
   onChange,
-  placeholder = 'Pick a date',
+  placeholder = "Pick a date",
   disabled = false,
   className,
 }) => {
   const date = React.useMemo(() => {
     if (!value) return undefined;
-    
+
     try {
       const parsed = new Date(value);
       // Check if date is valid
-      if (isNaN(parsed.getTime())) {
+      if (Number.isNaN(parsed.getTime())) {
         return undefined;
       }
       return parsed;
@@ -46,14 +42,14 @@ export const DateInput: React.FC<DateInputProps> = ({
         <Button
           variant="outline"
           className={cn(
-            'justify-start text-left font-normal',
-            !date && 'text-muted-foreground',
-            className
+            "justify-start text-left font-normal",
+            !date && "text-muted-foreground",
+            className,
           )}
           disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, 'PPP') : <span>{placeholder}</span>}
+          {date ? format(date, "PPP") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -66,7 +62,9 @@ export const DateInput: React.FC<DateInputProps> = ({
             }
           }}
           initialFocus
-          disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+          disabled={(date) =>
+            date > new Date() || date < new Date("1900-01-01")
+          }
         />
       </PopoverContent>
     </Popover>

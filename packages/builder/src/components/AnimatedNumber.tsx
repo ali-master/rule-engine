@@ -1,5 +1,5 @@
-import React from 'react';
-import NumberFlow, { useCanAnimate } from '@number-flow/react';
+import React from "react";
+import NumberFlow, { useCanAnimate } from "@number-flow/react";
 
 interface AnimatedNumberProps {
   value: number;
@@ -8,11 +8,11 @@ interface AnimatedNumberProps {
   animated?: boolean;
 }
 
-export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({ 
-  value, 
+export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
+  value,
   format = {},
   className,
-  animated = true 
+  animated = true,
 }) => {
   const canAnimate = useCanAnimate();
 
@@ -27,9 +27,10 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   // Filter out unsupported notation types for NumberFlow
   const numberFlowFormat = {
     ...format,
-    notation: format.notation === 'scientific' || format.notation === 'engineering' 
-      ? 'standard' 
-      : format.notation
+    notation:
+      format.notation === "scientific" || format.notation === "engineering"
+        ? "standard"
+        : format.notation,
   };
 
   return (
@@ -42,4 +43,4 @@ export const AnimatedNumber: React.FC<AnimatedNumberProps> = ({
   );
 };
 
-AnimatedNumber.displayName = 'AnimatedNumber';
+AnimatedNumber.displayName = "AnimatedNumber";

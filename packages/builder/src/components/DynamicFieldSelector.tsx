@@ -1,37 +1,33 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from "react";
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
   CommandSeparator,
-} from './ui/command';
+  CommandList,
+  CommandItem,
+  CommandInput,
+  CommandGroup,
+  CommandEmpty,
+  Command,
+} from "./ui/command";
+import { PopoverTrigger, PopoverContent, Popover } from "./ui/popover";
+import { Badge } from "./ui/badge";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from './ui/popover';
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { 
-  ChevronsUpDown, 
-  Code2, 
-  FileJson, 
-  Hash, 
-  Calendar, 
-  ToggleRight, 
-  List,
   Type,
-  Braces,
+  ToggleRight,
   Sparkles,
+  List,
+  Hash,
+  FileJson,
+  Code2,
+  ChevronsUpDown,
+  Calendar,
+  Braces,
   AlertCircle,
-} from 'lucide-react';
-import { cn } from '../lib/utils';
-import type { FieldConfig } from '../types';
-import { useFieldDiscovery } from '../hooks/use-field-discovery';
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import type { FieldConfig } from "../types";
+import { useFieldDiscovery } from "../hooks/use-field-discovery";
 
 interface DynamicFieldSelectorProps {
   value: string;
@@ -59,7 +55,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
   onChange,
   fields: providedFields = [],
   sampleData,
-  placeholder = 'Select or enter field',
+  placeholder = "Select or enter field",
   disabled = false,
   className,
   allowCustom = true,
@@ -69,8 +65,8 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
   const [inputValue, setInputValue] = useState(value);
   const [showCustomInput, setShowCustomInput] = useState(false);
 
-  const { 
-    fields: discoveredFields, 
+  const {
+    fields: discoveredFields,
     getSuggestedFields,
     validateJsonPath,
   } = useFieldDiscovery({
@@ -78,7 +74,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
     customFields: providedFields,
   });
 
-  const isJsonPath = value.startsWith('$');
+  const isJsonPath = value.startsWith("$");
   const validation = useMemo(() => {
     if (isJsonPath) {
       return validateJsonPath(value);
@@ -88,17 +84,17 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
 
   const allFields = useMemo(() => {
     const fieldMap = new Map<string, FieldConfig>();
-    
+
     // Add discovered fields
-    discoveredFields.forEach(field => {
+    discoveredFields.forEach((field) => {
       fieldMap.set(field.name, field);
     });
-    
+
     // Add provided fields (override if duplicate)
-    providedFields.forEach(field => {
+    providedFields.forEach((field) => {
       fieldMap.set(field.name, field);
     });
-    
+
     return Array.from(fieldMap.values());
   }, [discoveredFields, providedFields]);
 
@@ -108,19 +104,19 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
 
   const groupedFields = useMemo(() => {
     const groups: Record<string, FieldConfig[]> = {};
-    
-    suggestions.forEach(field => {
-      const group = field.group || 'Fields';
+
+    suggestions.forEach((field) => {
+      const group = field.group || "Fields";
       if (!groups[group]) {
         groups[group] = [];
       }
       groups[group].push(field);
     });
-    
+
     return groups;
   }, [suggestions]);
 
-  const selectedField = allFields.find(f => f.name === value);
+  const selectedField = allFields.find((f) => f.name === value);
 
   const handleSelect = (fieldName: string) => {
     onChange(fieldName);
@@ -137,7 +133,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
 
   if (showCustomInput || (!selectedField && value && !allFields.length)) {
     return (
-      <div className={cn('space-y-2', className)}>
+      <div className={cn("space-y-2", className)}>
         <div className="relative">
           <Input
             value={inputValue}
@@ -148,8 +144,8 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
             placeholder={placeholder}
             disabled={disabled}
             className={cn(
-              isJsonPath && 'font-mono text-xs pl-10',
-              !validation.valid && 'border-destructive',
+              isJsonPath && "font-mono text-xs pl-10",
+              !validation.valid && "border-destructive",
             )}
           />
           {isJsonPath && (
@@ -188,14 +184,18 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
-          className={cn('justify-between', className)}
+          className={cn("justify-between", className)}
         >
           <div className="flex items-center gap-2 truncate">
             {selectedField ? (
               <>
-                {React.createElement(typeIcons[selectedField.type as keyof typeof typeIcons] || FileJson, {
-                  className: 'h-4 w-4 shrink-0',
-                })}
+                {React.createElement(
+                  typeIcons[selectedField.type as keyof typeof typeIcons] ||
+                    FileJson,
+                  {
+                    className: "h-4 w-4 shrink-0",
+                  },
+                )}
                 <span className="truncate">
                   {selectedField.label || selectedField.name}
                 </span>
@@ -253,9 +253,13 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
                     onSelect={() => handleSelect(field.name)}
                   >
                     <div className="flex items-center gap-2 w-full">
-                      {React.createElement(typeIcons[field.type as keyof typeof typeIcons] || FileJson, {
-                        className: 'h-4 w-4 shrink-0 text-muted-foreground',
-                      })}
+                      {React.createElement(
+                        typeIcons[field.type as keyof typeof typeIcons] ||
+                          FileJson,
+                        {
+                          className: "h-4 w-4 shrink-0 text-muted-foreground",
+                        },
+                      )}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
                           <span className="truncate">
@@ -306,7 +310,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
                 <CommandGroup heading="JSONPath Examples">
                   <CommandItem
                     value="$.field"
-                    onSelect={() => handleSelect('$.field')}
+                    onSelect={() => handleSelect("$.field")}
                   >
                     <FileJson className="h-4 w-4 mr-2" />
                     <div>
@@ -318,7 +322,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
                   </CommandItem>
                   <CommandItem
                     value="$.parent.child"
-                    onSelect={() => handleSelect('$.parent.child')}
+                    onSelect={() => handleSelect("$.parent.child")}
                   >
                     <FileJson className="h-4 w-4 mr-2" />
                     <div>
@@ -330,7 +334,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
                   </CommandItem>
                   <CommandItem
                     value="$.array[*]"
-                    onSelect={() => handleSelect('$.array[*]')}
+                    onSelect={() => handleSelect("$.array[*]")}
                   >
                     <FileJson className="h-4 w-4 mr-2" />
                     <div>
@@ -342,7 +346,7 @@ export const DynamicFieldSelector: React.FC<DynamicFieldSelectorProps> = ({
                   </CommandItem>
                   <CommandItem
                     value="$..fieldName"
-                    onSelect={() => handleSelect('$..fieldName')}
+                    onSelect={() => handleSelect("$..fieldName")}
                   >
                     <FileJson className="h-4 w-4 mr-2" />
                     <div>

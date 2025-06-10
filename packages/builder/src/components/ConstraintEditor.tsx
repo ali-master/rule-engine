@@ -1,14 +1,14 @@
-import React from 'react';
-import { Card, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
-import { Trash2, AlertCircle } from 'lucide-react';
-import { FieldSelector } from './FieldSelector';
-import { OperatorSelector } from './OperatorSelector';
-import { ValueInput } from './ValueInput';
-import type { ConstraintEditorProps } from '../types';
-import { cn } from '../lib/utils';
+import React from "react";
+import { CardContent, Card } from "./ui/card";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Trash2, AlertCircle } from "lucide-react";
+import { FieldSelector } from "./FieldSelector";
+import { OperatorSelector } from "./OperatorSelector";
+import { ValueInput } from "./ValueInput";
+import type { ConstraintEditorProps } from "../types";
+import { cn } from "../lib/utils";
 
 export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
   constraint,
@@ -44,7 +44,7 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
   };
 
   return (
-    <Card className={cn('relative', readOnly && 'opacity-75')}>
+    <Card className={cn("relative", readOnly && "opacity-75")}>
       <CardContent className="p-4 space-y-4">
         <div className="flex items-start gap-4">
           <div className="flex-1 space-y-4">
@@ -58,7 +58,7 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
                   disabled={readOnly}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor={`${path}-operator`}>Operator</Label>
                 <OperatorSelector
@@ -69,7 +69,7 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
                   disabled={readOnly}
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor={`${path}-value`}>Value</Label>
                 <ValueInput
@@ -81,22 +81,25 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
                 />
               </div>
             </div>
-            
+
             <div className="space-y-2">
-              <Label htmlFor={`${path}-message`} className="flex items-center gap-2">
+              <Label
+                htmlFor={`${path}-message`}
+                className="flex items-center gap-2"
+              >
                 <AlertCircle className="h-4 w-4" />
                 Error Message (Optional)
               </Label>
               <Input
                 id={`${path}-message`}
-                value={constraint.message || ''}
+                value={constraint.message || ""}
                 onChange={(e) => handleMessageChange(e.target.value)}
                 placeholder="Custom error message"
                 disabled={readOnly}
               />
             </div>
           </div>
-          
+
           {!readOnly && onRemove && (
             <Button
               type="button"

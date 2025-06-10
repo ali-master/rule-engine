@@ -2,16 +2,16 @@ import type { Constraint } from "@usex/rule-engine";
 import type { FieldConfig } from "../types";
 import { Operators } from "@usex/rule-engine";
 import {
-  AlertCircle,
-  Code2,
-  Copy,
-  HelpCircle,
-  Info,
-  Layers,
-  Regex,
   Trash2,
+  Regex,
+  Layers,
+  Info,
+  HelpCircle,
+  Copy,
+  Code2,
+  AlertCircle,
 } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { operatorHelp } from "../constants/operator-help";
 import { cn } from "../lib/utils";
 import { getOperatorConfig } from "../utils/operators";
@@ -22,23 +22,23 @@ import { RegexValidator } from "./RegexValidator";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { Collapsible, CollapsibleContent } from "./ui/collapsible";
+import { CollapsibleContent, Collapsible } from "./ui/collapsible";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
+  SheetTitle,
+  SheetHeader,
+  SheetDescription,
+  SheetContent,
+  Sheet,
 } from "./ui/sheet";
-import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { TabsTrigger, TabsList, Tabs } from "./ui/tabs";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
 } from "./ui/tooltip";
 import { VisualFieldSelector } from "./VisualFieldSelector";
 import { AdvancedFieldInput } from "./AdvancedFieldInput";

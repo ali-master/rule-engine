@@ -2,32 +2,32 @@ import type { OperatorsType } from "@usex/rule-engine";
 import type { OperatorSelectorProps } from "../types";
 import { Command as CommandPrimitive } from "cmdk";
 import {
-  Braces,
-  Calendar,
-  ChevronRight,
-  Clock,
-  FileJson,
-  Hash,
-  List,
-  Search,
-  Sparkles,
-  Star,
-  ToggleRight,
-  TrendingUp,
-  Type,
   Zap,
+  Type,
+  TrendingUp,
+  ToggleRight,
+  Star,
+  Sparkles,
+  Search,
+  List,
+  Hash,
+  FileJson,
+  Clock,
+  ChevronRight,
+  Calendar,
+  Braces,
 } from "lucide-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { cn } from "../lib/utils";
 import {
-  getOperatorConfig,
-  getOperatorsForFieldType,
   operatorConfigs,
+  getOperatorsForFieldType,
+  getOperatorConfig,
 } from "../utils/operators";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { PopoverTrigger, PopoverContent, Popover } from "./ui/popover";
 import { Separator } from "./ui/separator";
 
 interface ExtendedOperatorSelectorProps extends OperatorSelectorProps {
@@ -114,7 +114,7 @@ const operatorColors: Record<string, string> = {
   "less-than-or-equals": "text-green-600 dark:text-green-400",
   between: "text-green-600 dark:text-green-400",
   "not-between": "text-green-600 dark:text-green-400",
-  
+
   // String
   contains: "text-purple-600 dark:text-purple-400",
   "not-contains": "text-purple-600 dark:text-purple-400",
@@ -124,13 +124,13 @@ const operatorColors: Record<string, string> = {
   "not-matches": "text-indigo-600 dark:text-indigo-400",
   like: "text-purple-600 dark:text-purple-400",
   "not-like": "text-purple-600 dark:text-purple-400",
-  
+
   // Array
   in: "text-yellow-600 dark:text-yellow-400",
   "not-in": "text-yellow-600 dark:text-yellow-400",
   "self-contains-any": "text-yellow-600 dark:text-yellow-400",
   "self-contains-all": "text-yellow-600 dark:text-yellow-400",
-  
+
   // Date
   "date-after": "text-orange-600 dark:text-orange-400",
   "date-before": "text-orange-600 dark:text-orange-400",
@@ -138,13 +138,13 @@ const operatorColors: Record<string, string> = {
   "date-equals": "text-orange-600 dark:text-orange-400",
   "date-after-now": "text-orange-600 dark:text-orange-400",
   "date-before-now": "text-orange-600 dark:text-orange-400",
-  
+
   // Boolean
   truthy: "text-emerald-600 dark:text-emerald-400",
   falsy: "text-red-600 dark:text-red-400",
   boolean: "text-emerald-600 dark:text-emerald-400",
   "not-boolean": "text-emerald-600 dark:text-emerald-400",
-  
+
   // Existence
   exists: "text-teal-600 dark:text-teal-400",
   "not-exists": "text-teal-600 dark:text-teal-400",
@@ -471,7 +471,12 @@ export const SmartOperatorSelector: React.FC<ExtendedOperatorSelectorProps> = ({
                             "group",
                           )}
                         >
-                          <OperatorIcon className={cn("mr-2 h-4 w-4", operatorColors[operator.name])} />
+                          <OperatorIcon
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              operatorColors[operator.name],
+                            )}
+                          />
                           <div className="flex-1 text-left">
                             <div className="flex items-center gap-2">
                               <span className="font-medium">

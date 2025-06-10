@@ -1,22 +1,22 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Plus } from 'lucide-react';
-import { ConditionGroup } from './ConditionGroup';
-import { ImportExport } from './ImportExport';
-import { useRuleBuilder } from '../context/RuleBuilderContext';
-import { ConditionTypes } from '@usex/rule-engine';
-import type { RuleEditorProps } from '../types';
-import { cn } from '../lib/utils';
+import React from "react";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
+import { ConditionGroup } from "./ConditionGroup";
+import { ImportExport } from "./ImportExport";
+import { useRuleBuilder } from "../context/RuleBuilderContext";
+import { ConditionTypes } from "@usex/rule-engine";
+import type { RuleEditorProps } from "../types";
+import { cn } from "../lib/utils";
 
 export const RuleEditor: React.FC<RuleEditorProps> = ({
   className,
   readOnly = false,
 }) => {
-  const { 
-    state, 
-    addCondition, 
-    updateCondition, 
+  const {
+    state,
+    addCondition,
+    updateCondition,
     removeCondition,
     importRule,
     exportRule,
@@ -24,25 +24,22 @@ export const RuleEditor: React.FC<RuleEditorProps> = ({
 
   const conditions = React.useMemo(() => {
     if (!state.rule.conditions) return [];
-    return Array.isArray(state.rule.conditions) 
-      ? state.rule.conditions 
+    return Array.isArray(state.rule.conditions)
+      ? state.rule.conditions
       : [state.rule.conditions];
   }, [state.rule.conditions]);
 
   const handleAddRootCondition = () => {
-    addCondition('', ConditionTypes.OR);
+    addCondition("", ConditionTypes.OR);
   };
 
   return (
-    <Card className={cn('w-full', className)}>
+    <Card className={cn("w-full", className)}>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Rule Editor</CardTitle>
           {!readOnly && (
-            <ImportExport
-              onImport={importRule}
-              onExport={exportRule}
-            />
+            <ImportExport onImport={importRule} onExport={exportRule} />
           )}
         </div>
       </CardHeader>
@@ -67,14 +64,14 @@ export const RuleEditor: React.FC<RuleEditorProps> = ({
                 condition={condition}
                 path={`${index}`}
                 readOnly={readOnly}
-                onUpdate={(updatedCondition) => 
+                onUpdate={(updatedCondition) =>
                   updateCondition(`${index}`, updatedCondition)
                 }
                 onRemove={() => removeCondition(`${index}`)}
               />
             ))}
             {!readOnly && (
-              <Button 
+              <Button
                 onClick={handleAddRootCondition}
                 variant="outline"
                 className="w-full"

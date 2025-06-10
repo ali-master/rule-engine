@@ -1,11 +1,11 @@
-import React from 'react';
-import { DynamicFieldSelector } from '../DynamicFieldSelector';
-import { Badge } from '../ui/badge';
-import { Label } from '../ui/label';
-import { Button } from '../ui/button';
-import { Plus, X, ArrowRight, Info } from 'lucide-react';
-import { Alert, AlertDescription } from '../ui/alert';
-import type { OperatorHandlerProps } from './index';
+import React from "react";
+import { DynamicFieldSelector } from "../DynamicFieldSelector";
+import { Badge } from "../ui/badge";
+import { Label } from "../ui/label";
+import { Button } from "../ui/button";
+import { X, Plus, Info, ArrowRight } from "lucide-react";
+import { AlertDescription, Alert } from "../ui/alert";
+import type { OperatorHandlerProps } from "./index";
 
 export const SelfReferenceHandler: React.FC<OperatorHandlerProps> = ({
   operator,
@@ -28,11 +28,16 @@ export const SelfReferenceHandler: React.FC<OperatorHandlerProps> = ({
   };
 
   const operatorDescriptions = {
-    'self-contains-any': 'Field value contains ANY of the referenced field values',
-    'self-contains-all': 'Field value contains ALL of the referenced field values',
-    'self-contains-none': 'Field value contains NONE of the referenced field values',
-    'self-not-contains-any': 'Field value does NOT contain ANY of the referenced field values',
-    'self-not-contains-all': 'Field value does NOT contain ALL of the referenced field values',
+    "self-contains-any":
+      "Field value contains ANY of the referenced field values",
+    "self-contains-all":
+      "Field value contains ALL of the referenced field values",
+    "self-contains-none":
+      "Field value contains NONE of the referenced field values",
+    "self-not-contains-any":
+      "Field value does NOT contain ANY of the referenced field values",
+    "self-not-contains-all":
+      "Field value does NOT contain ALL of the referenced field values",
   };
 
   return (
@@ -40,13 +45,18 @@ export const SelfReferenceHandler: React.FC<OperatorHandlerProps> = ({
       <div>
         <div className="flex items-center gap-2 mb-2">
           <Label>Referenced Fields</Label>
-          <Badge variant="outline" className="text-xs">Self-Reference</Badge>
+          <Badge variant="outline" className="text-xs">
+            Self-Reference
+          </Badge>
         </div>
         <Alert className="mb-3">
           <Info className="h-4 w-4" />
           <AlertDescription className="text-xs">
-            <strong>{field}</strong> <ArrowRight className="inline h-3 w-3 mx-1" />
-            {operatorDescriptions[operator as keyof typeof operatorDescriptions] || operator}
+            <strong>{field}</strong>{" "}
+            <ArrowRight className="inline h-3 w-3 mx-1" />
+            {operatorDescriptions[
+              operator as keyof typeof operatorDescriptions
+            ] || operator}
           </AlertDescription>
         </Alert>
       </div>
@@ -81,7 +91,7 @@ export const SelfReferenceHandler: React.FC<OperatorHandlerProps> = ({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => addField('')}
+          onClick={() => addField("")}
           disabled={disabled}
           className="w-full"
         >
@@ -94,7 +104,7 @@ export const SelfReferenceHandler: React.FC<OperatorHandlerProps> = ({
         <div className="p-3 bg-muted rounded-md">
           <p className="text-xs text-muted-foreground mb-2">Example:</p>
           <code className="text-xs font-mono">
-            {field} {operator} [{fields.join(', ')}]
+            {field} {operator} [{fields.join(", ")}]
           </code>
         </div>
       )}

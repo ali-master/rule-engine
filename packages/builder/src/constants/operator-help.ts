@@ -14,50 +14,55 @@ export const operatorHelp: Record<string, OperatorHelp> = {
   // String Operators
   equals: {
     name: "Equals",
-    description: "Checks if the field value exactly matches the specified value. Case-sensitive.",
+    description:
+      "Checks if the field value exactly matches the specified value. Case-sensitive.",
     examples: [
       {
         field: "status",
         operator: "equals",
         value: "active",
-        explanation: "Matches when status is exactly \"active\"",
+        explanation: 'Matches when status is exactly "active"',
       },
       {
         field: "user.email",
         operator: "equals",
         value: "john@example.com",
-        explanation: "Matches when user email is exactly \"john@example.com\"",
+        explanation: 'Matches when user email is exactly "john@example.com"',
       },
     ],
     tips: [
-      "This is case-sensitive. \"Active\" will not match \"active\"",
-      "For case-insensitive matching, use \"equalsIgnoreCase\"",
+      'This is case-sensitive. "Active" will not match "active"',
+      'For case-insensitive matching, use "equalsIgnoreCase"',
     ],
   },
 
   notEquals: {
     name: "Not Equals",
-    description: "Checks if the field value does not match the specified value.",
+    description:
+      "Checks if the field value does not match the specified value.",
     examples: [
       {
         field: "status",
         operator: "notEquals",
         value: "inactive",
-        explanation: "Matches when status is anything except \"inactive\"",
+        explanation: 'Matches when status is anything except "inactive"',
       },
     ],
-    tips: ["Returns true for null or undefined values if they don't match the specified value"],
+    tips: [
+      "Returns true for null or undefined values if they don't match the specified value",
+    ],
   },
 
   contains: {
     name: "Contains",
-    description: "Checks if the field value contains the specified substring. Case-sensitive.",
+    description:
+      "Checks if the field value contains the specified substring. Case-sensitive.",
     examples: [
       {
         field: "description",
         operator: "contains",
         value: "important",
-        explanation: "Matches when description contains \"important\" anywhere",
+        explanation: 'Matches when description contains "important" anywhere',
       },
       {
         field: "tags",
@@ -74,13 +79,14 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   notContains: {
     name: "Not Contains",
-    description: "Checks if the field value does not contain the specified substring.",
+    description:
+      "Checks if the field value does not contain the specified substring.",
     examples: [
       {
         field: "title",
         operator: "notContains",
         value: "draft",
-        explanation: "Matches when title doesn't contain \"draft\"",
+        explanation: 'Matches when title doesn\'t contain "draft"',
       },
     ],
   },
@@ -93,13 +99,13 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         field: "phone",
         operator: "startsWith",
         value: "+1",
-        explanation: "Matches phone numbers starting with \"+1\"",
+        explanation: 'Matches phone numbers starting with "+1"',
       },
       {
         field: "sku",
         operator: "startsWith",
         value: "PROD-",
-        explanation: "Matches SKUs starting with \"PROD-\"",
+        explanation: 'Matches SKUs starting with "PROD-"',
       },
     ],
   },
@@ -150,7 +156,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
   // Number Operators
   greaterThan: {
     name: "Greater Than",
-    description: "Checks if the numeric field value is greater than the specified number.",
+    description:
+      "Checks if the numeric field value is greater than the specified number.",
     examples: [
       {
         field: "age",
@@ -165,12 +172,16 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches prices above $99.99",
       },
     ],
-    tips: ["Works with integers and decimals", "Returns false for non-numeric values"],
+    tips: [
+      "Works with integers and decimals",
+      "Returns false for non-numeric values",
+    ],
   },
 
   greaterThanOrEquals: {
     name: "Greater Than or Equals",
-    description: "Checks if the numeric field value is greater than or equal to the specified number.",
+    description:
+      "Checks if the numeric field value is greater than or equal to the specified number.",
     examples: [
       {
         field: "score",
@@ -183,7 +194,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   lessThan: {
     name: "Less Than",
-    description: "Checks if the numeric field value is less than the specified number.",
+    description:
+      "Checks if the numeric field value is less than the specified number.",
     examples: [
       {
         field: "inventory",
@@ -196,7 +208,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   lessThanOrEquals: {
     name: "Less Than or Equals",
-    description: "Checks if the numeric field value is less than or equal to the specified number.",
+    description:
+      "Checks if the numeric field value is less than or equal to the specified number.",
     examples: [
       {
         field: "discount",
@@ -209,7 +222,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   between: {
     name: "Between",
-    description: "Checks if the numeric field value falls within a range (inclusive).",
+    description:
+      "Checks if the numeric field value falls within a range (inclusive).",
     examples: [
       {
         field: "temperature",
@@ -233,7 +247,10 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches when isActive is true",
       },
     ],
-    tips: ["No value input needed", "Only matches boolean true, not truthy values"],
+    tips: [
+      "No value input needed",
+      "Only matches boolean true, not truthy values",
+    ],
   },
 
   isFalse: {
@@ -261,7 +278,10 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches records created before January 1, 2024",
       },
     ],
-    tips: ["Accepts various date formats", "Time component is considered if provided"],
+    tips: [
+      "Accepts various date formats",
+      "Time component is considered if provided",
+    ],
   },
 
   after: {
@@ -288,7 +308,10 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches birthdays on May 15, 1990",
       },
     ],
-    tips: ["Compares date portion only by default", "Include time for precise matching"],
+    tips: [
+      "Compares date portion only by default",
+      "Include time for precise matching",
+    ],
   },
 
   dateBetween: {
@@ -323,12 +346,16 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches admin or moderator roles",
       },
     ],
-    tips: ["Provide comma-separated values", "Useful for multiple allowed values"],
+    tips: [
+      "Provide comma-separated values",
+      "Useful for multiple allowed values",
+    ],
   },
 
   notIn: {
     name: "Not In",
-    description: "Checks if the field value is not included in a list of values.",
+    description:
+      "Checks if the field value is not included in a list of values.",
     examples: [
       {
         field: "status",
@@ -347,7 +374,7 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         field: "tags",
         operator: "arrayContains",
         value: "featured",
-        explanation: "Matches when tags array includes \"featured\"",
+        explanation: 'Matches when tags array includes "featured"',
       },
     ],
     tips: ["Field must be an array", "Checks for exact value match in array"],
@@ -355,7 +382,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   arrayContainsAny: {
     name: "Array Contains Any",
-    description: "Checks if an array field contains any of the specified values.",
+    description:
+      "Checks if an array field contains any of the specified values.",
     examples: [
       {
         field: "permissions",
@@ -368,7 +396,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   arrayContainsAll: {
     name: "Array Contains All",
-    description: "Checks if an array field contains all of the specified values.",
+    description:
+      "Checks if an array field contains all of the specified values.",
     examples: [
       {
         field: "requiredSkills",
@@ -391,7 +420,10 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches records that haven't been deleted",
       },
     ],
-    tips: ["No value input needed", "Only matches null, not undefined or empty string"],
+    tips: [
+      "No value input needed",
+      "Only matches null, not undefined or empty string",
+    ],
   },
 
   isNotNull: {
@@ -409,7 +441,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
 
   isEmpty: {
     name: "Is Empty",
-    description: "Checks if the field value is empty (null, undefined, empty string, or empty array).",
+    description:
+      "Checks if the field value is empty (null, undefined, empty string, or empty array).",
     examples: [
       {
         field: "description",
@@ -418,7 +451,10 @@ export const operatorHelp: Record<string, OperatorHelp> = {
         explanation: "Matches when description is empty or not set",
       },
     ],
-    tips: ["Works with strings, arrays, and objects", "Considers \"\", [], {}, null, and undefined as empty"],
+    tips: [
+      "Works with strings, arrays, and objects",
+      'Considers "", [], {}, null, and undefined as empty',
+    ],
   },
 
   isNotEmpty: {

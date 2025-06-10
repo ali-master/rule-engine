@@ -1,17 +1,28 @@
-import React from 'react';
-import { Card, CardContent, CardHeader } from './ui/card';
-import { Button } from './ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Label } from './ui/label';
-import { Plus, Trash2, ChevronDown, ChevronRight } from 'lucide-react';
-import { ConstraintEditor } from './ConstraintEditor';
-import { useRuleBuilder } from '../context/RuleBuilderContext';
-import { ConditionTypes, type Condition, type Constraint, type ConditionType } from '@usex/rule-engine';
-import type { ConditionGroupProps } from '../types';
-import { cn } from '../lib/utils';
+import React from "react";
+import { CardHeader, CardContent, Card } from "./ui/card";
+import { Button } from "./ui/button";
+import {
+  SelectValue,
+  SelectTrigger,
+  SelectItem,
+  SelectContent,
+  Select,
+} from "./ui/select";
+import { Label } from "./ui/label";
+import { Trash2, Plus, ChevronRight, ChevronDown } from "lucide-react";
+import { ConstraintEditor } from "./ConstraintEditor";
+import { useRuleBuilder } from "../context/RuleBuilderContext";
+import {
+  type Constraint,
+  ConditionTypes,
+  type ConditionType,
+  type Condition,
+} from "@usex/rule-engine";
+import type { ConditionGroupProps } from "../types";
+import { cn } from "../lib/utils";
 
 const isConstraint = (item: Constraint | Condition): item is Constraint => {
-  return 'field' in item && 'operator' in item;
+  return "field" in item && "operator" in item;
 };
 
 export const ConditionGroup: React.FC<ConditionGroupProps> = ({
@@ -22,7 +33,7 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
   onUpdate,
   onRemove,
 }) => {
-  const { addConstraint, updateConstraint, removeConstraint, addCondition } = useRuleBuilder();
+  const { addConstraint, removeConstraint, addCondition } = useRuleBuilder();
   const [collapsed, setCollapsed] = React.useState(false);
 
   const conditionType = React.useMemo(() => {
@@ -38,12 +49,12 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
 
   const handleConditionTypeChange = (newType: ConditionType) => {
     if (newType === conditionType) return;
-    
+
     const newCondition: Condition = {
       [newType]: items,
       result: condition.result,
     };
-    
+
     if (onUpdate) {
       onUpdate(newCondition);
     }
@@ -51,9 +62,9 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
 
   const handleAddConstraint = () => {
     const newConstraint: Constraint = {
-      field: '',
-      operator: 'equals' as any,
-      value: '',
+      field: "",
+      operator: "equals" as any,
+      value: "",
     };
     addConstraint(path, newConstraint);
   };
@@ -65,7 +76,7 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
   const handleUpdateItem = (index: number, item: Constraint | Condition) => {
     const newItems = [...items];
     newItems[index] = item;
-    
+
     if (onUpdate) {
       onUpdate({
         ...condition,
@@ -89,24 +100,18 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
     }
   };
 
-  const conditionTypeLabel = {
-    [ConditionTypes.OR]: 'OR',
-    [ConditionTypes.AND]: 'AND',
-    [ConditionTypes.NONE]: 'NONE',
-  };
-
   const conditionTypeColor = {
-    [ConditionTypes.OR]: 'text-blue-600 bg-blue-50 border-blue-200',
-    [ConditionTypes.AND]: 'text-green-600 bg-green-50 border-green-200',
-    [ConditionTypes.NONE]: 'text-red-600 bg-red-50 border-red-200',
+    [ConditionTypes.OR]: "text-blue-600 bg-blue-50 border-blue-200",
+    [ConditionTypes.AND]: "text-green-600 bg-green-50 border-green-200",
+    [ConditionTypes.NONE]: "text-red-600 bg-red-50 border-red-200",
   };
 
   return (
-    <Card 
+    <Card
       className={cn(
-        'border-2',
+        "border-2",
         conditionTypeColor[conditionType],
-        depth > 0 && 'ml-8'
+        depth > 0 && "ml-8",
       )}
     >
       <CardHeader className="p-4">
@@ -119,9 +124,13 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
               onClick={() => setCollapsed(!collapsed)}
               className="p-0 h-auto"
             >
-              {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
             </Button>
-            
+
             <div className="flex items-center gap-2">
               <Label>Condition Type:</Label>
               <Select
@@ -140,7 +149,7 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
               </Select>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {!readOnly && (
               <>
@@ -177,17 +186,18 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
           </div>
         </div>
       </CardHeader>
-      
+
       {!collapsed && (
         <CardContent className="p-4 pt-0 space-y-4">
           {items.length === 0 ? (
             <div className="text-center text-muted-foreground py-8">
-              No rules in this group. Add a rule or condition group to get started.
+              No rules in this group. Add a rule or condition group to get
+              started.
             </div>
           ) : (
             items.map((item, index) => {
               const itemPath = `${path}.${conditionType}.${index}`;
-              
+
               if (isConstraint(item)) {
                 return (
                   <ConstraintEditor
@@ -195,7 +205,9 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
                     constraint={item}
                     path={itemPath}
                     readOnly={readOnly}
-                    onUpdate={(constraint) => handleUpdateItem(index, constraint)}
+                    onUpdate={(constraint) =>
+                      handleUpdateItem(index, constraint)
+                    }
                     onRemove={() => handleRemoveItem(index)}
                   />
                 );

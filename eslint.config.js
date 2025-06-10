@@ -28,9 +28,12 @@ export default antfu({
     "packages/*/coverage",
     "**/*.json",
   ],
-  files: ["./packages/**/*.ts"],
+  files: ["./packages/**/*.ts", "./packages/**/*.tsx"],
   rules: {
     eqeqeq: "off",
+    "prefer-regex-literals": "off",
+    "regexp/no-obscure-range": "off",
+    "react-refresh/only-export-components": "off",
     "no-labels": "off",
     "no-cond-assign": "off",
     "no-async-promise-executor": "off",
@@ -48,10 +51,7 @@ export default antfu({
     "ts/method-signature-style": "off",
     "ts/no-non-null-asserted-optional-chain": "off",
     "react-hooks-extra/no-direct-set-state-in-use-effect": "off",
+    "react/no-array-index-key": "off",
     "perfectionist/sort-named-imports": ["error", { order: "desc" }],
-    "react-refresh/only-export-components": [
-      "warn",
-      { allowConstantExport: true },
-    ],
   },
 });

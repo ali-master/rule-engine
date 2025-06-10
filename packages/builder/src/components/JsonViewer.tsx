@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import {
+  Upload,
+  Minimize2,
+  Maximize2,
+  Download,
   Copy,
   Check,
-  Download,
-  Upload,
-  Maximize2,
-  Minimize2,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import type { RuleType } from "@usex/rule-engine";

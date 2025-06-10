@@ -1,29 +1,21 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Regex, Info, Copy, CheckCircle2, AlertCircle } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { toast } from "sonner";
+import { cn } from "../lib/utils";
+import { AlertDescription, Alert } from "./ui/alert";
+import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Badge } from "./ui/badge";
-import { Separator } from "./ui/separator";
 import { ScrollArea } from "./ui/scroll-area";
+import { Separator } from "./ui/separator";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
   TooltipTrigger,
+  TooltipProvider,
+  TooltipContent,
+  Tooltip,
 } from "./ui/tooltip";
-import {
-  AlertCircle,
-  CheckCircle2,
-  Copy,
-  Info,
-  Regex,
-  TestTube,
-  X,
-} from "lucide-react";
-import { cn } from "../lib/utils";
-import { toast } from "sonner";
 
 interface RegexValidatorProps {
   value: string;
@@ -41,22 +33,58 @@ interface RegexMatch {
 }
 
 const commonPatterns = [
-  { name: "Email", pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" },
-  { name: "URL", pattern: "^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&\\/\\/=]*)$" },
-  { name: "Phone (US)", pattern: "^\\+?1?\\s?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$" },
-  { name: "Date (YYYY-MM-DD)", pattern: "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$" },
+  {
+    name: "Email",
+    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+  },
+  {
+    name: "URL",
+    pattern:
+      "^https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&\\/\\/=]*)$",
+  },
+  {
+    name: "Phone (US)",
+    pattern: "^\\+?1?\\s?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}$",
+  },
+  {
+    name: "Phone (IR)",
+    pattern: "^(\\+98|98|0098|0)?9(\\d{2})\\d{7}$",
+  },
+  {
+    name: "Bank Card Number (IR)",
+    pattern: "([۰-۹0-9-_.*]{16,20})",
+  },
+  {
+    name: "Date (YYYY-MM-DD)",
+    pattern: "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+  },
   { name: "Time (HH:MM)", pattern: "^([01]?[0-9]|2[0-3]):[0-5][0-9]$" },
   { name: "IPv4", pattern: "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$" },
   { name: "Hex Color", pattern: "^#?([a-fA-F0-9]{6}|[a-fA-F0-9]{3})$" },
   { name: "Username", pattern: "^[a-zA-Z0-9_]{3,16}$" },
-  { name: "Password (Strong)", pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" },
-  { name: "Credit Card", pattern: "^\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}$" },
+  {
+    name: "Password (Strong)",
+    pattern:
+      "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+  },
+  {
+    name: "Credit Card",
+    pattern: "^\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}$",
+  },
 ];
 
 const regexFlags = [
-  { flag: "i", name: "Case Insensitive", description: "Match regardless of case" },
+  {
+    flag: "i",
+    name: "Case Insensitive",
+    description: "Match regardless of case",
+  },
   { flag: "g", name: "Global", description: "Find all matches" },
-  { flag: "m", name: "Multiline", description: "^ and $ match line boundaries" },
+  {
+    flag: "m",
+    name: "Multiline",
+    description: "^ and $ match line boundaries",
+  },
   { flag: "s", name: "Dot All", description: ". matches newlines" },
   { flag: "u", name: "Unicode", description: "Enable unicode support" },
 ];
@@ -130,7 +158,9 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
       }
       setMatches(foundMatches);
     } catch (error) {
-      setRegexError(error instanceof Error ? error.message : "Error testing regex");
+      setRegexError(
+        error instanceof Error ? error.message : "Error testing regex",
+      );
     }
   }, [regex, localTestString]);
 
@@ -151,7 +181,7 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
     try {
       await navigator.clipboard.writeText(pattern);
       toast.success("Pattern copied to clipboard");
-    } catch (error) {
+    } catch {
       toast.error("Failed to copy pattern");
     }
   };
@@ -188,7 +218,7 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
             placeholder="Enter regex pattern..."
             className={cn(
               "font-mono text-sm",
-              regexError && "border-destructive"
+              regexError && "border-destructive",
             )}
           />
           {regexError && (
@@ -205,7 +235,9 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant={flags.includes(flagInfo.flag) ? "default" : "outline"}
+                      variant={
+                        flags.includes(flagInfo.flag) ? "default" : "outline"
+                      }
                       size="sm"
                       onClick={() => handleFlagToggle(flagInfo.flag)}
                       className="h-7 px-2"
@@ -249,9 +281,9 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
             {matches.length > 0 ? (
               <ScrollArea className="h-[100px] w-full rounded-md border p-2">
                 <div className="space-y-1">
-                  {matches.map((match, index) => (
+                  {matches.map((match) => (
                     <div
-                      key={index}
+                      key={`${match.index}-${match.value}`}
                       className="flex items-center justify-between text-sm"
                     >
                       <code className="px-2 py-1 bg-muted rounded">
@@ -286,14 +318,14 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
                   const isPartOfMatch = matches.some(
                     (match) =>
                       index >= match.index &&
-                      index < match.index + match.value.length
+                      index < match.index + match.value.length,
                   );
                   return (
                     <span
-                      key={index}
+                      key={`char-${index}-${char}`}
                       className={cn(
                         isPartOfMatch &&
-                          "bg-primary/20 text-primary font-semibold"
+                          "bg-primary/20 text-primary font-semibold",
                       )}
                     >
                       {char}
@@ -329,6 +361,7 @@ export const RegexValidator: React.FC<RegexValidatorProps> = ({
                   className="flex items-center justify-between p-2 hover:bg-muted/50 rounded-md group"
                 >
                   <button
+                    type="button"
                     className="flex-1 text-left"
                     onClick={() => handlePatternSelect(pattern.pattern)}
                   >

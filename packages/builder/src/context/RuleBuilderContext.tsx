@@ -1,17 +1,17 @@
 import type {
-  Condition,
-  ConditionType,
-  Constraint,
-  EngineResult,
   RuleType,
+  EngineResult,
+  Constraint,
+  ConditionType,
+  Condition,
 } from "@usex/rule-engine";
 import type {
-  RuleBuilderContextType,
-  RuleBuilderProviderProps,
-  RuleBuilderState,
   ValidationError,
+  RuleBuilderState,
+  RuleBuilderProviderProps,
+  RuleBuilderContextType,
 } from "../types";
-import React, { createContext, use, useCallback, useMemo } from "react";
+import React, { useMemo, useCallback, use, createContext } from "react";
 import { create } from "zustand";
 
 const initialRule: RuleType = {

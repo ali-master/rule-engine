@@ -1,9 +1,9 @@
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { ChevronDown, ChevronRight, Copy, Check } from 'lucide-react';
-import type { RuleViewerProps } from '../types';
-import { cn } from '../lib/utils';
+import React from "react";
+import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
+import { Button } from "./ui/button";
+import { Copy, ChevronRight, ChevronDown, Check } from "lucide-react";
+import type { RuleViewerProps } from "../types";
+import { cn } from "../lib/utils";
 
 export const RuleViewer: React.FC<RuleViewerProps> = ({
   rule,
@@ -25,7 +25,7 @@ export const RuleViewer: React.FC<RuleViewerProps> = ({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy:', error);
+      console.error("Failed to copy:", error);
     }
   };
 
@@ -41,7 +41,7 @@ export const RuleViewer: React.FC<RuleViewerProps> = ({
   };
 
   return (
-    <Card className={cn('overflow-hidden', className)}>
+    <Card className={cn("overflow-hidden", className)}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex items-center gap-2">
           {collapsible && (
@@ -52,7 +52,11 @@ export const RuleViewer: React.FC<RuleViewerProps> = ({
               onClick={() => setCollapsed(!collapsed)}
               className="p-0 h-auto"
             >
-              {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronDown className="h-4 w-4" />
+              )}
             </Button>
           )}
           <CardTitle className="text-sm font-medium">Rule JSON</CardTitle>
