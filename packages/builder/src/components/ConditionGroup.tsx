@@ -12,12 +12,8 @@ import { Label } from "./ui/label";
 import { Trash2, Plus, ChevronRight, ChevronDown } from "lucide-react";
 import { ConstraintEditor } from "./ConstraintEditor";
 import { useRuleBuilder } from "../context/RuleBuilderContext";
-import {
-  type Constraint,
-  ConditionTypes,
-  type ConditionType,
-  type Condition,
-} from "@usex/rule-engine";
+import { ConditionTypes } from "@usex/rule-engine";
+import type { Constraint, ConditionType, Condition } from "@usex/rule-engine";
 import type { ConditionGroupProps } from "../types";
 import { cn } from "../lib/utils";
 

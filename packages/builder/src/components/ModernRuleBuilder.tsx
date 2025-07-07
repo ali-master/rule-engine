@@ -3,12 +3,11 @@ import {
   useSensors,
   useSensor,
   PointerSensor,
-  type DragStartEvent,
   DragOverlay,
-  type DragEndEvent,
   DndContext,
   closestCenter,
 } from "@dnd-kit/core";
+import type { DragStartEvent, DragEndEvent } from "@dnd-kit/core";
 import {
   verticalListSortingStrategy,
   SortableContext,

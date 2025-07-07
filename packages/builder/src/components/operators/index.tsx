@@ -1,5 +1,6 @@
 import React from "react";
-import { type OperatorsType, Operators } from "@usex/rule-engine";
+import { Operators } from "@usex/rule-engine";
+import type { OperatorsType } from "@usex/rule-engine";
 
 // Import all operator handlers
 import { ComparisonOperatorHandler } from "./ComparisonOperatorHandler";
