@@ -1,7 +1,3 @@
-/**
- * Operator Registry - Central management for all operators
- */
-
 import { Operators } from "@root/enums";
 import type { OperatorsType } from "@root/types";
 import type {

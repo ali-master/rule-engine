@@ -1,4 +1,5 @@
 // Utilities
+import { clone } from "@root/utils";
 import { createHash } from "node:crypto";
 import { EventEmitter } from "eventemitter3";
 import { Logger } from "@root/services/logger";
@@ -134,7 +135,7 @@ export class Mutator {
       }
 
       // Make a copy of the criteria.
-      const copy = structuredClone(criteria);
+      const copy = clone(criteria);
 
       // Apply the mutations to the copy and return it.
       await this.applyMutations(copy);

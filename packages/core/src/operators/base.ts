@@ -1,7 +1,3 @@
-/**
- * Base types and interfaces for the operator system using Strategy pattern
- */
-
 import type { OperatorsType } from "@root/types";
 
 /**

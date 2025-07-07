@@ -1,7 +1,3 @@
-/**
- * Comparison operator implementations
- */
-
 import { isObject } from "@root/utils";
 import { Operators } from "@root/enums";
 import { OperatorCategory, BaseOperatorStrategy } from "../base";

@@ -1,5 +1,7 @@
 import { isEmpty } from "ramda";
 import { RuleError, isObject } from "@root/utils";
+import { isStringOperator } from "@root/operators";
+import { operatorRegistry } from "@root/operators/registry";
 import { ObjectDiscovery } from "@root/services/object-discovery";
 // Enums
 import { Operators, ConditionTypes } from "@root/enums";
@@ -12,8 +14,6 @@ import type {
   ConditionType,
   Condition,
 } from "@root/types";
-import { isStringOperator } from "@root";
-import { operatorRegistry } from "@root/operators/registry";
 
 export class Validator<T = any> {
   private readonly discovery = new ObjectDiscovery<T>();

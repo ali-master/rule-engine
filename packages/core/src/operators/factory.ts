@@ -1,7 +1,3 @@
-/**
- * Factory for registering all built-in operators
- */
-
 import { operatorRegistry } from "./registry";
 import type { OperatorFactory, OperatorConstructor } from "./base";
 

@@ -4,7 +4,7 @@ import {
   dateWithTzOffset,
   convertTimeToMs,
 } from "@root/utils";
-import { isBefore, isAfter } from "date-fns-jalali";
+import { isBefore, isAfter } from "date-fns";
 
 /**
  * Checks if the value is equal to the compareValue. Both values must be of the same type. If the values are objects, it will compare the stringifies versions of the objects.
@@ -143,7 +143,7 @@ export function likeOperator(
   caseInsensitive = false,
 ) {
   // Escape special characters in the pattern to prevent SQL injection
-   
+
   const escapedPattern = pattern.replace(/([\\%_[\]^$!@#&?()-='">{}])/g, "$1");
 
   // Build the regular expression with pattern handling
@@ -286,7 +286,6 @@ export function isAlphaOperator(value: string): boolean {
   return alphaRegex.test(value);
 }
 export function isPersianAlphaOperator(value: string): boolean {
-   
   const text = value.replace(/["'-+؟\s.]/g, "");
 
   // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
@@ -299,7 +298,6 @@ export function isAlphaNumericOperator(value: string): boolean {
 }
 
 export function isPersianAlphaNumericOperator(value: string): boolean {
-   
   const text = value.replace(/["'-+؟\s.]/g, "");
 
   // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character

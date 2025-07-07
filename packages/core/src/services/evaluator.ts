@@ -1,7 +1,3 @@
-/**
- * Evaluator V2 - Refactored to use Strategy pattern for operators
- */
-
 import { ObjectDiscovery } from "@root/services/object-discovery";
 import { operatorRegistry } from "@root/operators/registry";
 import { ConditionTypes } from "@root/enums";

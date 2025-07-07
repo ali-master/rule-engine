@@ -1,7 +1,3 @@
-/**
- * Export all operator implementations
- */
-
 export * from "./array";
 export * from "./boolean";
 // Comparison operators

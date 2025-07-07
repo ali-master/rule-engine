@@ -1,8 +1,4 @@
-/**
- * Introspector V2 - Enhanced with operator metadata and type safety
- */
-
-import { RuleTypeError } from "@root/utils";
+import { RuleTypeError, clone } from "@root/utils";
 import { Logger } from "@root/services/logger";
 import { ObjectDiscovery } from "@root/services/object-discovery";
 import { operatorRegistry } from "@root/operators/registry";
@@ -476,7 +472,7 @@ export class Introspector {
     type: ConditionType,
   ): Record<string, unknown> {
     // We need to clone the constraint because we will be modifying it
-    const $constraint = structuredClone(constraint);
+    const $constraint = clone(constraint);
 
     // We can consider a 'None' as a not 'All' and flip all the operators
     // To be done on any 'None' type condition or on any child
@@ -575,9 +571,7 @@ export class Introspector {
       // them if the key is new, or replacing the 'any' with the new values.
       if (depth > 1) {
         // We should start based on the last option added
-        const baseOption = structuredClone(
-          entry.options?.[entry.options.length - 1],
-        )!;
+        const baseOption = clone(entry.options?.[entry.options.length - 1])!;
 
         // If the previous step added anything to the base option, then we must first
         // remove these changes. For condition types of 'Any' or 'None' a step

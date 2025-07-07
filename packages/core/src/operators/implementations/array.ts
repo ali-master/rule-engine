@@ -1,7 +1,3 @@
-/**
- * Array operator implementations
- */
-
 import { Operators } from "@root/enums";
 import { OperatorCategory, BaseOperatorStrategy } from "../base";
 import type { OperatorMetadata, OperatorContext } from "../base";
