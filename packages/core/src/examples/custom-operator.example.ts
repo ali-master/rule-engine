@@ -314,7 +314,7 @@ export async function customOperatorExample() {
   };
 
   const businessResult = await RuleEngine.evaluate(businessRule, {
-    createdAt: new Date("2024-01-15T10:30:00"), // Monday 10:30 AM
+    createdAt: new Date("2025-01-15T10:30:00"), // Monday 10:30 AM
   });
   console.log("Within business hours:", businessResult.isPassed); // true
 }

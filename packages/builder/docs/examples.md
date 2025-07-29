@@ -83,7 +83,7 @@ const pricingFields: FieldConfig[] = [
 
 function DynamicPricingBuilder() {
   const [pricingRule, setPricingRule] = useState(null);
-  
+
   const sampleData = {
     product: {
       category: 'electronics',
@@ -103,12 +103,12 @@ function DynamicPricingBuilder() {
       current: 'winter'
     }
   };
-  
+
   const handlePricingRuleChange = (rule) => {
     setPricingRule(rule);
     console.log('Pricing rule updated:', rule);
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -116,7 +116,7 @@ function DynamicPricingBuilder() {
         <p className="text-gray-600 mb-6">
           Create rules to automatically adjust pricing based on customer, product, and context factors.
         </p>
-        
+
         <TreeRuleBuilder
           fields={pricingFields}
           sampleData={sampleData}
@@ -132,7 +132,7 @@ function DynamicPricingBuilder() {
           }}
         />
       </div>
-      
+
       {/* Example rule preview */}
       <div className="bg-gray-50 p-4 rounded-lg">
         <h3 className="font-semibold mb-2">Example Pricing Rules:</h3>
@@ -228,12 +228,12 @@ function ShippingCalculatorBuilder() {
       isPremium: true
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
         <h2 className="text-2xl font-bold mb-4">Shipping Rate Rules</h2>
-        
+
         <TreeRuleBuilder
           fields={shippingFields}
           sampleData={sampleData}
@@ -244,7 +244,7 @@ function ShippingCalculatorBuilder() {
           }}
         />
       </div>
-      
+
       {/* Rate examples */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-blue-50 p-4 rounded">
@@ -317,8 +317,8 @@ function PromotionalCampaignBuilder() {
   const sampleData = {
     campaign: {
       code: 'SAVE20',
-      startDate: '2024-01-01',
-      endDate: '2024-01-31'
+      startDate: '2025-01-01',
+      endDate: '2025-01-31'
     },
     customer: {
       email: 'customer@example.com',
@@ -331,7 +331,7 @@ function PromotionalCampaignBuilder() {
       total: 299.99
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -339,7 +339,7 @@ function PromotionalCampaignBuilder() {
         <p className="text-gray-600 mb-6">
           Define complex promotional rules with multiple conditions and customer targeting.
         </p>
-        
+
         <TreeRuleBuilder
           fields={promotionFields}
           sampleData={sampleData}
@@ -352,7 +352,7 @@ function PromotionalCampaignBuilder() {
           }}
         />
       </div>
-      
+
       {/* Campaign examples */}
       <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-lg">
         <h3 className="font-semibold mb-4">Example Campaign Rules:</h3>
@@ -501,7 +501,7 @@ function RBACBuilder() {
       ipAddress: '192.168.1.100'
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -509,7 +509,7 @@ function RBACBuilder() {
         <p className="text-gray-600 mb-6">
           Define role-based access control rules with fine-grained permissions.
         </p>
-        
+
         <TreeRuleBuilder
           fields={rbacFields}
           sampleData={sampleData}
@@ -525,7 +525,7 @@ function RBACBuilder() {
           }}
         />
       </div>
-      
+
       {/* Access examples */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-green-50 p-4 rounded border border-green-200">
@@ -625,7 +625,7 @@ function MFABuilder() {
       ipAddress: '203.0.113.1'
     },
     session: {
-      lastLogin: '2024-01-15T10:30:00Z',
+      lastLogin: '2025-01-15T10:30:00Z',
       duration: 30
     },
     action: {
@@ -633,7 +633,7 @@ function MFABuilder() {
       sensitivity: 'critical'
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -641,7 +641,7 @@ function MFABuilder() {
         <p className="text-gray-600 mb-6">
           Create intelligent MFA rules based on risk assessment and context.
         </p>
-        
+
         <TreeRuleBuilder
           fields={mfaFields}
           sampleData={sampleData}
@@ -651,7 +651,7 @@ function MFABuilder() {
           }}
         />
       </div>
-      
+
       {/* MFA scenarios */}
       <div className="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
         <h3 className="font-semibold mb-4 text-yellow-800">MFA Trigger Scenarios:</h3>
@@ -756,10 +756,10 @@ function RegistrationValidationBuilder() {
     acceptTerms: true,
     marketingConsent: false
   });
-  
+
   const validateForm = async (data) => {
     if (!validationRule) return { isValid: true, errors: [] };
-    
+
     try {
       const result = await RuleEngine.evaluate(validationRule, data);
       return {
@@ -773,7 +773,7 @@ function RegistrationValidationBuilder() {
       };
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -781,7 +781,7 @@ function RegistrationValidationBuilder() {
         <p className="text-gray-600 mb-6">
           Create comprehensive validation rules for user registration forms.
         </p>
-        
+
         <TreeRuleBuilder
           fields={registrationFields}
           sampleData={formData}
@@ -792,7 +792,7 @@ function RegistrationValidationBuilder() {
           }}
         />
       </div>
-      
+
       {/* Form testing */}
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="font-semibold mb-4">Test Validation</h3>
@@ -815,7 +815,7 @@ function RegistrationValidationBuilder() {
             </ul>
           </div>
         </div>
-        
+
         <button
           onClick={() => validateForm(formData)}
           className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
@@ -901,7 +901,7 @@ function DynamicValidationBuilder() {
       accountType: 'business'
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -909,7 +909,7 @@ function DynamicValidationBuilder() {
         <p className="text-gray-600 mb-6">
           Create conditional validation rules that adapt based on form context and user role.
         </p>
-        
+
         <TreeRuleBuilder
           fields={dynamicValidationFields}
           sampleData={sampleData}
@@ -919,7 +919,7 @@ function DynamicValidationBuilder() {
           }}
         />
       </div>
-      
+
       {/* Validation scenarios */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-blue-50 p-4 rounded border border-blue-200">
@@ -1055,7 +1055,7 @@ function LeadScoringBuilder() {
       trialStarted: false
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -1063,7 +1063,7 @@ function LeadScoringBuilder() {
         <p className="text-gray-600 mb-6">
           Create intelligent lead scoring based on company fit and engagement metrics.
         </p>
-        
+
         <TreeRuleBuilder
           fields={leadScoringFields}
           sampleData={sampleData}
@@ -1073,7 +1073,7 @@ function LeadScoringBuilder() {
           }}
         />
       </div>
-      
+
       {/* Scoring matrix */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg">
         <h3 className="font-semibold mb-4">Lead Scoring Matrix</h3>
@@ -1209,7 +1209,7 @@ function InventoryManagementBuilder() {
       current: 'holiday'
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="bg-white p-6 rounded-lg shadow">
@@ -1217,7 +1217,7 @@ function InventoryManagementBuilder() {
         <p className="text-gray-600 mb-6">
           Automate inventory decisions with intelligent reordering and stock level management.
         </p>
-        
+
         <TreeRuleBuilder
           fields={inventoryFields}
           sampleData={sampleData}
@@ -1227,7 +1227,7 @@ function InventoryManagementBuilder() {
           }}
         />
       </div>
-      
+
       {/* Inventory actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-red-50 p-4 rounded border border-red-200">
@@ -1267,14 +1267,14 @@ function InventoryManagementBuilder() {
 ```tsx
 function EcommercePlatformDemo() {
   const [activeTab, setActiveTab] = useState('pricing');
-  
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto py-8">
         <h1 className="text-3xl font-bold text-center mb-8">
           E-commerce Rule Engine Platform
         </h1>
-        
+
         <div className="bg-white rounded-lg shadow-lg">
           <div className="border-b border-gray-200">
             <nav className="flex space-x-8 px-6">
@@ -1298,7 +1298,7 @@ function EcommercePlatformDemo() {
               ))}
             </nav>
           </div>
-          
+
           <div className="p-6">
             {activeTab === 'pricing' && <DynamicPricingBuilder />}
             {activeTab === 'shipping' && <ShippingCalculatorBuilder />}
@@ -1318,7 +1318,7 @@ function EcommercePlatformDemo() {
 function SaaSRulePlatform() {
   const [tenant, setTenant] = useState('tenant1');
   const [ruleType, setRuleType] = useState('access');
-  
+
   const tenantData = {
     tenant1: {
       name: 'Acme Corp',
@@ -1331,7 +1331,7 @@ function SaaSRulePlatform() {
       features: ['basic-rules', 'api-access']
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow">
@@ -1360,7 +1360,7 @@ function SaaSRulePlatform() {
           </div>
         </div>
       </header>
-      
+
       <main className="container mx-auto py-8 px-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="mb-6">
@@ -1371,7 +1371,7 @@ function SaaSRulePlatform() {
               Plan: {tenantData[tenant].plan} | Features: {tenantData[tenant].features.join(', ')}
             </p>
           </div>
-          
+
           {ruleType === 'access' && <RBACBuilder />}
           {ruleType === 'validation' && <RegistrationValidationBuilder />}
           {ruleType === 'pricing' && <DynamicPricingBuilder />}

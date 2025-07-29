@@ -56,7 +56,7 @@ export class DateAfterOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "createdAt", operator: "date-after", value: "2024-01-01" }',
+      '{ field: "createdAt", operator: "date-after", value: "2025-01-01" }',
   };
 
   evaluate(context: OperatorContext): boolean {
@@ -178,7 +178,7 @@ export class DateEqualsOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "appointmentDate", operator: "date-equals", value: "2024-01-15" }',
+      '{ field: "appointmentDate", operator: "date-equals", value: "2025-01-15" }',
   };
 
   evaluate(context: OperatorContext): boolean {
@@ -241,7 +241,7 @@ export class DateNotEqualsOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "lastLogin", operator: "date-not-equals", value: "2024-01-01" }',
+      '{ field: "lastLogin", operator: "date-not-equals", value: "2025-01-01" }',
   };
 
   private equalsOperator = new DateEqualsOperator();
@@ -269,7 +269,7 @@ export class DateAfterOrEqualsOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "startDate", operator: "date-after-or-equals", value: "2024-01-01" }',
+      '{ field: "startDate", operator: "date-after-or-equals", value: "2025-01-01" }',
   };
 
   evaluate(context: OperatorContext): boolean {
@@ -302,7 +302,7 @@ export class DateBeforeOrEqualsOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "endDate", operator: "date-before-or-equals", value: "2024-12-31" }',
+      '{ field: "endDate", operator: "date-before-or-equals", value: "2025-12-31" }',
   };
 
   evaluate(context: OperatorContext): boolean {
@@ -334,7 +334,7 @@ export class DateBetweenOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "eventDate", operator: "date-between", value: ["2024-01-01", "2024-12-31"] }',
+      '{ field: "eventDate", operator: "date-between", value: ["2025-01-01", "2025-12-31"] }',
   };
 
   evaluate(context: OperatorContext): boolean {
@@ -374,7 +374,7 @@ export class DateNotBetweenOperator extends BaseOperatorStrategy<
     requiresValue: true,
     isNegatable: true,
     example:
-      '{ field: "holiday", operator: "date-not-between", value: ["2024-06-01", "2024-08-31"] }',
+      '{ field: "holiday", operator: "date-not-between", value: ["2025-06-01", "2025-08-31"] }',
   };
 
   private betweenOperator = new DateBetweenOperator();

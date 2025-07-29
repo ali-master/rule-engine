@@ -114,7 +114,7 @@ const rule = {
       operator: 'equals',
       value: 'premium'
     }],
-    result: { 
+    result: {
       discount: 0.25,
       type: 'offer-discount'
     }
@@ -269,7 +269,7 @@ console.log(result.value.discount); // 0.20
       message: "Must be over 18"
     },
     {
-      field: "age", 
+      field: "age",
       method: "lessThan",
       value: 100,
       message: "Invalid age"
@@ -483,7 +483,7 @@ Convert complex boolean logic to nested conditions:
       and: [conditionA, conditionB]
     }, {
       and: [conditionC, conditionD]
-    }, 
+    },
     conditionE
     ]
   }
@@ -524,7 +524,7 @@ Use specialized date operators:
     }, {
       field: 'lastPayment',
       operator: 'date-between',
-      value: ['2024-01-01', '2024-12-31']
+      value: ['2025-01-01', '2025-12-31']
     }]
   }
 }

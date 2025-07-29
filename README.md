@@ -42,7 +42,8 @@ const result = await RuleEngine.evaluate(discountRules, { user, order });
 ### **Built for Modern Developers**
 - 🎯 **Zero Dependencies** - Pure JavaScript excellence, no supply chain bloat
 - 🏎️ **Lightning Fast** - 117,000+ evaluations per second
-- 🛡️ **TypeScript Native** - Built-in generics for bulletproof type safety
+- 🛡️ **TypeScript Native** - **Fully typed with generic support** for bulletproof type safety
+- 🔧 **Extensible Architecture** - **Create & register custom operators** without core modifications
 - 🌐 **Universal** - Node.js, browsers, edge functions, Deno, Bun everywhere
 
 ### **Powerful Yet Intuitive**
@@ -52,7 +53,8 @@ const result = await RuleEngine.evaluate(discountRules, { user, order });
 - 🏗️ **Visual Builder** - Drag-and-drop UI for non-technical stakeholders
 
 ### **Enterprise Ready**
-- 🔧 **Extensible Core** - Plugin custom operators without touching internals
+- 🔧 **Extensible Core** - **Plugin custom operators** without touching internals
+- 🛡️ **Type-Safe APIs** - **Generic interfaces** ensure compile-time safety
 - 📊 **Rule Introspection** - Reverse-engineer possible inputs from rule definitions
 - ⚡ **Performance Optimized** - Optional validation bypass for trusted rules
 - 🎭 **Data Mutations** - Preprocess data before evaluation
@@ -63,8 +65,148 @@ This monorepo contains two powerful packages:
 
 | Package | Description | Install |
 |---------|-------------|---------|
-| **[@usex/rule-engine](./packages/core)** <br/> [![npm](https://img.shields.io/npm/v/@usex/rule-engine.svg?style=flat-square)](https://www.npmjs.com/package/@usex/rule-engine) | Core rule engine library with 121+ operators | `npm install @usex/rule-engine` |
+| **[@usex/rule-engine](./packages/core)** <br/> [![npm](https://img.shields.io/npm/v/@usex/rule-engine.svg?style=flat-square)](https://www.npmjs.com/package/@usex/rule-engine) | **Fully typed** core engine with **generic support** & **custom operators** | `npm install @usex/rule-engine` |
 | **[@usex/rule-engine-builder](./packages/builder)** <br/> [![npm](https://img.shields.io/npm/v/@usex/rule-engine-builder.svg?style=flat-square)](https://www.npmjs.com/package/@usex/rule-engine-builder) | Visual rule builder for React applications | `npm install @usex/rule-engine-builder` |
+
+## 🛡️ TypeScript Excellence & Extensibility
+
+### **Fully Typed with Generics**
+The core package is built with TypeScript-first design, providing complete type safety:
+
+```typescript
+// Type-safe rule definitions with generics
+interface DiscountResult {
+  discount: number;
+  code: string;
+  description: string;
+}
+
+// Generic rule with full type inference
+const discountRule: Rule<DiscountResult> = {
+  conditions: [
+    {
+      and: [
+        { field: "$.user.tier", operator: "equals", value: "premium" },
+        { field: "$.order.total", operator: "greater-than", value: 100 }
+      ],
+      result: {
+        discount: 0.20,      // ✅ Type-safe
+        code: "PREMIUM20",   // ✅ Type-safe
+        description: "20% premium discount"  // ✅ Type-safe
+      }
+    }
+  ],
+  default: { discount: 0, code: "", description: "No discount" }
+};
+
+// Evaluation with full type inference
+const result = await RuleEngine.evaluate<DiscountResult>(discountRule, orderData);
+// result.value is automatically typed as DiscountResult ✅
+```
+
+### **Custom Operators Made Easy**
+Extend the engine with your business-specific logic:
+
+```typescript
+import { OperatorRegistry, BaseOperator } from '@usex/rule-engine';
+
+// 1. Create your custom operator
+class IsWeekendOperator extends BaseOperator {
+  name = 'is-weekend';
+  category = 'datetime';
+
+  evaluate(fieldValue: Date): boolean {
+    const day = fieldValue.getDay();
+    return day === 0 || day === 6; // Sunday or Saturday
+  }
+}
+
+class BulkDiscountEligibleOperator extends BaseOperator {
+  name = 'bulk-discount-eligible';
+  category = 'business';
+
+  evaluate(orderData: any, threshold: number): boolean {
+    return orderData.quantity >= threshold || orderData.value >= threshold * 10;
+  }
+}
+
+// 2. Register your operators
+OperatorRegistry.register(new IsWeekendOperator());
+OperatorRegistry.register(new BulkDiscountEligibleOperator());
+
+// 3. Use them in your rules immediately
+const weekendRule = {
+  conditions: {
+    and: [
+      { field: "$.currentDate", operator: "is-weekend", value: true },
+      { field: "$.order", operator: "bulk-discount-eligible", value: 10 }
+    ],
+    result: {
+      discount: 0.25,
+      reason: "Weekend bulk discount!"
+    }
+  }
+};
+
+// 4. Full TypeScript support for your custom operators
+const result = await RuleEngine.evaluate(weekendRule, {
+  currentDate: new Date(),
+  order: { quantity: 15, value: 200 }
+}); // ✅ Fully typed, including custom operators
+```
+
+### **Advanced Generic Usage**
+
+```typescript
+// Define complex result types
+interface AccessControlResult {
+  allowed: boolean;
+  permissions: string[];
+  level: 'admin' | 'user' | 'guest';
+  expiresAt?: Date;
+}
+
+interface UserData {
+  role: string;
+  department: string;
+  clearanceLevel: number;
+}
+
+// Generic rule with both input and output types
+const accessRule: Rule<AccessControlResult, UserData> = {
+  conditions: [
+    {
+      and: [
+        { field: "role", operator: "equals", value: "admin" },
+        { field: "clearanceLevel", operator: "greater-than", value: 5 }
+      ],
+      result: {
+        allowed: true,
+        permissions: ["read", "write", "delete"],
+        level: "admin"
+      }
+    }
+  ],
+  default: {
+    allowed: false,
+    permissions: [],
+    level: "guest"
+  }
+};
+
+// Type-safe evaluation with input validation
+const userData: UserData = {
+  role: "admin",
+  department: "engineering",
+  clearanceLevel: 8
+};
+
+const access = await RuleEngine.evaluate<AccessControlResult, UserData>(
+  accessRule,
+  userData
+);
+// Both input and output are fully typed ✅
+```
 
 ## 🎬 Quick Start
 
@@ -124,7 +266,7 @@ import { RuleEngine } from '@usex/rule-engine';
 
 function App() {
   const [rule, setRule] = useState(null);
-  
+
   const availableFields = [
     { name: '$.user.tier', type: 'string', label: 'User Tier' },
     { name: '$.user.age', type: 'number', label: 'User Age' },
@@ -140,7 +282,7 @@ function App() {
   return (
     <div className="app">
       <h1>Build Your Business Rules Visually</h1>
-      
+
       <RuleBuilder
         rule={rule}
         onRuleChange={setRule}
@@ -150,7 +292,7 @@ function App() {
         showPreview={true}
         showHistory={true}
       />
-      
+
       {rule && (
         <button onClick={async () => {
           const result = await RuleEngine.evaluate(rule, testData);
@@ -177,7 +319,7 @@ const pricingRules = {
         { field: "$.event.name", operator: "equals", value: "black-friday" },
         { field: "$.event.active", operator: "equals", value: true }
       ],
-      result: { discount: 0.50, code: "BLACKFRIDAY50", expires: "2024-11-30T23:59:59Z" }
+      result: { discount: 0.50, code: "BLACKFRIDAY50", expires: "2025-11-30T23:59:59Z" }
     },
     {
       // Bulk orders: tiered discounts
@@ -424,11 +566,13 @@ console.log(insights);
 { field: "password", operator: "min-length", value: 8 }
 ```
 
-## 🎓 TypeScript Support
+## 🎓 Complete TypeScript Excellence
 
-Full type safety with intelligent inference:
+### **Built-in Generic Support**
+The core package is **100% TypeScript** with comprehensive generic interfaces:
 
 ```typescript
+// 🛡️ Full generic support for input and output types
 interface UserPermissions {
   canRead: boolean;
   canWrite: boolean;
@@ -436,8 +580,14 @@ interface UserPermissions {
   level: 'admin' | 'user' | 'guest';
 }
 
-// Type-safe rule definition
-const accessRule: Rule<UserPermissions> = {
+interface UserContext {
+  role: string;
+  department: string;
+  active: boolean;
+}
+
+// ✅ Type-safe rule with both input/output generics
+const accessRule: Rule<UserPermissions, UserContext> = {
   conditions: [
     {
       and: [
@@ -448,7 +598,7 @@ const accessRule: Rule<UserPermissions> = {
         canRead: true,
         canWrite: true,
         canDelete: true,
-        level: "admin"
+        level: "admin"   // ✅ Autocomplete & validation
       }
     }
   ],
@@ -456,13 +606,41 @@ const accessRule: Rule<UserPermissions> = {
     canRead: false,
     canWrite: false,
     canDelete: false,
-    level: "guest"
+    level: "guest"     // ✅ Type-safe default
   }
 };
 
-// Type-safe evaluation
-const result = await RuleEngine.evaluate<UserPermissions>(accessRule, userData);
-// result.value is typed as UserPermissions ✅
+// ✅ Fully typed evaluation with IntelliSense
+const result = await RuleEngine.evaluate<UserPermissions, UserContext>(
+  accessRule,
+  { role: "admin", department: "IT", active: true }
+);
+// result.value is automatically typed as UserPermissions with full IDE support ✅
+```
+
+### **Type-Safe Custom Operators**
+Custom operators inherit full TypeScript support:
+
+```typescript
+// ✅ Typed custom operator interface
+interface CustomOperator<T = any, V = any> {
+  name: string;
+  category: string;
+  evaluate(fieldValue: T, operatorValue: V): boolean;
+}
+
+// ✅ Type-safe custom operator implementation
+class DateRangeOperator implements CustomOperator<Date, [Date, Date]> {
+  name = 'date-within-range';
+  category = 'datetime';
+
+  evaluate(fieldValue: Date, [start, end]: [Date, Date]): boolean {
+    return fieldValue >= start && fieldValue <= end;
+  }
+}
+
+// ✅ Generic operator registration with type safety
+OperatorRegistry.register<Date, [Date, Date]>(new DateRangeOperator());
 ```
 
 ## 📚 Documentation
@@ -523,11 +701,12 @@ pnpm lint
 | Feature | @usex/rule-engine | json-rules-engine | node-rules |
 |---------|-------------------|-------------------|------------|
 | Zero Dependencies | ✅ | ❌ | ❌ |
-| TypeScript Native | ✅ | ⚠️ Partial | ❌ |
+| **TypeScript Native** | **✅ 100% + Generics** | ⚠️ Partial | ❌ |
+| **Custom Operators** | **✅ Full Support** | ⚠️ Limited | ❌ |
 | JSONPath Support | ✅ | ❌ | ❌ |
 | Self-Referencing | ✅ | ❌ | ❌ |
 | Visual Builder | ✅ | ❌ | ❌ |
-| Custom Operators | ✅ | ⚠️ Limited | ❌ |
+| Generic Support | **✅ Input/Output** | ❌ | ❌ |
 | Performance (ops/sec) | 117k+ | 45k | 30k |
 | Bundle Size | 12KB | 45KB | 38KB |
 | Browser Support | ✅ | ✅ | ❌ |
@@ -556,19 +735,21 @@ See our [Contributing Guide](./CONTRIBUTING.md) for details.
 
 ### Version 1.0 (Current)
 - ✅ Core rule engine with 121+ operators
+- ✅ **Full TypeScript support with generics**
+- ✅ **Custom operator registration system**
 - ✅ Visual rule builder for React
-- ✅ Full TypeScript support
 - ✅ Comprehensive documentation
 - ✅ Performance optimizations
 
-### Version 1.1 (Q2 2024)
+### Version 1.1 (Q2 2025)
+- 🔄 **Enhanced TypeScript utilities** (type guards, validators)
+- 🔄 **Operator marketplace** with community operators
 - 🔄 Rule templates and marketplace
 - 🔄 GraphQL integration
 - 🔄 More operator types (geo, financial)
 - 🔄 Advanced debugging tools
-- 🔄 Cloud rule storage
 
-### Version 2.0 (Q4 2024)
+### Version 2.0 (Q4 2025)
 - 🔮 AI-powered rule suggestions
 - 🔮 Visual rule debugger
 - 🔮 Collaborative editing

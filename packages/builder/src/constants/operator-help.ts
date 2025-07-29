@@ -274,8 +274,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
       {
         field: "createdAt",
         operator: "before",
-        value: "2024-01-01",
-        explanation: "Matches records created before January 1, 2024",
+        value: "2025-01-01",
+        explanation: "Matches records created before January 1, 2025",
       },
     ],
     tips: [
@@ -291,8 +291,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
       {
         field: "expiryDate",
         operator: "after",
-        value: "2024-12-31",
-        explanation: "Matches items expiring after December 31, 2024",
+        value: "2025-12-31",
+        explanation: "Matches items expiring after December 31, 2025",
       },
     ],
   },
@@ -321,8 +321,8 @@ export const operatorHelp: Record<string, OperatorHelp> = {
       {
         field: "orderDate",
         operator: "dateBetween",
-        value: "2024-01-01,2024-12-31",
-        explanation: "Matches orders placed in 2024",
+        value: "2025-01-01,2025-12-31",
+        explanation: "Matches orders placed in 2025",
       },
     ],
     tips: ["Provide two comma-separated dates", "Both bounds are inclusive"],

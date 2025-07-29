@@ -108,11 +108,11 @@ This document provides a comprehensive reference for all 126 operators available
 
 | Operator | Description | Example | Notes |
 |----------|-------------|---------|-------|
-| `date-after` | Date is after | `{ field: "expiry", operator: "date-after", value: "2024-01-01" }` | Supports ISO 8601 |
+| `date-after` | Date is after | `{ field: "expiry", operator: "date-after", value: "2025-01-01" }` | Supports ISO 8601 |
 | `date-before` | Date is before | `{ field: "created", operator: "date-before", value: "2023-12-31" }` | Supports ISO 8601 |
 | `date-equals` | Date equals | `{ field: "birthday", operator: "date-equals", value: "1990-05-15" }` | Day precision |
-| `date-not-equals` | Date not equals | `{ field: "lastLogin", operator: "date-not-equals", value: "2024-01-01" }` | Day precision |
-| `date-between` | Date in range | `{ field: "event", operator: "date-between", value: ["2024-01-01", "2024-12-31"] }` | Inclusive |
+| `date-not-equals` | Date not equals | `{ field: "lastLogin", operator: "date-not-equals", value: "2025-01-01" }` | Day precision |
+| `date-between` | Date in range | `{ field: "event", operator: "date-between", value: ["2025-01-01", "2025-12-31"] }` | Inclusive |
 
 ### Relative Date Operators
 
@@ -222,16 +222,16 @@ const complexRule = {
       { field: "email", operator: "email", value: true },
       { field: "age", operator: "between", value: [18, 100] },
       { field: "status", operator: "equals", value: "active" },
-      
+
       // Profile requirements
       { field: "profile.bio", operator: "length-between", value: [50, 500] },
       { field: "profile.skills", operator: "contains-any", value: ["javascript", "typescript"] },
       { field: "profile.experience", operator: "greater-than", value: 2 },
-      
+
       // Date validations
       { field: "joinDate", operator: "date-before-now", value: true },
       { field: "subscription.expires", operator: "date-after-now", value: true },
-      
+
       // Complex nested validation
       {
         or: [
@@ -254,14 +254,14 @@ const formValidation = {
       { field: "username", operator: "not-null-or-undefined", value: true, message: "Username is required" },
       { field: "username", operator: "alpha-numeric", value: true, message: "Username must be alphanumeric" },
       { field: "username", operator: "length-between", value: [3, 20], message: "Username must be 3-20 characters" },
-      
+
       // Email validation
       { field: "email", operator: "email", value: true, message: "Invalid email format" },
-      
+
       // Password strength
       { field: "password", operator: "min-length", value: 8, message: "Password too short" },
       { field: "password", operator: "matches", value: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)", message: "Password must contain uppercase, lowercase, and number" },
-      
+
       // Confirmation
       { field: "confirmPassword", operator: "equals", value: "$.password", message: "Passwords don't match" }
     ]

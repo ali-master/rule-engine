@@ -10,7 +10,7 @@ export const sampleEcommerceData = {
     status: "active",
     role: "premium",
     createdAt: "2023-01-15T10:30:00Z",
-    lastLoginAt: "2024-01-20T14:22:00Z",
+    lastLoginAt: "2025-01-20T14:22:00Z",
     profile: {
       avatar: "https://example.com/avatar/john.jpg",
       bio: "Software developer and tech enthusiast",
@@ -66,12 +66,12 @@ export const sampleEcommerceData = {
     membership: {
       tier: "gold",
       points: 15420,
-      expiresAt: "2024-12-31T23:59:59Z",
+      expiresAt: "2025-12-31T23:59:59Z",
       benefits: ["free_shipping", "priority_support", "exclusive_deals"],
       history: [
         { tier: "bronze", startDate: "2023-01-15", endDate: "2023-06-30" },
         { tier: "silver", startDate: "2023-07-01", endDate: "2023-12-31" },
-        { tier: "gold", startDate: "2024-01-01", endDate: null },
+        { tier: "gold", startDate: "2025-01-01", endDate: null },
       ],
     },
   },
@@ -133,7 +133,7 @@ export const sampleEcommerceData = {
     recent: [
       {
         id: "ord_456789",
-        date: "2024-01-10T16:45:00Z",
+        date: "2025-01-10T16:45:00Z",
         status: "delivered",
         total: 567.89,
         items: 3,
@@ -182,14 +182,14 @@ export const sampleEcommerceData = {
           id: "txn_001",
           type: "credit",
           amount: 50.0,
-          date: "2024-01-15T10:00:00Z",
+          date: "2025-01-15T10:00:00Z",
           description: "Refund for order #456788",
         },
         {
           id: "txn_002",
           type: "debit",
           amount: 25.0,
-          date: "2024-01-18T14:30:00Z",
+          date: "2025-01-18T14:30:00Z",
           description: "Applied to order #456791",
         },
       ],
@@ -219,8 +219,8 @@ export const sampleEcommerceData = {
   },
   session: {
     id: "sess_abc123",
-    startTime: "2024-01-20T14:00:00Z",
-    lastActivity: "2024-01-20T14:35:00Z",
+    startTime: "2025-01-20T14:00:00Z",
+    lastActivity: "2025-01-20T14:35:00Z",
     pageViews: 12,
     device: {
       type: "desktop",
@@ -236,7 +236,7 @@ export const sampleEcommerceData = {
     },
     referrer: "google.com",
     utmSource: "email",
-    utmCampaign: "winter_sale_2024",
+    utmCampaign: "winter_sale_2025",
   },
 };
 

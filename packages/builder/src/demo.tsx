@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ModernRuleBuilder } from "./components/ModernRuleBuilder";
-import { Github, ExternalLink, Star, GitFork } from "lucide-react";
+import { Star, Github, GitFork, ExternalLink } from "lucide-react";
 import "./styles/globals.css";
 
 // Initialize theme
@@ -226,7 +226,7 @@ function DemoApp() {
 
           <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © 2024{" "}
+              © 2025{" "}
               <a
                 href="https://github.com/ali-master"
                 target="_blank"

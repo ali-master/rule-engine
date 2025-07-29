@@ -136,9 +136,9 @@ export const TypeValidationHandler: React.FC<OperatorHandlerProps> = ({
         icon: Calendar,
         color: "text-pink-600 dark:text-pink-400",
         examples: [
-          "2024-01-01 ✓",
+          "2025-01-01 ✓",
           "new Date() ✓",
-          "2024-13-45 ✗",
+          "2025-13-45 ✗",
           "invalid-date ✗",
         ],
         config: false,

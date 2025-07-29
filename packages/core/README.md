@@ -234,7 +234,7 @@ const pricingRules = {
       result: {
         discount: 0.50,
         code: "BLACKFRIDAY50",
-        expires: "2024-11-30T23:59:59Z"
+        expires: "2025-11-30T23:59:59Z"
       }
     },
     {
