@@ -42,7 +42,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "build:demo": "BUILD_MODE=demo vite build",
+    "build:demo": "cd ../core && pnpm run build && cd ../builder && BUILD_MODE=demo vite build",
     "preview": "vite preview",
     "preview:demo": "BUILD_MODE=demo vite preview --outDir dist-demo",
     "test:types": "tsc --noEmit",
