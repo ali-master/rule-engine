@@ -42,7 +42,7 @@ const result = await RuleEngine.evaluate(discountRules, { user, order });
 
 ### **Built for Modern Developers**
 - 🎯 **Zero Dependencies** - Pure JavaScript excellence, no supply chain bloat
-- 🏎️ **Lightning Fast** - 117,000+ evaluations per second
+- 🏎️ **Lightning Fast** - 17,000+ rule evaluations per second with complex JSONPath support at 55,000+ ops/sec
 - 🛡️ **TypeScript Native** - **Fully typed with generic support** for bulletproof type safety
 - 🔧 **Extensible Architecture** - **Create & register custom operators** without core modifications
 - 🌐 **Universal** - Node.js, browsers, edge functions, Deno, Bun everywhere
@@ -496,14 +496,33 @@ console.log(insights);
 ```
 
 ## 🏎️ Performance & Benchmarks
+*Real-world performance data from actual benchmark runs (10,000 iterations each)*
 
-| Operation | Records | Time | Throughput |
-|-----------|---------|------|------------|
-| Simple Rule (3 conditions) | 10,000 | 85ms | ~117,000/sec |
-| Complex Rule (15+ conditions) | 10,000 | 250ms | ~40,000/sec |
-| JSONPath Resolution | 10,000 | 120ms | ~83,000/sec |
-| With Mutations | 10,000 | 150ms | ~66,000/sec |
-| Custom Operators | 10,000 | 180ms | ~55,000/sec |
+### Core Rule Performance
+| Operation | Hz (ops/sec) | Avg Time | Performance Grade |
+|-----------|-------------|----------|-------------------|
+| **Simple Rules (3-5 conditions)** | **~16,900** | **0.059ms** | **🚀 Lightning Fast** |
+| Complex Rules (nested evaluation) | ~17,400 | 0.057ms | 🔥 Blazing |
+| Complex Rules (priority-based) | ~8,000 | 0.126ms | ⚡ Very Fast |
+| Array Operations | ~45,400 | 0.022ms | 🚀 Ultra Fast |
+
+### Advanced Features  
+| Feature | Hz (ops/sec) | Avg Time | Performance Grade |
+|---------|-------------|----------|-------------------|
+| **JSONPath Resolution (simple)** | **~55,000** | **0.018ms** | **🔥 Blazing Fast** |
+| JSONPath Deep Nested Access | ~54,000 | 0.019ms | 🔥 Blazing Fast |
+| JSONPath Array Processing | ~49,500 | 0.020ms | 🚀 Ultra Fast |
+| Self-Referencing (complex) | ~33,600 | 0.030ms | 🚀 Excellent |
+| Data Mutations (simple) | ~16,300 | 0.061ms | 🚀 Fast |
+| Data Mutations (complex) | ~34,100 | 0.029ms | 🚀 Excellent |
+
+### Specialized Operations
+| Operation | Hz (ops/sec) | Use Case | Performance |
+|-----------|-------------|----------|-------------|
+| **Rule Builder (simple)** | **~12,000,000** | Rule Construction | ⚡ Instant |
+| Rule Builder (complex) | ~94,300 | Complex Rule Building | 🚀 Very Fast |
+| Rule Validation | ~67,000 | Schema Validation | 🔥 Blazing |
+| Error Handling | ~1,661,000 | Exception Processing | ⚡ Instant |
 
 ### Optimization Tips
 
@@ -708,7 +727,7 @@ pnpm lint
 | Self-Referencing | ✅ | ❌ | ❌ |
 | Visual Builder | ✅ | ❌ | ❌ |
 | Generic Support | **✅ Input/Output** | ❌ | ❌ |
-| Performance (ops/sec) | 117k+ | 45k | 30k |
+| Performance (ops/sec) | 17k+ (55k+ JSONPath) | 45k | 30k |
 | Bundle Size | 12KB | 45KB | 38KB |
 | Browser Support | ✅ | ✅ | ❌ |
 | Rule Introspection | ✅ | ❌ | ❌ |
