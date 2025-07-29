@@ -288,7 +288,7 @@ export function isAlphaOperator(value: string): boolean {
 export function isPersianAlphaOperator(value: string): boolean {
   const text = value.replace(/["'-+؟\s.]/g, "");
 
-  // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
+   
   return new RegExp(`^[${faAlphaText}]+$`).test(text);
 }
 
@@ -300,7 +300,7 @@ export function isAlphaNumericOperator(value: string): boolean {
 export function isPersianAlphaNumericOperator(value: string): boolean {
   const text = value.replace(/["'-+؟\s.]/g, "");
 
-  // eslint-disable-next-line no-misleading-character-class,regexp/no-dupe-characters-character-class,regexp/no-misleading-unicode-character
+   
   return new RegExp(`^[${faComplexText}]+$`).test(text);
 }
 

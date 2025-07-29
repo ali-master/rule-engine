@@ -22,7 +22,7 @@ export default defineConfig({
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       name: "RuleEngineBuilder",
-      formats: ["es"],
+      formats: ["es", "cjs"],
       fileName: "index",
     },
     rollupOptions: {
