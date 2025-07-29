@@ -40,7 +40,7 @@ const result = await RuleEngine.evaluate(discountRules, { user, order });
 
 **Built for Modern Developers**
 - 🎯 **Zero Dependencies** - No supply chain bloat, just pure JavaScript excellence
-- 🏎️ **Lightning Fast** - 117,000+ evaluations per second
+- 🏎️ **Lightning Fast** - 17,000+ rule evaluations per second with complex JSONPath support at 55,000+ ops/sec
 - 🛡️ **TypeScript Native** - Built-in generics for bulletproof type safety
 - 🌐 **Universal** - Node.js, browsers, edge functions, Deno, Bun - everywhere JavaScript runs
 
@@ -555,33 +555,43 @@ console.log(insights);
 ## 🏎️ Performance & Optimization
 
 ### Real-World Benchmarks
-*Performance data from actual benchmark runs (10,000 iterations each)*
+*Performance data from actual benchmark runs (10,000 iterations each on modern hardware)*
 
 #### Core Rule Evaluation
-| Operation | Hz (ops/sec) | Avg Time | Throughput |
-|-----------|-------------|----------|------------|
-| **Simple Rules (3-5 conditions)** | **~17,000** | **0.057ms** | **🚀 Lightning Fast** |
-| Complex Rules (10+ conditions) | ~15,000 | 0.067ms | Excellent |
-| Priority-based Rules | ~8,000 | 0.125ms | Very Fast |
-| Array Operations | ~45,000 | 0.022ms | ⚡ Ultra Fast |
+| Operation | Hz (ops/sec) | Avg Time | Performance Grade |
+|-----------|-------------|----------|-------------------|
+| **Simple Rules (3-5 conditions)** | **~16,900** | **0.059ms** | **🚀 Lightning Fast** |
+| Complex Rules (nested evaluation) | ~17,400 | 0.057ms | 🔥 Blazing |
+| Complex Rules (priority-based) | ~8,000 | 0.126ms | ⚡ Very Fast |
+| Array Operations | ~45,400 | 0.022ms | 🚀 Ultra Fast |
 
-#### Advanced Features
-| Feature | Hz (ops/sec) | Performance |
-|---------|-------------|-------------|
-| **JSONPath Resolution** | **~54,000** | **🔥 Blazing** |
-| Self-Referencing Rules | ~33,000 | Excellent |  
-| Data Mutations | ~35,000* | High Performance |
-| Error Handling | ~1,600,000** | Instant |
+#### Advanced Features  
+| Feature | Hz (ops/sec) | Avg Time | Performance Grade |
+|---------|-------------|----------|-------------------|
+| **JSONPath Resolution (simple)** | **~55,000** | **0.018ms** | **🔥 Blazing Fast** |
+| JSONPath Deep Nested Access | ~54,000 | 0.019ms | 🔥 Blazing Fast |
+| JSONPath Array Processing | ~49,500 | 0.020ms | 🚀 Ultra Fast |
+| Self-Referencing (complex) | ~33,600 | 0.030ms | 🚀 Excellent |
+| Self-Referencing (simple) | ~30,900 | 0.032ms | 🚀 Excellent |
 
-#### Specialized Operations
-| Operation | Hz (ops/sec) | Use Case |
-|-----------|-------------|----------|
-| Rule Builder | ~12,800,000 | Rule Construction |
-| Rule Validation | ~68,000 | Schema Validation |
-| Text Interpolation | ~790,000 | Dynamic Messages |
+#### Data Processing & Validation
+| Operation | Hz (ops/sec) | Avg Time | Use Case |
+|-----------|-------------|----------|----------|
+| **Rule Builder (simple)** | **~12,000,000** | **0.0001ms** | Rule Construction |
+| Rule Builder (complex) | ~94,300 | 0.011ms | Complex Rule Building |
+| Rule Validation | ~67,000 | 0.015ms | Schema Validation |
+| Data Mutations (simple) | ~16,300 | 0.061ms | Data Preprocessing |
+| Data Mutations (complex) | ~34,100 | 0.029ms | Advanced Transformations |
+| Text Interpolation | ~796,000 | 0.0013ms | Dynamic Messages |
 
-*\*Mutation performance includes data transformation overhead*  
-*\*\*Error detection is optimized for instant feedback*
+#### Error Handling & Edge Cases
+| Operation | Hz (ops/sec) | Performance Grade |
+|-----------|-------------|-------------------|
+| **Unknown Operator Handling** | **~1,661,000** | ⚡ Instant Response |
+| Invalid Ruleset Handling | ~214,000 | 🚀 Very Fast |
+| Exists/NotExists Operators | ~41,400 | 🔥 Blazing |
+
+*All benchmarks run on 10,000 iterations with statistical accuracy. Performance may vary based on hardware and rule complexity.*
 
 ### Bundle Size
 | Build Type | Size |
@@ -749,7 +759,7 @@ pnpm dev
 | JSONPath Support | ✅ | ❌ | ❌ |
 | Self-Referencing | ✅ | ❌ | ❌ |
 | Custom Operators | ✅ | ⚠️ Limited | ❌ |
-| Performance (ops/sec) | 117k+ | 45k | 30k |
+| Performance (ops/sec) | 17k+ (55k+ JSONPath) | 45k | 30k |
 | Bundle Size | 18.4KB | 45KB | 38KB |
 | Browser Support | ✅ | ✅ | ❌ |
 | Rule Introspection | ✅ | ❌ | ❌ |
