@@ -12,6 +12,7 @@
   "license": "MIT",
   "scripts": {
     "build": "pnpm -r build",
+    "build:demo": "pnpm -r build:demo",
     "lint": "pnpm -r lint",
     "lint:fix": "pnpm -r lint:fix",
     "format:check": "pnpm -r format:check",

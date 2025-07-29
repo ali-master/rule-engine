@@ -42,7 +42,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:demo": "BUILD_MODE=demo vite build",
     "preview": "vite preview",
+    "preview:demo": "BUILD_MODE=demo vite preview --outDir dist-demo",
     "test:types": "tsc --noEmit",
     "test:knip": "knip",
     "test:knip:fix": "knip --fix",
