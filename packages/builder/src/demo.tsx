@@ -46,95 +46,120 @@ const sampleData = {
 
 function DemoApp() {
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header with Logo and GitHub Links */}
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="max-w-7xl mx-auto px-8 py-4">
+    <div className="min-h-screen w-full relative bg-black">
+      {/* Ocean Abyss Background with Top Glow */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(6, 182, 212, 0.25), transparent 70%), #000000",
+        }}
+      />
+      {/* Mobile-First Responsive Header */}
+      <header className="relative z-10 border-b border-white/10 bg-black/80 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            {/* Logo and Title - Mobile optimized */}
+            <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
               <img
                 src="/icon.svg"
                 alt="Rule Engine Builder Logo"
-                className="w-12 h-12"
+                className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 flex-shrink-0"
               />
-              <div>
-                <h1 className="text-2xl font-bold">Rule Engine Builder</h1>
-                <p className="text-sm text-muted-foreground">
+              <div className="min-w-0 flex-1">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-bold truncate text-white">
+                  Rule Engine Builder
+                </h1>
+                <p className="text-xs sm:text-sm text-gray-400 hidden sm:block">
                   Visual rule construction toolkit for React
                 </p>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            {/* Action Buttons - Mobile responsive */}
+            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+              {/* Mobile: Show icons only, Desktop: Show text + icons */}
               <a
                 href="https://github.com/ali-master/rule-engine"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-foreground hover:text-foreground/80 transition-colors"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                title="View on GitHub"
               >
                 <Github className="w-4 h-4" />
-                GitHub
+                <span className="hidden sm:inline">GitHub</span>
               </a>
 
               <a
                 href="https://github.com/ali-master/rule-engine"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                className="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-sm font-medium bg-cyan-600 text-white rounded-md hover:bg-cyan-700 transition-colors"
+                title="Star on GitHub"
               >
                 <Star className="w-4 h-4" />
-                Star
+                <span className="hidden sm:inline">Star</span>
               </a>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="p-8">
-        <div className="max-w-7xl mx-auto space-y-8">
-          <div className="text-center space-y-4">
-            <h2 className="text-4xl font-bold">Interactive Demo</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      {/* Main Content - Mobile-First */}
+      <main className="relative z-10 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
+          {/* Hero Section - Mobile optimized */}
+          <div className="text-center space-y-3 sm:space-y-4">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white">
+              Interactive Demo
+            </h2>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-300 max-w-none sm:max-w-2xl mx-auto px-2 sm:px-0">
               Build complex business rules with an intuitive drag-and-drop
               interface. Transform IF-THEN decisions into visual flows with
               real-time evaluation.
             </p>
 
-            {/* Feature Highlights */}
-            <div className="flex flex-wrap justify-center gap-4 mt-6">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+            {/* Feature Highlights - Mobile responsive grid */}
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 lg:gap-4 mt-4 sm:mt-6 px-2 sm:px-0">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 TypeScript Support
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 Real-time Evaluation
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 Undo/Redo History
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 JSONPath Support
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
+              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                 Visual Programming
               </span>
             </div>
           </div>
 
-          <ModernRuleBuilder
-            sampleData={sampleData}
-            onChange={(rule) => console.log("Rule changed:", rule)}
-          />
+          {/* Rule Builder - Full responsive */}
+          <div className="w-full">
+            <ModernRuleBuilder
+              sampleData={sampleData}
+              onChange={(rule) => console.log("Rule changed:", rule)}
+            />
+          </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t mt-16">
-        <div className="max-w-7xl mx-auto px-8 py-8">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <h3 className="font-semibold mb-4">Rule Engine Builder</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+      {/* Mobile-First Responsive Footer */}
+      <footer className="relative z-10 border-t border-white/10 mt-12 sm:mt-16 bg-black/50">
+        <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* Brand Section */}
+            <div className="col-span-1 sm:col-span-2 lg:col-span-1">
+              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-white">
+                Rule Engine Builder
+              </h3>
+              <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4 leading-relaxed">
                 The ultimate JSON-based rule engine that turns complex business
                 logic into declarative configurations. Built for developers who
                 believe code should be expressive, not repetitive.
@@ -144,22 +169,26 @@ function DemoApp() {
                   href="https://github.com/ali-master/rule-engine"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-foreground transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors"
+                  title="GitHub Repository"
                 >
-                  <Github className="w-5 h-5" />
+                  <Github className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
               </div>
             </div>
 
-            <div>
-              <h3 className="font-semibold mb-4">Quick Links</h3>
-              <ul className="space-y-2 text-sm">
+            {/* Quick Links */}
+            <div className="col-span-1">
+              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-white">
+                Quick Links
+              </h3>
+              <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                 <li>
                   <a
                     href="https://github.com/ali-master/rule-engine#readme"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                   >
                     Documentation <ExternalLink className="w-3 h-3" />
                   </a>
@@ -169,7 +198,7 @@ function DemoApp() {
                     href="https://github.com/ali-master/rule-engine/issues"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                   >
                     Issues <ExternalLink className="w-3 h-3" />
                   </a>
@@ -179,7 +208,7 @@ function DemoApp() {
                     href="https://github.com/ali-master/rule-engine/blob/master/CHANGELOG.md"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                   >
                     Changelog <ExternalLink className="w-3 h-3" />
                   </a>
@@ -187,15 +216,18 @@ function DemoApp() {
               </ul>
             </div>
 
-            <div>
-              <h3 className="font-semibold mb-4">Community</h3>
-              <ul className="space-y-2 text-sm">
+            {/* Community */}
+            <div className="col-span-1">
+              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-white">
+                Community
+              </h3>
+              <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                 <li>
                   <a
                     href="https://github.com/ali-master/rule-engine/fork"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                   >
                     <GitFork className="w-3 h-3" /> Fork Project
                   </a>
@@ -205,7 +237,7 @@ function DemoApp() {
                     href="https://github.com/ali-master/rule-engine/stargazers"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                   >
                     <Star className="w-3 h-3" /> Star on GitHub
                   </a>
@@ -215,7 +247,7 @@ function DemoApp() {
                     href="https://github.com/ali-master"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                    className="text-gray-400 hover:text-white transition-colors flex items-center gap-1"
                   >
                     Follow @ali-master <ExternalLink className="w-3 h-3" />
                   </a>
@@ -224,20 +256,21 @@ function DemoApp() {
             </div>
           </div>
 
-          <div className="border-t mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
+          {/* Bottom Copyright Section */}
+          <div className="border-t border-white/10 mt-6 sm:mt-8 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+            <p className="text-xs sm:text-sm text-gray-400 text-center sm:text-left">
               © 2025{" "}
               <a
                 href="https://github.com/ali-master"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-foreground hover:text-foreground/80 transition-colors underline underline-offset-2"
+                className="text-white hover:text-gray-300 transition-colors underline underline-offset-2"
               >
                 Ali Torki
               </a>
               . Released under the MIT License.
             </p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs sm:text-sm text-gray-400 text-center sm:text-right">
               Built with React, TypeScript, and Tailwind CSS
             </p>
           </div>

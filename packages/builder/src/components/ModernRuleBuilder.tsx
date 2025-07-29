@@ -552,45 +552,56 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
     <div className={cn("space-y-4", className)}>
       <Toaster position="top-center" />
 
-      {/* Header */}
+      {/* Mobile-First Responsive Header */}
       <Card>
         <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <CardTitle>Rule Builder</CardTitle>
-              <Badge variant="outline">{conditions.length} groups</Badge>
+          {/* Mobile: Stack vertically, Desktop: Side by side */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <CardTitle className="text-lg sm:text-xl">Rule Builder</CardTitle>
+              <Badge variant="outline" className="text-xs sm:text-sm">
+                {conditions.length} groups
+              </Badge>
             </div>
-            <div className="flex items-center gap-2">
+
+            {/* Mobile: Full width toolbar, Desktop: Compact */}
+            <div className="flex items-center justify-between sm:justify-end gap-1 sm:gap-2">
               {showToolbar && (
                 <>
                   {enableHistory && (
-                    <>
+                    <div className="flex items-center gap-1">
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => undo()}
                         disabled={!canUndo() || readOnly}
                         title="Undo"
+                        className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                       >
-                        <Undo2 className="h-4 w-4" />
+                        <Undo2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => redo()}
                         disabled={!canRedo() || readOnly}
                         title="Redo"
+                        className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                       >
-                        <Redo2 className="h-4 w-4" />
+                        <Redo2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
-                      <Separator orientation="vertical" className="h-6" />
-                    </>
+                      <Separator
+                        orientation="vertical"
+                        className="h-4 sm:h-6 mx-1"
+                      />
+                    </div>
                   )}
-                  {onSave && (
-                    <>
+
+                  <div className="flex items-center gap-1">
+                    {onSave && (
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={async () => {
                           setIsSaving(true);
                           try {
@@ -604,44 +615,53 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
                         }}
                         disabled={readOnly || isSaving}
                         title="Save"
+                        className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                       >
                         <Save
-                          className={cn("h-4 w-4", isSaving && "animate-pulse")}
+                          className={cn(
+                            "h-3 w-3 sm:h-4 sm:w-4",
+                            isSaving && "animate-pulse",
+                          )}
                         />
                       </Button>
-                      <Separator orientation="vertical" className="h-6" />
-                    </>
-                  )}
-                  {onExport && (
-                    <>
+                    )}
+                    {onExport && (
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         onClick={() => {
                           onExport(rule, "json");
                           toast.success(mergedLabels.exportSuccess);
                         }}
                         title="Export JSON"
+                        className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                       >
-                        <FileJson className="h-4 w-4" />
+                        <FileJson className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
-                      <Separator orientation="vertical" className="h-6" />
-                    </>
-                  )}
-                  <Button variant="ghost" size="icon" title="Help">
-                    <HelpCircle className="h-4 w-4" />
-                  </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      title="Help"
+                      className="h-8 w-8 p-0 sm:h-9 sm:w-9"
+                    >
+                      <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4" />
+                    </Button>
+                  </div>
                 </>
               )}
-              <ThemeToggle />
+              <div className="ml-2">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </CardHeader>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Builder Area */}
-        <div className="lg:col-span-2 space-y-4">
+      {/* Mobile-First Layout: Stack on mobile, side-by-side on desktop */}
+      <div className="flex flex-col lg:grid lg:grid-cols-3 gap-4">
+        {/* Rule Builder Area - Full width on mobile */}
+        <div className="lg:col-span-2 space-y-3 sm:space-y-4 order-2 lg:order-1">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -654,21 +674,25 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
             >
               {conditions.length === 0 ? (
                 <Card className="border-dashed">
-                  <CardContent className="py-12 text-center">
-                    <p className="text-muted-foreground mb-4">
+                  <CardContent className="py-8 sm:py-12 text-center px-4">
+                    <p className="text-muted-foreground mb-4 text-sm sm:text-base">
                       {mergedLabels.noRules}
                     </p>
                     {!readOnly && (
-                      <div className="flex justify-center gap-2">
-                        <Button onClick={() => addRootConditionGroup("or")}>
-                          <Plus className="h-4 w-4 mr-2" />
+                      <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
+                        <Button
+                          onClick={() => addRootConditionGroup("or")}
+                          className="text-sm w-full sm:w-auto"
+                        >
+                          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                           Add {mergedLabels.or} Group
                         </Button>
                         <Button
                           onClick={() => addRootConditionGroup("and")}
                           variant="outline"
+                          className="text-sm w-full sm:w-auto"
                         >
-                          <Plus className="h-4 w-4 mr-2" />
+                          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                           Add {mergedLabels.and} Group
                         </Button>
                       </div>
@@ -701,9 +725,9 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
                     <Button
                       onClick={() => addRootConditionGroup()}
                       variant="outline"
-                      className="w-full"
+                      className="w-full text-sm py-2 sm:py-3"
                     >
-                      <Plus className="h-4 w-4 mr-2" />
+                      <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                       {mergedLabels.addGroup}
                     </Button>
                   )}
@@ -721,10 +745,10 @@ export const ModernRuleBuilder: React.FC<ModernRuleBuilderProps> = ({
           </DndContext>
         </div>
 
-        {/* JSON Viewer */}
+        {/* JSON Viewer - Show first on mobile, second on desktop */}
         {showJsonViewer && (
-          <div className="lg:col-span-1">
-            <div className="sticky top-4">
+          <div className="lg:col-span-1 order-1 lg:order-2">
+            <div className="lg:sticky lg:top-4">
               <JsonViewer
                 rule={rule}
                 onImport={(imported) => {

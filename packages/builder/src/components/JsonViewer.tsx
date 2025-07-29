@@ -82,14 +82,16 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
 
   return (
     <Card className={cn("overflow-hidden", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0 pb-3">
         <div className="flex items-center gap-2">
-          <CardTitle className="text-base font-medium">Rule JSON</CardTitle>
+          <CardTitle className="text-sm sm:text-base font-medium">
+            Rule JSON
+          </CardTitle>
           <Badge variant="secondary" className="text-xs">
             {lineCount} lines
           </Badge>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 justify-end sm:justify-start">
           {onImport && (
             <>
               <input
@@ -101,45 +103,49 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
               />
               <Button
                 variant="ghost"
-                size="icon"
-                className="h-8 w-8"
+                size="sm"
+                className="h-7 w-7 p-0 sm:h-8 sm:w-8"
                 onClick={() => fileInputRef.current?.click()}
+                title="Import JSON"
               >
-                <Upload className="h-4 w-4" />
+                <Upload className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </>
           )}
           <Button
             variant="ghost"
-            size="icon"
-            className="h-8 w-8"
+            size="sm"
+            className="h-7 w-7 p-0 sm:h-8 sm:w-8"
             onClick={handleExport}
+            title="Export JSON"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
           <Button
             variant="ghost"
-            size="icon"
-            className="h-8 w-8"
+            size="sm"
+            className="h-7 w-7 p-0 sm:h-8 sm:w-8"
             onClick={handleCopy}
+            title="Copy JSON"
           >
             {copied ? (
-              <Check className="h-4 w-4 text-green-600" />
+              <Check className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
             ) : (
-              <Copy className="h-4 w-4" />
+              <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
             )}
           </Button>
           {onExpandedChange && (
             <Button
               variant="ghost"
-              size="icon"
-              className="h-8 w-8"
+              size="sm"
+              className="h-7 w-7 p-0 sm:h-8 sm:w-8"
               onClick={() => onExpandedChange(!expanded)}
+              title={expanded ? "Minimize" : "Maximize"}
             >
               {expanded ? (
-                <Minimize2 className="h-4 w-4" />
+                <Minimize2 className="h-3 w-3 sm:h-4 sm:w-4" />
               ) : (
-                <Maximize2 className="h-4 w-4" />
+                <Maximize2 className="h-3 w-3 sm:h-4 sm:w-4" />
               )}
             </Button>
           )}
@@ -149,11 +155,11 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
         <div
           className={cn(
             "overflow-auto bg-muted/50 dark:bg-muted/20",
-            expanded ? "max-h-[80vh]" : "max-h-[400px]",
+            expanded ? "max-h-[80vh]" : "max-h-[300px] sm:max-h-[400px]",
           )}
         >
-          <pre className="p-4 text-sm">
-            <code className="font-mono">{jsonString}</code>
+          <pre className="p-3 sm:p-4 text-xs sm:text-sm">
+            <code className="font-mono leading-relaxed">{jsonString}</code>
           </pre>
         </div>
       </CardContent>
