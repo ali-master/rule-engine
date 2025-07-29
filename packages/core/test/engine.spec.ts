@@ -170,8 +170,8 @@ describe("engine works correctly", () => {
     ).toEqual([false, true, false]);
   });
 
-  it("throws an error on invalid not runnable ruleset", () => {
-    expect(
+  it("throws an error on invalid not runnable ruleset", async () => {
+    await expect(
       async () => await RuleEngine.getEvaluateResult({ conditions: [] }, {}),
     ).rejects.toThrow(RuleError);
   });
@@ -219,12 +219,12 @@ describe("engine works correctly", () => {
   });
 
   it("evaluates invalid rulesets", async () => {
-    expect(
+    await expect(
       async () =>
         await RuleEngine.getEvaluateResult(invalid2Json, { foo: true }, false),
     ).rejects.toThrow(RuleError);
 
-    expect(
+    await expect(
       async () =>
         await RuleEngine.getEvaluateResult(
           invalid2Json,
