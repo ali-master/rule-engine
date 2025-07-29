@@ -7,6 +7,7 @@
   <p>
     <a href="https://www.npmjs.com/package/@usex/rule-engine"><img src="https://img.shields.io/npm/v/@usex/rule-engine?style=flat-square&color=blue" alt="npm version" /></a>
     <a href="https://github.com/ali-master/rule-engine/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/@usex/rule-engine?style=flat-square&color=green" alt="license" /></a>
+    <a href="https://codecov.io/gh/ali-master/rule-engine"><img src="https://codecov.io/gh/ali-master/rule-engine/graph/badge.svg?token=UN5opqxNsi" alt="codecov" /></a>
     <a href="https://www.npmjs.com/package/@usex/rule-engine"><img src="https://img.shields.io/npm/dm/@usex/rule-engine?style=flat-square&color=orange" alt="downloads" /></a>
     <a href="https://github.com/ali-master/rule-engine"><img src="https://img.shields.io/github/stars/ali-master/rule-engine?style=flat-square&color=yellow" alt="stars" /></a>
     <a href="https://bundlephobia.com/package/@usex/rule-engine"><img src="https://img.shields.io/bundlephobia/minzip/@usex/rule-engine?style=flat-square&color=purple" alt="bundle size" /></a>
