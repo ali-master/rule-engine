@@ -44,6 +44,7 @@ const result = await RuleEngine.evaluate(discountRules, { user, order });
 - 🏎️ **Lightning Fast** - 117,000+ evaluations per second
 - 🛡️ **TypeScript Native** - **Fully typed with generic support** for bulletproof type safety
 - 🔧 **Extensible Architecture** - **Create & register custom operators** without core modifications
+- 🧠 **Smart IDE Integration** - **Dynamic auto-completion** for all operators (built-in + custom)
 - 🌐 **Universal** - Node.js, browsers, edge functions, Deno, Bun everywhere
 
 ### **Powerful Yet Intuitive**
@@ -643,6 +644,143 @@ class DateRangeOperator implements CustomOperator<Date, [Date, Date]> {
 OperatorRegistry.register<Date, [Date, Date]>(new DateRangeOperator());
 ```
 
+### **Dynamic IDE Auto-Completion**
+The rule engine provides intelligent IntelliSense for all operators - both built-in and runtime registered:
+
+```typescript
+// ✅ Built-in operators get full auto-completion
+const rule1 = {
+  conditions: {
+    field: "$.user.age",
+    operator: "greater-than",  // 🔮 IDE suggests: equals, greater-than, less-than, between, etc.
+    value: 18
+  }
+};
+
+// ✅ String operators with context-aware suggestions
+const rule2 = {
+  conditions: {
+    field: "$.email",
+    operator: "email",  // 🔮 IDE suggests: email, like, starts-with, ends-with, matches, etc.
+    value: true
+  }
+};
+
+// ✅ Custom operators automatically appear in auto-completion
+class CreditScoreOperator extends BaseOperator {
+  name = 'credit-score-above';
+  category = 'financial';
+  
+  evaluate(score: number, threshold: number): boolean {
+    return score >= threshold;
+  }
+}
+
+OperatorRegistry.register(new CreditScoreOperator());
+
+// 🔮 Now "credit-score-above" appears in IDE auto-completion instantly!
+const rule3 = {
+  conditions: {
+    field: "$.user.creditScore",
+    operator: "credit-score-above",  // ✅ Auto-completed from registry
+    value: 700
+  }
+};
+
+// ✅ Type-safe operator union with dynamic updates
+type AvailableOperators = 
+  | 'equals' | 'greater-than' | 'less-than'        // Built-in operators
+  | 'email' | 'like' | 'matches'                   // String operators  
+  | 'contains' | 'contains-all' | 'array-length'   // Array operators
+  | 'date-after' | 'time-between'                  // DateTime operators
+  | 'credit-score-above' | 'is-weekend'            // Custom operators (auto-updated!)
+  | ExtractRegisteredOperators;                    // Dynamic from registry
+
+// ✅ IntelliSense works in complex rule structures
+const complexRule = {
+  conditions: [
+    {
+      and: [
+        { 
+          field: "$.user.tier", 
+          operator: "equals",  // 🔮 Full auto-completion here
+          value: "premium" 
+        },
+        { 
+          field: "$.user.joinDate", 
+          operator: "date-before",  // 🔮 And here
+          value: "2024-01-01" 
+        },
+        {
+          field: "$.user.score",
+          operator: "credit-score-above",  // 🔮 Custom operator auto-completed
+          value: 750
+        }
+      ]
+    }
+  ]
+};
+
+// ✅ Runtime operator discovery with type augmentation
+declare module '@usex/rule-engine' {
+  interface OperatorRegistry {
+    'is-premium-eligible': BooleanOperator;
+    'bulk-discount-qualified': NumericOperator;
+    'geo-location-within': LocationOperator;
+  }
+}
+
+// 🔮 These operators now auto-complete in your IDE immediately!
+const runtimeRule = {
+  conditions: {
+    field: "$.location",
+    operator: "geo-location-within",  // ✅ Auto-completed from module augmentation
+    value: { lat: 40.7128, lng: -74.0060, radius: 50 }
+  }
+};
+```
+
+### **Advanced IntelliSense Features**
+
+```typescript
+// ✅ Operator suggestions based on field type
+interface SmartRule<TData = any> {
+  field: keyof TData | string;
+  operator: InferOperatorsForType<TData[keyof TData]>;  // 🔮 Smart suggestions
+  value: InferValueTypeForOperator<operator>;           // 🔮 Value type inference
+}
+
+// ✅ Context-aware operator filtering
+const userRule: SmartRule<{ age: number; email: string; roles: string[] }> = {
+  field: "age",        // ✅ Auto-complete from TData keys
+  operator: "between", // 🔮 Only numeric operators suggested for number field
+  value: [18, 65]      // 🔮 Tuple type inferred for 'between' operator
+};
+
+const emailRule: SmartRule<{ age: number; email: string; roles: string[] }> = {
+  field: "email",           // ✅ Auto-complete from TData keys  
+  operator: "email",        // 🔮 Only string operators suggested for string field
+  value: true               // 🔮 Boolean type inferred for 'email' operator
+};
+
+// ✅ Real-time operator registry IntelliSense
+function createRule() {
+  return {
+    conditions: {
+      field: "$.data",
+      operator: "",  // 🔮 Press Ctrl+Space here - all operators appear instantly!
+      /*
+       * IDE shows:
+       * Built-in: equals, greater-than, less-than, between, contains, email, etc.
+       * Custom: credit-score-above, is-weekend, bulk-discount-eligible
+       * Recently added: geo-location-within, is-premium-eligible
+       */
+      value: null
+    }
+  };
+}
+```
+
 ## 📚 Documentation
 
 ### Core Package
@@ -703,6 +841,7 @@ pnpm lint
 | Zero Dependencies | ✅ | ❌ | ❌ |
 | **TypeScript Native** | **✅ 100% + Generics** | ⚠️ Partial | ❌ |
 | **Custom Operators** | **✅ Full Support** | ⚠️ Limited | ❌ |
+| **IDE Auto-Completion** | **✅ Dynamic + Built-in** | ❌ | ❌ |
 | JSONPath Support | ✅ | ❌ | ❌ |
 | Self-Referencing | ✅ | ❌ | ❌ |
 | Visual Builder | ✅ | ❌ | ❌ |
@@ -742,7 +881,8 @@ See our [Contributing Guide](./CONTRIBUTING.md) for details.
 - ✅ Performance optimizations
 
 ### Version 1.1 (Q2 2025)
-- 🔄 **Enhanced TypeScript utilities** (type guards, validators)
+- 🔄 **Enhanced IDE auto-completion** with smarter context awareness
+- 🔄 **TypeScript utilities** (type guards, validators, inference helpers)
 - 🔄 **Operator marketplace** with community operators
 - 🔄 Rule templates and marketplace
 - 🔄 GraphQL integration

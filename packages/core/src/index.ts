@@ -1,9 +1,45 @@
+// Export dynamic registry with auto-completion
+export {
+  DynamicOperatorRegistry,
+  dynamicOperatorRegistry,
+  OperatorIntelliSense as OperatorIntelliSenseUtils,
+} from "./operators/dynamic-registry";
+// Export smart builder with type inference
+export {
+  RuleBuilder,
+  smartRuleBuilder,
+  TypeSafeRuleBuilder,
+} from "./services/smart-builder";
+// Export TypeScript auto-completion types
+export type {
+  ArrayOperators,
+  AutoCompletionContext,
+  AvailableOperators,
+  BooleanOperators,
+  CustomOperatorNames,
+  DateOperators,
+  InferOperatorsForType,
+  InferValueTypeForOperator,
+  IntelliSenseRegistry,
+  NumericOperators,
+  ObjectOperators,
+  OperatorIntelliSenseInfo,
+  OperatorsByCategory,
+  OperatorsByFieldType,
+  SmartCondition,
+  SmartConstraint,
+  SmartRule,
+  SmartRuleBuilder,
+  StringOperators,
+  SuggestOperators,
+} from "./types/operator-intellisense";
 // Enums
 export * from "@root/enums";
 // Explicit re-export for better TypeScript support
 export { ConditionTypes, Operators } from "@root/enums";
 // Legacy operators (for backward compatibility)
 export * from "@root/operators";
+
 // Operator System Base (must come before implementations)
 export {
   BaseOperatorStrategy,
@@ -17,6 +53,7 @@ export {
   type ValidationResult as OperatorValidationResult,
   type ValueType,
 } from "@root/operators/base";
+
 // Operator System
 export {
   initializeOperators,
@@ -50,15 +87,19 @@ export {
 } from "@root/operators/implementations";
 
 export { OperatorRegistry, operatorRegistry } from "@root/operators/registry";
-
 // Services
 export { ObjectDiscovery } from "@root/services";
 export { Evaluator } from "@root/services/evaluator";
-
 export { Introspector } from "@root/services/introspector";
 export type { EnhancedIntrospectionResult } from "@root/services/introspector";
 export { RuleEngine } from "@root/services/rule-engine";
+
+// ================================
+// TYPESCRIPT AUTO-COMPLETION FEATURES
+// ================================
+
 export type { RuleEngineConfig } from "@root/services/rule-engine";
+
 // Types (excluding ValidationResult to avoid conflict)
 export {
   type Condition,
@@ -74,5 +115,22 @@ export {
   type OperatorsType,
   type RuleType,
 } from "@root/types";
+
 // Utils
 export * from "@root/utils";
+
+// ================================
+// MODULE AUGMENTATION DECLARATION
+// ================================
+
+/**
+ * Global module augmentation for custom operator registration
+ *
+ * Usage:
+ * declare module '@usex/rule-engine' {
+ *   interface CustomOperatorNames {
+ *     'my-custom-operator': CustomOperatorMetadata;
+ *   }
+ * }
+ */
+// Custom operators can be added via module augmentation

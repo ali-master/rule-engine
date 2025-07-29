@@ -288,7 +288,6 @@ export function isAlphaOperator(value: string): boolean {
 export function isPersianAlphaOperator(value: string): boolean {
   const text = value.replace(/["'-+؟\s.]/g, "");
 
-   
   return new RegExp(`^[${faAlphaText}]+$`).test(text);
 }
 
@@ -300,7 +299,6 @@ export function isAlphaNumericOperator(value: string): boolean {
 export function isPersianAlphaNumericOperator(value: string): boolean {
   const text = value.replace(/["'-+؟\s.]/g, "");
 
-   
   return new RegExp(`^[${faComplexText}]+$`).test(text);
 }
 
