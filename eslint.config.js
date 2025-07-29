@@ -32,6 +32,10 @@ export default antfu({
   rules: {
     eqeqeq: "off",
     "prefer-regex-literals": "off",
+    "unicorn/number-literal-case": "off",
+    "regexp/no-dupe-characters-character-class": "off",
+    "no-misleading-character-class": "off",
+    "regexp/no-misleading-unicode-character": "off",
     "regexp/no-obscure-range": "off",
     "react-refresh/only-export-components": "off",
     "no-labels": "off",
