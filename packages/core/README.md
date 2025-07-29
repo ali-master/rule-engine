@@ -563,6 +563,14 @@ console.log(insights);
 | With Mutations | 10,000 | 150ms | ~66,000/sec |
 | Custom Operators | 10,000 | 180ms | ~55,000/sec |
 
+### Bundle Size
+| Build Type | Size |
+|------------|------|
+| Minified | 102.7kB |
+| Minified + Gzipped | **18.4kB** |
+
+*Zero dependencies = predictable bundle size with tree-shaking support*
+
 ### Optimization Tips
 
 **1. Trust Mode for Validated Rules**
@@ -722,7 +730,7 @@ pnpm dev
 | Self-Referencing | ✅ | ❌ | ❌ |
 | Custom Operators | ✅ | ⚠️ Limited | ❌ |
 | Performance (ops/sec) | 117k+ | 45k | 30k |
-| Bundle Size | 12KB | 45KB | 38KB |
+| Bundle Size | 18.4KB | 45KB | 38KB |
 | Browser Support | ✅ | ✅ | ❌ |
 | Rule Introspection | ✅ | ❌ | ❌ |
 | Fluent Builder | ✅ | ❌ | ❌ |
