@@ -48,22 +48,22 @@ describe("mutator correctly", () => {
   beforeEach(() => {
     console.debug = vi.fn();
     process.env.DEBUG = "true";
-    
+
     // Setup axios mock responses
     (mockedAxios.get as any).mockImplementation((url: string) => {
       if (url.includes("United Kingdom")) {
         return Promise.resolve({
-          data: [{ cca2: "GB" }]
+          data: [{ cca2: "GB" }],
         });
       }
       if (url.includes("Spain")) {
         return Promise.resolve({
-          data: [{ cca2: "ES" }]
+          data: [{ cca2: "ES" }],
         });
       }
       // Default response for any other country
       return Promise.resolve({
-        data: [{ cca2: "US" }]
+        data: [{ cca2: "US" }],
       });
     });
   });
@@ -74,7 +74,7 @@ describe("mutator correctly", () => {
     rp.clearMutations();
     rp.clearMutationCache();
     rp.clearCache();
-    
+
     // Clear axios mocks
     vi.clearAllMocks();
   });
