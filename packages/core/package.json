@@ -56,6 +56,7 @@
     "dev": "tsup-node --watch",
     "build": "tsup-node",
     "test": "cross-env CI=true vitest --typecheck",
+    "test:junit": "cross-env CI=true vitest --reporter=junit --outputFile=test-report.junit.xml --typecheck",
     "test:watch": "pnpm run test --watch",
     "test:ui": "pnpm run test:watch --ui --coverage.enabled=true",
     "test:bench": "pnpm run test bench",
