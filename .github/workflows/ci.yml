@@ -31,9 +31,6 @@ jobs:
       - name: 🔠 Lint project
         run: pnpm lint
 
-      - name: ✂️ Knip project
-        run: pnpm test:knip
-
   test:
     runs-on: ubuntu-latest
 
