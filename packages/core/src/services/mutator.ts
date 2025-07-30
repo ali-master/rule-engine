@@ -221,7 +221,6 @@ export class Mutator {
    *
    * @param mutationKey The criteria property to execute the mutation on.
    * @param criteria The criteria to execute the mutation with.
-   * @param mutationKey The key of the mutation to execute.
    */
   private async execMutation(
     mutationKey: string,

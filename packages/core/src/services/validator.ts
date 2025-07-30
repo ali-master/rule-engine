@@ -197,7 +197,6 @@ export class Validator<T = any> {
    *   - `isValid` (boolean): True if the constraint is valid, False otherwise.
    *   - `error` (string|null): An error message describing the validation issue,
    *                             or null if the constraint is valid.
-   * @param constraint The constraint to validate.
    */
   private validateConstraint(constraint: Constraint): RuleError {
     if (!isStringOperator(constraint.field)) {

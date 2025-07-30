@@ -18,12 +18,15 @@ export default antfu({
   name: "rule-engine",
   react: true,
   gitignore: true,
+  pnpm: false,
+  jsonc: false,
 }).append({
   ignores: [
     "README.md",
     "packages/*/README.md",
     "packages/*/CHANGELOG.md",
     "packages/*/dist",
+    "packages/*/dist-demo",
     "packages/*/node_modules",
     "packages/*/coverage",
     "**/*.json",

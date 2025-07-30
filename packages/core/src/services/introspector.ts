@@ -92,6 +92,9 @@ export class Introspector {
    * @template R The type of the rule result.
    * @param rule The rule to evaluate.
    * @param options Introspection options
+   * @param options.includeMetadata Whether to include operator metadata in the result.
+   * @param options.includeComplexity Whether to include complexity metrics in the result.
+   * @param options.validateOperators Whether to validate operators in the rule.
    * @throws RuleTypeError if the rule is not granular
    */
   introspect<R = any>(
@@ -132,7 +135,11 @@ export class Introspector {
 
     // Using this information, we can build the skeleton of the introspected criteria range
     const criteriaRange: Array<CriteriaRange<R>> = [];
-    for (const result of conditionMap.keys()) {
+    // Initialize criteria range with all possible results
+    // This will be used to populate the criteria ranges for each result
+    const conditionsKeys = conditionMap.keys();
+    // @ts-ignore
+    for (const result of conditionsKeys) {
       criteriaRange.push({
         result,
         options: [],
