@@ -59,7 +59,7 @@
     "test:junit": "cross-env CI=true vitest --reporter=junit --outputFile=test-report.junit.xml --typecheck",
     "test:watch": "pnpm run test --watch",
     "test:ui": "pnpm run test:watch --ui --coverage.enabled=true",
-    "test:bench": "pnpm run test bench",
+    "test:bench": "cross-env CI=true vitest bench",
     "test:coverage": "pnpm run test run --coverage",
     "test:debug": "vitest --inspect-brk --pool forks --poolOptions.forks.singleFork",
     "test:debug:watch": "pnpm run test:debug --watch --poolOptions.threads.isolate false",

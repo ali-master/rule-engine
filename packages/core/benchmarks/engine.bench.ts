@@ -2,14 +2,14 @@ import { describe, bench } from "vitest";
 import type { OperatorsType } from "@root";
 import { RuleEngine, Operators } from "@root";
 // Assets
-import { valid1Json } from "./rulesets/valid1.json";
-import { valid3Json } from "./rulesets/valid3.json";
-import { valid4Json } from "./rulesets/valid4.json";
-import { valid5Json } from "./rulesets/valid5.json";
-import { valid13Json } from "./rulesets/valid13.json";
-import { Valid10Json } from "./rulesets/valid10.json";
-import { Valid11Json } from "./rulesets/valid11.json";
-import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
+import { valid1Json } from "../test/rulesets/valid1.json";
+import { valid3Json } from "../test/rulesets/valid3.json";
+import { valid4Json } from "../test/rulesets/valid4.json";
+import { valid5Json } from "../test/rulesets/valid5.json";
+import { valid13Json } from "../test/rulesets/valid13.json";
+import { Valid10Json } from "../test/rulesets/valid10.json";
+import { Valid11Json } from "../test/rulesets/valid11.json";
+import { selfFieldsConstraintsJson } from "../test/rulesets/self-fields-constraints.json";
 
 // Sample data for benchmarks
 const simpleData = {

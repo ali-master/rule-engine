@@ -1,7 +1,7 @@
 import { describe, bench } from "vitest";
 import { RuleEngine, ObjectDiscovery } from "@root";
 // Rules
-import { selfFieldsConstraintsJson } from "./rulesets/self-fields-constraints.json";
+import { selfFieldsConstraintsJson } from "../test/rulesets/self-fields-constraints.json";
 
 describe("json path correctly", () => {
   const discovery = new ObjectDiscovery();

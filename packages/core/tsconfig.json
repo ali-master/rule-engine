@@ -33,7 +33,7 @@
       "@root/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*", "test/**/*"],
+  "include": ["src/**/*", "test/**/*", "benchmarks/**/*"],
   "exclude": [
     "node_modules",
     "dist",

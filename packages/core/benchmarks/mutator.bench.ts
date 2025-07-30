@@ -2,7 +2,7 @@
 import { describe, bench } from "vitest";
 import { RuleEngine, Operators } from "@root";
 // Assets
-import { valid1Json } from "./rulesets/valid1.json";
+import { valid1Json } from "../test/rulesets/valid1.json";
 
 describe("mutation Performance Benchmarks", () => {
   describe("data Mutations", () => {

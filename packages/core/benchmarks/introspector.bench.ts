@@ -1,8 +1,8 @@
 import { describe, bench } from "vitest";
 import { RuleEngine } from "@root";
 // Assets
-import { valid2Json } from "./rulesets/valid2.json";
-import { valid6Json } from "./rulesets/valid6.json";
+import { valid2Json } from "../test/rulesets/valid2.json";
+import { valid6Json } from "../test/rulesets/valid6.json";
 
 describe("introspector correctly", () => {
   bench(
