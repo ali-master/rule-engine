@@ -2,6 +2,7 @@ import { useState, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RuleBuilder } from "./components/rule-builder";
 import { DebugTest } from "./debug-test";
+import { Analytics } from "@vercel/analytics/react";
 import { StoreDebugTest } from "./test-store-debug";
 import { Star, Github, GitFork, ExternalLink } from "lucide-react";
 import { ecommerceFields } from "./data/sample-data";
@@ -382,6 +383,7 @@ function DemoApp() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <Analytics />
     <DemoApp />
   </StrictMode>,
 );
