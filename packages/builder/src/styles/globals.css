@@ -109,7 +109,12 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: default;
   }
 }
 
@@ -162,34 +167,64 @@
 
 /* Animation classes */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideIn {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @keyframes in {
-  from { 
+  from {
     opacity: var(--tw-enter-opacity, 1);
-    transform: translate3d(var(--tw-enter-translate-x, 0), var(--tw-enter-translate-y, 0), 0) scale3d(var(--tw-enter-scale, 1), var(--tw-enter-scale, 1), var(--tw-enter-scale, 1)) rotate(var(--tw-enter-rotate, 0));
+    transform: translate3d(
+        var(--tw-enter-translate-x, 0),
+        var(--tw-enter-translate-y, 0),
+        0
+      )
+      scale3d(
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1)
+      )
+      rotate(var(--tw-enter-rotate, 0));
   }
-  to { 
+  to {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1) rotate(0);
   }
 }
 
 @keyframes out {
-  from { 
+  from {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale3d(1, 1, 1) rotate(0);
   }
-  to { 
+  to {
     opacity: var(--tw-exit-opacity, 1);
-    transform: translate3d(var(--tw-exit-translate-x, 0), var(--tw-exit-translate-y, 0), 0) scale3d(var(--tw-exit-scale, 1), var(--tw-exit-scale, 1), var(--tw-exit-scale, 1)) rotate(var(--tw-exit-rotate, 0));
+    transform: translate3d(
+        var(--tw-exit-translate-x, 0),
+        var(--tw-exit-translate-y, 0),
+        0
+      )
+      scale3d(
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1)
+      )
+      rotate(var(--tw-exit-rotate, 0));
   }
 }
 
@@ -203,11 +238,11 @@
   .scrollbar-none::-webkit-scrollbar {
     display: none;
   }
-  
+
   /* Hide scrollbar for IE, Edge and Firefox */
   .scrollbar-none {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
@@ -373,11 +408,21 @@
 
 @utility rule-indents {
   /* Nested rule indentation */
-  .rule-indent-1 { @apply pl-4; }
-  .rule-indent-2 { @apply pl-8; }
-  .rule-indent-3 { @apply pl-12; }
-  .rule-indent-4 { @apply pl-16; }
-  .rule-indent-5 { @apply pl-20; }
+  .rule-indent-1 {
+    @apply pl-4;
+  }
+  .rule-indent-2 {
+    @apply pl-8;
+  }
+  .rule-indent-3 {
+    @apply pl-12;
+  }
+  .rule-indent-4 {
+    @apply pl-16;
+  }
+  .rule-indent-5 {
+    @apply pl-20;
+  }
   .rule-indent-deep {
     @apply pl-24 border-l-2 border-dashed border-border;
   }
