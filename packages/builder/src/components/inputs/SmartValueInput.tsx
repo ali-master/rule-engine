@@ -93,6 +93,7 @@ export const SmartValueInput: React.FC<SmartValueInputProps> = ({
                 <Badge key={index} variant="secondary">
                   {field.values?.find((opt) => opt.value === v)?.label || v}
                   <button
+                    type="button"
                     onClick={() =>
                       onChange(value.filter((_, i) => i !== index))
                     }

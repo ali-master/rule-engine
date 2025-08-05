@@ -2,42 +2,28 @@ import React from "react";
 import { CardTitle, CardHeader, CardContent, Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { Copy, ChevronRight, ChevronDown, Check } from "lucide-react";
+import { JsonViewer } from "./JsonVisualizer";
 import type { RuleViewerProps } from "../types";
 import { cn } from "../lib/utils";
 
 export const RuleViewer: React.FC<RuleViewerProps> = ({
   rule,
   className,
-  syntaxHighlight = true,
   collapsible = true,
   defaultCollapsed = false,
 }) => {
   const [collapsed, setCollapsed] = React.useState(defaultCollapsed);
   const [copied, setCopied] = React.useState(false);
 
-  const jsonString = React.useMemo(() => {
-    return JSON.stringify(rule, null, 2);
-  }, [rule]);
-
   const handleCopy = async () => {
     try {
+      const jsonString = JSON.stringify(rule, null, 2);
       await navigator.clipboard.writeText(jsonString);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error("Failed to copy:", error);
     }
-  };
-
-  const highlightJson = (json: string) => {
-    if (!syntaxHighlight) return json;
-
-    return json
-      .replace(/("[\w\s-]+":)/g, '<span class="text-blue-600">$1</span>')
-      .replace(/(".*?")/g, '<span class="text-green-600">$1</span>')
-      .replace(/(true|false)/g, '<span class="text-purple-600">$1</span>')
-      .replace(/(\d+)/g, '<span class="text-orange-600">$1</span>')
-      .replace(/(null|undefined)/g, '<span class="text-gray-500">$1</span>');
   };
 
   return (
@@ -59,7 +45,9 @@ export const RuleViewer: React.FC<RuleViewerProps> = ({
               )}
             </Button>
           )}
-          <CardTitle className="text-sm font-medium">Rule JSON</CardTitle>
+          <CardTitle className="text-sm font-medium text-gray-900 dark:text-white">
+            Rule JSON
+          </CardTitle>
         </div>
         <Button
           type="button"
@@ -83,18 +71,15 @@ export const RuleViewer: React.FC<RuleViewerProps> = ({
       </CardHeader>
       {!collapsed && (
         <CardContent>
-          <pre className="overflow-x-auto rounded-lg bg-muted p-4">
-            {syntaxHighlight ? (
-              <code
-                dangerouslySetInnerHTML={{
-                  __html: highlightJson(jsonString),
-                }}
-                className="text-sm font-mono"
-              />
-            ) : (
-              <code className="text-sm font-mono">{jsonString}</code>
-            )}
-          </pre>
+          <div className="rounded-lg bg-gray-50 dark:bg-background p-4 border border-gray-200 dark:border-gray-700">
+            <JsonViewer
+              data={rule}
+              rootName="rule"
+              defaultExpanded={true}
+              highlightLogicalOperators={true}
+              className="text-gray-900 dark:text-gray-100"
+            />
+          </div>
         </CardContent>
       )}
     </Card>

@@ -1,7 +1,11 @@
-import { StrictMode } from "react";
+import { useState, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { ModernRuleBuilder } from "./components/ModernRuleBuilder";
+import { RuleBuilder } from "./components/RuleBuilder";
+import { DebugTest } from "./debug-test";
+import { StoreDebugTest } from "./test-store-debug";
 import { Star, Github, GitFork, ExternalLink } from "lucide-react";
+import { ecommerceFields } from "./data/sample-data";
+import { operatorConfigs } from "./utils/operators";
 import "./styles/globals.css";
 
 // Initialize theme
@@ -20,31 +24,11 @@ if (typeof window !== "undefined") {
   }
 }
 
-const sampleData = {
-  user: {
-    id: "123",
-    name: "John Doe",
-    email: "john@example.com",
-    age: 30,
-    isActive: true,
-    role: "admin",
-    tags: ["premium", "verified"],
-  },
-  product: {
-    id: "prod-456",
-    name: "Premium Widget",
-    price: 99.99,
-    inStock: true,
-    category: "electronics",
-  },
-  order: {
-    total: 299.97,
-    status: "processing",
-    items: 3,
-  },
-};
-
 function DemoApp() {
+  const [mode, setMode] = useState<"builder" | "debug" | "store-debug">(
+    "builder",
+  );
+
   return (
     <div className="min-h-screen w-full relative bg-black">
       {/* Ocean Abyss Background with Top Glow */}
@@ -56,7 +40,7 @@ function DemoApp() {
         }}
       />
       {/* Mobile-First Responsive Header */}
-      <header className="relative z-10 border-b border-white/10 bg-black/80 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0">
+      <header className="relative z-10 border-b border-white/10 bg-black/80 backdrop-blur supports-[backdrop-filter]:bg-black/60 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
           <div className="flex items-center justify-between">
             {/* Logo and Title - Mobile optimized */}
@@ -139,12 +123,128 @@ function DemoApp() {
             </div>
           </div>
 
+          {/* JSON Examples Section */}
+          <div className="bg-gray-900/50 border border-gray-800 rounded-lg p-6 mb-8">
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Rule JSON Examples
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium text-cyan-300">
+                  Simple AND Rule
+                </h4>
+                <pre className="bg-black/40 p-3 rounded text-xs text-gray-300 overflow-x-auto">
+                  {`{
+  "conditions": {
+    "and": [
+      {
+        "field": "user.age",
+        "operator": "greater_than",
+        "value": 18
+      },
+      {
+        "field": "user.status",
+        "operator": "equals",
+        "value": "active"
+      }
+    ]
+  }
+}`}
+                </pre>
+              </div>
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium text-cyan-300">
+                  Nested OR Inside AND
+                </h4>
+                <pre className="bg-black/40 p-3 rounded text-xs text-gray-300 overflow-x-auto">
+                  {`{
+  "conditions": {
+    "and": [
+      {
+        "field": "user.role",
+        "operator": "equals",
+        "value": "admin"
+      },
+      {
+        "or": [
+          {
+            "field": "user.department",
+            "operator": "equals",
+            "value": "IT"
+          },
+          {
+            "field": "user.department",
+            "operator": "equals",
+            "value": "Security"
+          }
+        ]
+      }
+    ]
+  }
+}`}
+                </pre>
+              </div>
+            </div>
+          </div>
+
+          {/* Builder Toggle */}
+          <div className="flex justify-center mb-6">
+            <div className="flex bg-background rounded-lg p-1">
+              <button
+                type="button"
+                onClick={() => setMode("builder")}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  mode === "builder"
+                    ? "bg-accent text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Rule Builder
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("debug")}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  mode === "debug"
+                    ? "bg-accent text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Debug Test
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("store-debug")}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  mode === "store-debug"
+                    ? "bg-accent text-white"
+                    : "text-gray-400 hover:text-white"
+                }`}
+              >
+                Store Debug
+              </button>
+            </div>
+          </div>
+
           {/* Rule Builder - Full responsive */}
           <div className="w-full">
-            <ModernRuleBuilder
-              sampleData={sampleData}
-              onChange={(rule) => console.log("Rule changed:", rule)}
-            />
+            {mode === "debug" ? (
+              <div className="bg-white dark:bg-background rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                <DebugTest />
+              </div>
+            ) : mode === "store-debug" ? (
+              <div className="bg-white dark:bg-background rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                <StoreDebugTest />
+              </div>
+            ) : (
+              <div className="bg-white dark:bg-background rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+                <RuleBuilder
+                  fields={ecommerceFields}
+                  operators={operatorConfigs}
+                  onRuleChange={(rule) => console.log("Rule changed:", rule)}
+                />
+              </div>
+            )}
           </div>
         </div>
       </main>

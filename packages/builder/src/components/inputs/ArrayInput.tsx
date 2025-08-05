@@ -5,6 +5,9 @@ import { Badge } from "../ui/badge";
 import { X, Plus } from "lucide-react";
 import { cn } from "../../lib/utils";
 
+// Extract default props to prevent infinite re-renders
+const defaultValue: any[] = [];
+
 interface ArrayInputProps {
   value?: any[];
   onChange: (value: any[]) => void;
@@ -15,7 +18,7 @@ interface ArrayInputProps {
 }
 
 export const ArrayInput: React.FC<ArrayInputProps> = ({
-  value = [],
+  value = defaultValue,
   onChange,
   itemType = "string",
   placeholder = "Add item",

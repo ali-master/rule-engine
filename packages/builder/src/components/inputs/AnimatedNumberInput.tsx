@@ -4,6 +4,9 @@ import { Input } from "../ui/input";
 import { cn } from "../../lib/utils";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
+// Extract default props to prevent infinite re-renders
+const defaultFormat: Intl.NumberFormatOptions = {};
+
 interface AnimatedNumberInputProps {
   value?: number | string;
   onChange: (value: string) => void;
@@ -25,7 +28,7 @@ export const AnimatedNumberInput: React.FC<AnimatedNumberInputProps> = ({
   min,
   max,
   step = 1,
-  format = {},
+  format = defaultFormat,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState("");

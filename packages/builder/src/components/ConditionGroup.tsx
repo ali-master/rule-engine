@@ -11,11 +11,15 @@ import {
 import { Label } from "./ui/label";
 import { Trash2, Plus, ChevronRight, ChevronDown } from "lucide-react";
 import { ConstraintEditor } from "./ConstraintEditor";
-import { useRuleBuilder } from "../context/RuleBuilderContext";
+import { useRuleBuilder } from "../stores/unified-rule-store";
 import { ConditionTypes } from "@usex/rule-engine";
 import type { Constraint, ConditionType, Condition } from "@usex/rule-engine";
 import type { ConditionGroupProps } from "../types";
 import { cn } from "../lib/utils";
+
+// Extract default props to prevent infinite re-renders
+const defaultFields: ConditionGroupProps["fields"] = [];
+const defaultOperators: ConditionGroupProps["operators"] = [];
 
 const isConstraint = (item: Constraint | Condition): item is Constraint => {
   return "field" in item && "operator" in item;
@@ -26,10 +30,18 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
   path,
   depth = 0,
   readOnly = false,
-  onUpdate,
+  fields = defaultFields,
+  operators = defaultOperators,
   onRemove,
 }) => {
-  const { addConstraint, removeConstraint, addCondition } = useRuleBuilder();
+  const {
+    addConstraint,
+    removeConstraint,
+    addCondition,
+    updateConstraint,
+    updateCondition,
+    removeCondition,
+  } = useRuleBuilder();
   const [collapsed, setCollapsed] = React.useState(false);
 
   const conditionType = React.useMemo(() => {
@@ -51,9 +63,8 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
       result: condition.result,
     };
 
-    if (onUpdate) {
-      onUpdate(newCondition);
-    }
+    // Update condition directly through store
+    updateCondition(path, newCondition);
   };
 
   const handleAddConstraint = () => {
@@ -62,50 +73,62 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
       operator: "equals" as any,
       value: "",
     };
-    addConstraint(path, newConstraint);
+    // Add constraint to this condition group by appending the condition type to the path
+    const constraintPath = path ? `${path}.${conditionType}` : conditionType;
+    addConstraint(constraintPath, newConstraint);
   };
 
   const handleAddConditionGroup = () => {
-    addCondition(path, ConditionTypes.AND);
+    // Add new condition group to this condition group by appending the condition type to the path
+    const parentPath = path ? `${path}.${conditionType}` : conditionType;
+    addCondition(parentPath, ConditionTypes.AND);
   };
 
   const handleUpdateItem = (index: number, item: Constraint | Condition) => {
-    const newItems = [...items];
-    newItems[index] = item;
-
-    if (onUpdate) {
-      onUpdate({
-        ...condition,
-        [conditionType]: newItems,
-      });
+    if (isConstraint(item)) {
+      // Update constraint directly through store
+      const itemPath = path
+        ? `${path}.${conditionType}.${index}`
+        : `${conditionType}.${index}`;
+      updateConstraint(itemPath, item);
+    } else {
+      // Update condition directly through store
+      const itemPath = path
+        ? `${path}.${conditionType}.${index}`
+        : `${conditionType}.${index}`;
+      updateCondition(itemPath, item);
     }
   };
 
   const handleRemoveItem = (index: number) => {
     if (isConstraint(items[index])) {
-      removeConstraint(`${path}.${conditionType}.${index}`);
+      // Remove constraint using store function
+      const itemPath = path
+        ? `${path}.${conditionType}.${index}`
+        : `${conditionType}.${index}`;
+      removeConstraint(itemPath);
     } else {
-      // Remove condition
-      const newItems = items.filter((_, i) => i !== index);
-      if (onUpdate) {
-        onUpdate({
-          ...condition,
-          [conditionType]: newItems,
-        });
-      }
+      // Remove condition using store function
+      const itemPath = path
+        ? `${path}.${conditionType}.${index}`
+        : `${conditionType}.${index}`;
+      removeCondition(itemPath);
     }
   };
 
   const conditionTypeColor = {
-    [ConditionTypes.OR]: "text-blue-600 bg-blue-50 border-blue-200",
-    [ConditionTypes.AND]: "text-green-600 bg-green-50 border-green-200",
-    [ConditionTypes.NONE]: "text-red-600 bg-red-50 border-red-200",
+    [ConditionTypes.OR]:
+      "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/30 border-blue-200 dark:border-blue-800",
+    [ConditionTypes.AND]:
+      "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30 border-green-200 dark:border-green-800",
+    [ConditionTypes.NONE]:
+      "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 border-red-200 dark:border-red-800",
   };
 
   return (
     <Card
       className={cn(
-        "border-2",
+        "rounded-lg shadow-sm border-2",
         conditionTypeColor[conditionType],
         depth > 0 && "ml-8",
       )}
@@ -128,7 +151,9 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
             </Button>
 
             <div className="flex items-center gap-2">
-              <Label>Condition Type:</Label>
+              <Label className="text-gray-900 dark:text-gray-100 font-medium">
+                Condition Type:
+              </Label>
               <Select
                 value={conditionType}
                 onValueChange={handleConditionTypeChange}
@@ -192,7 +217,9 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
             </div>
           ) : (
             items.map((item, index) => {
-              const itemPath = `${path}.${conditionType}.${index}`;
+              const itemPath = path
+                ? `${path}.${conditionType}.${index}`
+                : `${conditionType}.${index}`;
 
               if (isConstraint(item)) {
                 return (
@@ -200,9 +227,11 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
                     key={itemPath}
                     constraint={item}
                     path={itemPath}
+                    fields={fields}
+                    operators={operators}
                     readOnly={readOnly}
                     onUpdate={(constraint) =>
-                      handleUpdateItem(index, constraint)
+                      updateConstraint(itemPath, constraint)
                     }
                     onRemove={() => handleRemoveItem(index)}
                   />
@@ -214,6 +243,8 @@ export const ConditionGroup: React.FC<ConditionGroupProps> = ({
                     condition={item}
                     path={itemPath}
                     depth={depth + 1}
+                    fields={fields}
+                    operators={operators}
                     readOnly={readOnly}
                     onUpdate={(condition) => handleUpdateItem(index, condition)}
                     onRemove={() => handleRemoveItem(index)}

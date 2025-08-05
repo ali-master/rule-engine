@@ -44,13 +44,23 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
   };
 
   return (
-    <Card className={cn("relative", readOnly && "opacity-75")}>
+    <Card
+      className={cn(
+        "relative rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800",
+        readOnly && "opacity-75",
+      )}
+    >
       <CardContent className="p-4 space-y-4">
         <div className="flex items-start gap-4">
           <div className="flex-1 space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
-                <Label htmlFor={`${path}-field`}>Field</Label>
+                <Label
+                  htmlFor={`${path}-field`}
+                  className="text-gray-900 dark:text-gray-100"
+                >
+                  Field
+                </Label>
                 <FieldSelector
                   value={constraint.field}
                   onChange={handleFieldChange}
@@ -60,7 +70,12 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`${path}-operator`}>Operator</Label>
+                <Label
+                  htmlFor={`${path}-operator`}
+                  className="text-gray-900 dark:text-gray-100"
+                >
+                  Operator
+                </Label>
                 <OperatorSelector
                   value={constraint.operator}
                   onChange={handleOperatorChange}
@@ -71,7 +86,12 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor={`${path}-value`}>Value</Label>
+                <Label
+                  htmlFor={`${path}-value`}
+                  className="text-gray-900 dark:text-gray-100"
+                >
+                  Value
+                </Label>
                 <ValueInput
                   value={constraint.value}
                   onChange={handleValueChange}
@@ -85,9 +105,9 @@ export const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
             <div className="space-y-2">
               <Label
                 htmlFor={`${path}-message`}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-gray-900 dark:text-gray-100"
               >
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="h-4 w-4 text-gray-600 dark:text-gray-400" />
                 Error Message (Optional)
               </Label>
               <Input

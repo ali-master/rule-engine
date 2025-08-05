@@ -12,10 +12,13 @@ import { Input } from "./ui/input";
 import type { FieldSelectorProps } from "../types";
 import { cn } from "../lib/utils";
 
+// Extract default props to prevent infinite re-renders
+const defaultFields: FieldSelectorProps["fields"] = [];
+
 export const FieldSelector: React.FC<FieldSelectorProps> = ({
   value,
   onChange,
-  fields = [],
+  fields = defaultFields,
   placeholder = "Select or enter field",
   disabled = false,
   className,

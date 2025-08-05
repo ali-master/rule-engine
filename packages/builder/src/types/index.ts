@@ -58,6 +58,8 @@ export interface RuleBuilderProps {
 export interface RuleEditorProps {
   className?: string;
   readOnly?: boolean;
+  fields?: FieldConfig[];
+  operators?: OperatorConfig[];
 }
 
 export interface ConditionGroupProps {
@@ -65,6 +67,8 @@ export interface ConditionGroupProps {
   path: string;
   depth?: number;
   readOnly?: boolean;
+  fields?: FieldConfig[];
+  operators?: OperatorConfig[];
   onUpdate?: (condition: Condition) => void;
   onRemove?: () => void;
 }

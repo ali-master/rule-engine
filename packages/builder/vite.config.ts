@@ -21,10 +21,9 @@ export default defineConfig({
         insertTypesEntry: true,
       }),
     nodePolyfills({
-      include: ["crypto"],
+      include: ["crypto", "stream", "vm", "buffer", "path", "url"],
     }),
   ].filter(Boolean),
-
   build: isDemoMode
     ? {
         // Demo build configuration

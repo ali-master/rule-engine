@@ -1,40 +1,37 @@
 import React from "react";
-import { RuleBuilderProvider } from "../context/RuleBuilderContext";
 import { RuleEditor } from "./RuleEditor";
 import { RuleViewer } from "./RuleViewer";
+import { RuleEvaluator } from "./RuleEvaluator";
+import { ResizablePanel } from "./ResizablePanel";
+import { TabsTrigger, TabsList, TabsContent, Tabs } from "./ui/tabs";
 import type { RuleBuilderProps } from "../types";
 import { cn } from "../lib/utils";
+import { ecommerceFields } from "../data/sample-data";
+import { operatorConfigs } from "../utils/operators";
+import { useUnifiedRuleStore } from "../stores/unified-rule-store";
 
 export const RuleBuilder: React.FC<RuleBuilderProps> = ({
   className,
   showViewer = true,
   viewerPosition = "right",
   theme,
+  fields = ecommerceFields,
+  operators = operatorConfigs,
   onRuleChange,
   readOnly = false,
 }) => {
-  const [rule, setRule] = React.useState({
-    conditions: [],
-  });
+  const rule = useUnifiedRuleStore((state) => state.rule);
 
-  const handleRuleChange = React.useCallback(
-    (newRule: any) => {
-      setRule(newRule);
-      if (onRuleChange) {
-        onRuleChange(newRule);
-      }
-    },
-    [onRuleChange],
-  );
+  React.useEffect(() => {
+    if (onRuleChange) {
+      onRuleChange(rule);
+    }
+  }, [rule, onRuleChange]);
 
-  return (
-    <RuleBuilderProvider initialRule={rule} onChange={handleRuleChange}>
+  if (viewerPosition === "bottom") {
+    return (
       <div
-        className={cn(
-          "flex gap-4",
-          viewerPosition === "bottom" ? "flex-col" : "flex-row",
-          className,
-        )}
+        className={cn("flex flex-col gap-4", className)}
         style={
           theme
             ? ({
@@ -52,25 +49,95 @@ export const RuleBuilder: React.FC<RuleBuilderProps> = ({
             : undefined
         }
       >
-        <div className={cn("flex-1", viewerPosition === "right" && "min-w-0")}>
-          <RuleEditor readOnly={readOnly} />
-        </div>
-
+        <RuleEditor fields={fields} operators={operators} readOnly={readOnly} />
         {showViewer && (
-          <div
-            className={cn(
-              viewerPosition === "right" ? "w-1/3 min-w-[400px]" : "w-full",
-            )}
-          >
-            <RuleViewer
-              rule={rule}
-              syntaxHighlight
-              collapsible
-              defaultCollapsed={false}
-            />
-          </div>
+          <Tabs defaultValue="json" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="json" className="text-sm">
+                Rule JSON
+              </TabsTrigger>
+              <TabsTrigger value="evaluator" className="text-sm">
+                Live Evaluator
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="json" className="mt-4">
+              <RuleViewer
+                rule={rule}
+                syntaxHighlight
+                collapsible
+                defaultCollapsed={false}
+              />
+            </TabsContent>
+            <TabsContent value="evaluator" className="mt-4">
+              <RuleEvaluator className="h-full" />
+            </TabsContent>
+          </Tabs>
         )}
       </div>
-    </RuleBuilderProvider>
+    );
+  }
+
+  return (
+    <div
+      className={cn("h-full", className)}
+      style={
+        theme
+          ? ({
+              "--primary": theme.colors?.primary,
+              "--secondary": theme.colors?.secondary,
+              "--destructive": theme.colors?.destructive,
+              "--muted": theme.colors?.muted,
+              "--accent": theme.colors?.accent,
+              "--background": theme.colors?.background,
+              "--foreground": theme.colors?.foreground,
+              "--card": theme.colors?.card,
+              "--border": theme.colors?.border,
+              fontFamily: theme.fontFamily,
+            } as React.CSSProperties)
+          : undefined
+      }
+    >
+      <ResizablePanel
+        defaultSize={showViewer ? 50 : 100}
+        minSize={30}
+        maxSize={showViewer ? 70 : 100}
+        direction="horizontal"
+        persistId="rule-builder-panel"
+        className="h-full"
+        handleClassName="mx-2"
+      >
+        <RuleEditor
+          fields={fields}
+          operators={operators}
+          readOnly={readOnly}
+          className="h-full"
+        />
+
+        {showViewer && (
+          <Tabs defaultValue="json" className="h-full flex flex-col">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="json" className="text-sm">
+                Rule JSON
+              </TabsTrigger>
+              <TabsTrigger value="evaluator" className="text-sm">
+                Live Evaluator
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="json" className="flex-1 mt-4">
+              <RuleViewer
+                rule={rule}
+                syntaxHighlight
+                collapsible
+                defaultCollapsed={false}
+                className="h-full"
+              />
+            </TabsContent>
+            <TabsContent value="evaluator" className="flex-1 mt-4">
+              <RuleEvaluator className="h-full" />
+            </TabsContent>
+          </Tabs>
+        )}
+      </ResizablePanel>
+    </div>
   );
 };
