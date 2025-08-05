@@ -13,6 +13,7 @@ import {
   FileJson,
   EyeOff,
   Eye,
+  Cpu,
   Code,
   ChevronRight,
   ChevronDown,
@@ -25,10 +26,10 @@ import { sampleEcommerceData } from "../data/sample-data";
 import { useKeyboardShortcuts } from "../hooks/use-keyboard-shortcuts";
 import { cn } from "../lib/utils";
 import { useRuleBuilder } from "../stores/unified-rule-store";
-import { EditableJsonViewer } from "./EditableJsonViewer";
+import { EditableJsonViewer } from "./editable-json-viewer";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { Card } from "./ui/card";
+import { CardHeader, CardContent, Card } from "./ui/card";
 import { Label } from "./ui/label";
 import { ScrollArea } from "./ui/scroll-area";
 import { Switch } from "./ui/switch";
@@ -60,6 +61,17 @@ interface RuleEvaluatorProps {
   onEvaluationChange?: (result: EvaluationResult | null) => void;
 }
 
+/**
+ * Modern Rule Evaluator with enhanced UX and mobile-optimized design
+ *
+ * Features:
+ * - Clean, modern interface with proper visual hierarchy
+ * - Mobile-first responsive design
+ * - Enhanced dark mode support
+ * - Real-time evaluation with performance indicators
+ * - Progressive disclosure of complex information
+ * - Accessible design with proper ARIA labels
+ */
 export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
   className,
   defaultSampleData = sampleEcommerceData,
@@ -495,21 +507,21 @@ export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
         animate={{ scale: 1 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
         className={cn(
-          "flex items-center gap-2 px-4 py-2 rounded-full shadow-sm backdrop-blur-sm font-medium",
+          "flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium shadow-sm backdrop-blur-sm border",
           evaluationResult?.isPassed
-            ? "bg-gradient-to-r from-green-500/15 to-emerald-500/15 text-green-600 dark:text-green-400 ring-1 ring-green-500/20"
-            : "bg-gradient-to-r from-red-500/15 to-rose-500/15 text-red-600 dark:text-red-400 ring-1 ring-red-500/20",
+            ? "bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-800"
+            : "bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800",
         )}
       >
         {evaluationResult?.isPassed ? (
           <>
             <CheckCircle2 className="h-4 w-4" />
-            <span className="text-sm font-medium">Pass</span>
+            <span>Pass</span>
           </>
         ) : (
           <>
             <XCircle className="h-4 w-4" />
-            <span className="text-sm font-medium">Fail</span>
+            <span>Fail</span>
           </>
         )}
       </motion.div>
@@ -518,119 +530,110 @@ export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
 
   return (
     <TooltipProvider>
-      <Card
-        className={cn(
-          "rounded-xl shadow-xl border-0 bg-gradient-to-br from-background to-muted/50 overflow-hidden backdrop-blur-sm",
-          className,
-        )}
-      >
-        {/* Header */}
-        <div className="bg-gradient-to-r from-primary/5 via-accent/5 to-secondary/5 border-b border-border/50 p-6 backdrop-blur-md">
+      <Card className={cn("h-full flex flex-col shadow-sm", className)}>
+        {/* Modern Header */}
+        <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 ring-1 ring-primary/20 shadow-inner">
-                <Activity className="h-6 w-6 text-primary" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-200/50 dark:border-blue-800/50">
+                <Cpu className="h-4 w-4 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h3 className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+                <h3 className="font-semibold text-foreground">
                   Rule Evaluator
                 </h3>
-                <p className="text-sm text-muted-foreground font-medium">
-                  Test your rules with live data evaluation
+                <p className="text-sm text-muted-foreground">
+                  Test rules with live data evaluation
                 </p>
               </div>
             </div>
-            {/* Result Indicator (Silent Mode) - Keep this on the right for quick visibility */}
-            {!showDetails && <ResultIndicator />}
+            <ResultIndicator />
           </div>
-        </div>
+        </CardHeader>
 
         {/* Content Area */}
-        <div className="p-6 bg-gradient-to-b from-background/50 to-background">
+        <CardContent className="flex-1 min-h-0 space-y-4 overflow-hidden">
           {/* Control Panel */}
-          <div className="mb-6 p-4 bg-gradient-to-r from-muted/30 to-muted/20 border border-border/50 rounded-xl backdrop-blur-sm">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              {/* Live Mode Toggle */}
-              <div className="flex items-center gap-3 px-4 py-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border/50 shadow-sm hover:shadow-md transition-all duration-200">
-                <Switch
-                  id="live-mode"
-                  checked={isLiveMode}
-                  onCheckedChange={setIsLiveMode}
-                />
-                <Label htmlFor="live-mode" className="text-sm font-semibold">
-                  Live Mode
-                </Label>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 bg-muted/30 rounded-lg border">
+            {/* Live Mode Toggle */}
+            <div className="flex items-center gap-3">
+              <Switch
+                id="live-mode"
+                checked={isLiveMode}
+                onCheckedChange={setIsLiveMode}
+              />
+              <Label
+                htmlFor="live-mode"
+                className="text-sm font-medium cursor-pointer"
+              >
+                Live Mode
+              </Label>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <p className="font-medium">Ctrl/Cmd + E to toggle</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex items-center gap-2">
+              <Button
+                variant={showDetails ? "secondary" : "outline"}
+                size="sm"
+                onClick={() => setShowDetails(!showDetails)}
+                className="h-8"
+              >
+                {showDetails ? (
+                  <>
+                    <EyeOff className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Hide</span>
+                  </>
+                ) : (
+                  <>
+                    <Eye className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Details</span>
+                  </>
+                )}
+              </Button>
+
+              {/* Run Once Button */}
+              {!isLiveMode && (
                 <Tooltip>
-                  <TooltipTrigger>
-                    <Info className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground transition-colors" />
+                  <TooltipTrigger asChild>
+                    <Button
+                      size="sm"
+                      onClick={runEvaluationOnce}
+                      disabled={isEvaluating}
+                      className="h-8"
+                    >
+                      {isEvaluating ? (
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                          className="mr-1"
+                        >
+                          <Zap className="h-4 w-4" />
+                        </motion.div>
+                      ) : (
+                        <Play className="h-4 w-4 mr-1" />
+                      )}
+                      <span className="hidden sm:inline">
+                        {isEvaluating ? "Running..." : "Evaluate"}
+                      </span>
+                    </Button>
                   </TooltipTrigger>
-                  <TooltipContent
-                    side="bottom"
-                    className="bg-popover/95 backdrop-blur-sm"
-                  >
-                    <p className="font-medium">Ctrl/Cmd + E to toggle</p>
+                  <TooltipContent side="bottom">
+                    <p className="font-medium">Ctrl/Cmd + Shift + E</p>
                   </TooltipContent>
                 </Tooltip>
-              </div>
-
-              {/* Control Buttons */}
-              <div className="flex items-center gap-3">
-                <Button
-                  variant={showDetails ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setShowDetails(!showDetails)}
-                  className="rounded-full shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                >
-                  {showDetails ? (
-                    <>
-                      <EyeOff className="h-4 w-4 mr-2" />
-                      Hide Details
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="h-4 w-4 mr-2" />
-                      Show Details
-                    </>
-                  )}
-                </Button>
-
-                {/* Run Once Button */}
-                {!isLiveMode && (
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        size="sm"
-                        onClick={runEvaluationOnce}
-                        disabled={isEvaluating}
-                        className="rounded-full bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200 font-semibold"
-                      >
-                        {isEvaluating ? (
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                            className="mr-2"
-                          >
-                            <Zap className="h-4 w-4" />
-                          </motion.div>
-                        ) : (
-                          <Play className="h-4 w-4 mr-2" />
-                        )}
-                        {isEvaluating ? "Evaluating..." : "Evaluate"}
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="bottom"
-                      className="bg-popover/95 backdrop-blur-sm"
-                    >
-                      <p className="font-medium">Ctrl/Cmd + Shift + E</p>
-                    </TooltipContent>
-                  </Tooltip>
-                )}
-              </div>
+              )}
             </div>
           </div>
 
@@ -639,16 +642,14 @@ export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-gradient-to-r from-destructive/10 to-destructive/5 border border-destructive/20 rounded-xl flex items-center gap-3 shadow-sm"
+              className="p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-lg flex items-center gap-3"
             >
-              <div className="p-2.5 rounded-lg bg-destructive/15 ring-1 ring-destructive/20">
-                <AlertCircle className="h-5 w-5 text-destructive" />
-              </div>
+              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
               <div>
-                <p className="text-sm font-semibold text-destructive">
+                <p className="text-sm font-medium text-red-700 dark:text-red-300">
                   Evaluation Error
                 </p>
-                <p className="text-sm text-muted-foreground font-medium">
+                <p className="text-sm text-red-600 dark:text-red-400">
                   {error}
                 </p>
               </div>
@@ -657,208 +658,196 @@ export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
 
           {/* Detailed View */}
           <AnimatePresence mode="wait">
-            {showDetails && (
+            {showDetails ? (
               <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex-1 min-h-0"
               >
-                <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent mb-6" />
-
                 <Tabs
                   value={activeTab}
                   onValueChange={(v) => setActiveTab(v as any)}
-                  className="space-y-6"
+                  className="h-full flex flex-col"
                 >
-                  <TabsList className="grid w-full grid-cols-3 bg-gradient-to-r from-muted/40 to-muted/60 p-1.5 rounded-xl shadow-inner backdrop-blur-sm">
-                    <TabsTrigger
-                      value="result"
-                      className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-200 font-medium"
-                    >
-                      <Activity className="h-4 w-4" />
-                      Result
+                  <TabsList className="grid grid-cols-3 mb-4">
+                    <TabsTrigger value="result" className="text-sm">
+                      <Activity className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Result</span>
                     </TabsTrigger>
-                    <TabsTrigger
-                      value="details"
-                      className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-200 font-medium"
-                    >
-                      <Code className="h-4 w-4" />
-                      Details
+                    <TabsTrigger value="details" className="text-sm">
+                      <Code className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Details</span>
                     </TabsTrigger>
-                    <TabsTrigger
-                      value="data"
-                      className="flex items-center gap-2 rounded-lg data-[state=active]:bg-background data-[state=active]:shadow-md transition-all duration-200 font-medium"
-                    >
-                      <FileJson className="h-4 w-4" />
-                      Test Data
+                    <TabsTrigger value="data" className="text-sm">
+                      <FileJson className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Data</span>
                     </TabsTrigger>
                   </TabsList>
 
-                  {/* Result Tab */}
-                  <TabsContent value="result" className="mt-0 space-y-0">
-                    {evaluationResult ? (
-                      <div className="space-y-6">
-                        <div
-                          className={cn(
-                            "p-8 rounded-2xl border-0 shadow-lg backdrop-blur-sm",
-                            evaluationResult.isPassed
-                              ? "bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-950/30 dark:to-emerald-950/30 ring-1 ring-green-200/50 dark:ring-green-800/50"
-                              : "bg-gradient-to-br from-red-50/80 to-rose-50/80 dark:from-red-950/30 dark:to-rose-950/30 ring-1 ring-red-200/50 dark:ring-red-800/50",
-                          )}
-                        >
-                          <div className="flex items-center gap-4 mb-4">
-                            <div
-                              className={cn(
-                                "p-4 rounded-xl shadow-inner ring-1",
-                                evaluationResult.isPassed
-                                  ? "bg-gradient-to-br from-green-100 to-green-50 dark:from-green-900/40 dark:to-green-900/20 ring-green-200/50 dark:ring-green-800/50"
-                                  : "bg-gradient-to-br from-red-100 to-red-50 dark:from-red-900/40 dark:to-red-900/20 ring-red-200/50 dark:ring-red-800/50",
-                              )}
-                            >
+                  <div className="flex-1 min-h-0">
+                    {/* Result Tab */}
+                    <TabsContent value="result" className="h-full m-0">
+                      {evaluationResult ? (
+                        <div className="space-y-4">
+                          <div
+                            className={cn(
+                              "p-6 rounded-xl border shadow-sm",
+                              evaluationResult.isPassed
+                                ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-800"
+                                : "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-800",
+                            )}
+                          >
+                            <div className="flex items-center gap-3 mb-4">
                               {evaluationResult.isPassed ? (
                                 <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
                               ) : (
                                 <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
                               )}
-                            </div>
-                            <div>
-                              <h3 className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                                Rule{" "}
-                                {evaluationResult.isPassed
-                                  ? "Passed"
-                                  : "Failed"}
-                              </h3>
-                              <p className="text-sm font-medium text-muted-foreground mt-1">
-                                {evaluationResult.isPassed
-                                  ? "All conditions were satisfied successfully"
-                                  : "One or more conditions failed validation"}
-                              </p>
-                            </div>
-                          </div>
-
-                          {evaluationResult.value && (
-                            <div className="mt-4">
-                              <Label className="text-sm font-semibold mb-3 block text-foreground/90">
-                                Result Value:
-                              </Label>
-                              <div className="p-5 bg-gradient-to-br from-background to-muted/30 rounded-xl border border-border/50 shadow-inner">
-                                <pre className="text-sm font-mono overflow-x-auto text-foreground/90">
-                                  {JSON.stringify(
-                                    evaluationResult.value,
-                                    null,
-                                    2,
-                                  )}
-                                </pre>
-                              </div>
-                            </div>
-                          )}
-
-                          {evaluationResult.message && (
-                            <div className="mt-4">
-                              <Label className="text-sm font-semibold mb-3 block text-foreground/90">
-                                Message:
-                              </Label>
-                              <div className="p-5 bg-gradient-to-br from-background to-muted/30 rounded-xl border border-border/50 shadow-inner">
-                                <p className="text-sm font-medium text-foreground/90">
-                                  {evaluationResult.message}
+                              <div>
+                                <h3 className="text-xl font-semibold">
+                                  Rule{" "}
+                                  {evaluationResult.isPassed
+                                    ? "Passed"
+                                    : "Failed"}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {evaluationResult.isPassed
+                                    ? "All conditions were satisfied"
+                                    : "One or more conditions failed"}
                                 </p>
                               </div>
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-center py-12">
-                        <div className="p-6 rounded-2xl bg-gradient-to-br from-muted/30 to-muted/50 w-fit mx-auto mb-6 shadow-inner ring-1 ring-border/30">
-                          <Activity className="h-16 w-16 text-muted-foreground" />
-                        </div>
-                        <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                          No evaluation results yet
-                        </h3>
-                        <p className="text-sm text-muted-foreground font-medium mb-6">
-                          {isLiveMode
-                            ? "Waiting for rule changes..."
-                            : 'Click "Evaluate" to test your rule'}
-                        </p>
-                        {!isLiveMode && (
-                          <Button
-                            onClick={runEvaluationOnce}
-                            disabled={isEvaluating}
-                          >
-                            <Play className="h-4 w-4 mr-2" />
-                            Run Evaluation
-                          </Button>
-                        )}
-                      </div>
-                    )}
-                  </TabsContent>
 
-                  {/* Details Tab */}
-                  <TabsContent value="details" className="mt-0">
-                    <div className="bg-gradient-to-br from-background to-muted/30 rounded-2xl border-0 shadow-xl ring-1 ring-border/30 overflow-hidden">
-                      <ScrollArea className="h-[400px]">
-                        <div className="p-6">
-                          {evaluationDetails.length > 0 ? (
-                            <div className="space-y-4">
-                              {evaluationDetails.map((detail) =>
-                                renderEvaluationDetails(detail),
-                              )}
-                            </div>
-                          ) : (
-                            <div className="text-center py-16">
-                              <div className="p-6 rounded-2xl bg-gradient-to-br from-muted/30 to-muted/50 w-fit mx-auto mb-6 shadow-inner">
-                                <Code className="h-16 w-16 text-muted-foreground" />
+                            {evaluationResult.value && (
+                              <div>
+                                <Label className="text-sm font-medium mb-2 block">
+                                  Result Value:
+                                </Label>
+                                <div className="p-3 bg-background rounded-lg border">
+                                  <pre className="text-sm font-mono overflow-x-auto">
+                                    {JSON.stringify(
+                                      evaluationResult.value,
+                                      null,
+                                      2,
+                                    )}
+                                  </pre>
+                                </div>
                               </div>
-                              <h3 className="text-xl font-semibold mb-3 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                                No evaluation details
-                              </h3>
-                              <p className="text-sm text-muted-foreground font-medium">
-                                Run an evaluation to see detailed breakdown
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-center h-full">
+                          <div className="text-center space-y-3">
+                            <Activity className="h-12 w-12 text-muted-foreground mx-auto" />
+                            <div>
+                              <h3 className="font-medium">No Results Yet</h3>
+                              <p className="text-sm text-muted-foreground">
+                                {isLiveMode
+                                  ? "Waiting for rule changes..."
+                                  : 'Click "Evaluate" to test your rule'}
                               </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </TabsContent>
+
+                    {/* Details Tab */}
+                    <TabsContent value="details" className="h-full m-0">
+                      <ScrollArea className="h-full">
+                        <div className="space-y-2">
+                          {evaluationDetails.length > 0 ? (
+                            evaluationDetails.map((detail) =>
+                              renderEvaluationDetails(detail),
+                            )
+                          ) : (
+                            <div className="flex items-center justify-center h-full">
+                              <div className="text-center space-y-3">
+                                <Code className="h-12 w-12 text-muted-foreground mx-auto" />
+                                <div>
+                                  <h3 className="font-medium">
+                                    No Details Available
+                                  </h3>
+                                  <p className="text-sm text-muted-foreground">
+                                    Run an evaluation to see detailed breakdown
+                                  </p>
+                                </div>
+                              </div>
                             </div>
                           )}
                         </div>
                       </ScrollArea>
-                    </div>
-                  </TabsContent>
+                    </TabsContent>
 
-                  {/* Test Data Tab */}
-                  <TabsContent value="data" className="mt-0">
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <Label className="text-lg font-semibold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-                            Test Data
-                          </Label>
-                          <p className="text-sm text-muted-foreground font-medium">
-                            Edit the data used for evaluation
-                          </p>
+                    {/* Test Data Tab */}
+                    <TabsContent value="data" className="h-full m-0">
+                      <div className="space-y-4 h-full flex flex-col">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <Label className="text-base font-medium">
+                              Test Data
+                            </Label>
+                            <p className="text-sm text-muted-foreground">
+                              Edit the data used for evaluation
+                            </p>
+                          </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setSampleData(defaultSampleData)}
+                          >
+                            Reset
+                          </Button>
                         </div>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setSampleData(defaultSampleData)}
-                          className="rounded-full shadow-sm hover:shadow-md transition-all duration-200 font-medium"
-                        >
-                          Reset to Default
-                        </Button>
+                        <div className="flex-1 min-h-0">
+                          <EditableJsonViewer
+                            rule={sampleData}
+                            onUpdate={setSampleData}
+                            className="h-full"
+                            readOnly={false}
+                          />
+                        </div>
                       </div>
-                      <div className="bg-gradient-to-br from-background to-muted/30 rounded-2xl border-0 shadow-xl ring-1 ring-border/30 overflow-hidden">
-                        <EditableJsonViewer
-                          rule={sampleData}
-                          onUpdate={setSampleData}
-                          className="max-h-[400px]"
-                          readOnly={false}
-                        />
-                      </div>
-                    </div>
-                  </TabsContent>
+                    </TabsContent>
+                  </div>
                 </Tabs>
+              </motion.div>
+            ) : (
+              /* Compact Result View */
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="flex-1 flex items-center justify-center"
+              >
+                <div className="text-center space-y-4">
+                  <div className="w-16 h-16 mx-auto rounded-full bg-muted/30 flex items-center justify-center">
+                    <Activity className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium mb-2">Ready to Evaluate</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      {isLiveMode
+                        ? "Live mode is active - changes will evaluate automatically"
+                        : "Click evaluate to test your rule, or enable live mode"}
+                    </p>
+                    {!isLiveMode && (
+                      <Button
+                        onClick={runEvaluationOnce}
+                        disabled={isEvaluating}
+                      >
+                        <Play className="h-4 w-4 mr-2" />
+                        Run Evaluation
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </CardContent>
       </Card>
     </TooltipProvider>
   );

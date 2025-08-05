@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RuleBuilder } from "./components/RuleBuilder";
+import { RuleBuilder } from "./components/rule-builder";
 import { ecommerceFields } from "./data/sample-data";
 import { operatorConfigs } from "./utils/operators";
 import "./styles/globals.css";
@@ -17,7 +17,7 @@ function TestDemo() {
           <RuleBuilder
             fields={ecommerceFields}
             operators={operatorConfigs}
-            onRuleChange={(rule) => {
+            onRuleChange={(rule: any) => {
               console.log("Rule changed:", JSON.stringify(rule, null, 2));
             }}
           />

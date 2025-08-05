@@ -1,6 +1,6 @@
 import { useState, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RuleBuilder } from "./components/RuleBuilder";
+import { RuleBuilder } from "./components/rule-builder";
 import { DebugTest } from "./debug-test";
 import { StoreDebugTest } from "./test-store-debug";
 import { Star, Github, GitFork, ExternalLink } from "lucide-react";

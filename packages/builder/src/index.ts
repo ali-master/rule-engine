@@ -17,11 +17,11 @@ export { SmartValueInput } from "./components/inputs/SmartValueInput";
 export { JsonViewer } from "./components/JsonViewer";
 export { JsonViewer as RuleViewer } from "./components/JsonViewer";
 export { ModernConstraintEditor } from "./components/ModernConstraintEditor";
-// Main components
 export { ModernRuleBuilder } from "./components/ModernRuleBuilder";
-export { ModernRuleBuilder as RuleBuilder } from "./components/ModernRuleBuilder";
 export { OperatorSelector } from "./components/OperatorSelector";
-export { RuleEvaluator } from "./components/RuleEvaluator";
+// Main components
+export { RuleBuilder } from "./components/rule-builder";
+export { RuleEvaluator } from "./components/rule-evaluator";
 
 export { ThemeToggle } from "./components/ThemeToggle";
 export { TreeConditionGroup } from "./components/TreeConditionGroup";
