@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { RuleBuilder } from "./components/rule-builder";
 import { DebugTest } from "./debug-test";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { StoreDebugTest } from "./test-store-debug";
 import { Star, Github, GitFork, ExternalLink } from "lucide-react";
 import { ecommerceFields } from "./data/sample-data";
@@ -384,6 +385,7 @@ function DemoApp() {
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Analytics />
+    <SpeedInsights />
     <DemoApp />
   </StrictMode>,
 );
