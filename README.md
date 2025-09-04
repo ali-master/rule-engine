@@ -795,11 +795,11 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENCE) fi
 
 ## Star History
 
-<a href="https://www.star-history.com/#ali-master/rule-engine&Timeline&LogScale">
+<a href="https://www.star-history.com/#ali-master/rule-engine&Date&LogScale">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ali-master/rule-engine&type=Timeline&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ali-master/rule-engine&type=Timeline" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ali-master/rule-engine&type=Timeline" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=ali-master/rule-engine&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=ali-master/rule-engine&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=ali-master/rule-engine&type=Date" />
  </picture>
 </a>
 
