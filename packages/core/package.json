@@ -2,7 +2,7 @@
   "name": "@usex/rule-engine",
   "type": "module",
   "version": "0.0.2",
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.17.1",
   "description": "The ultimate JSON-based rule engine that turns complex business logic into declarative configurations. Built for developers who believe code should be expressive, not repetitive.",
   "author": {
     "name": "Ali Torki",
@@ -86,8 +86,8 @@
     "ramda": "^0.30.1"
   },
   "devDependencies": {
-    "@types/ramda": "^0.31.0",
-    "axios": "^1.11.0",
+    "@types/ramda": "^0.31.1",
+    "axios": "^1.12.2",
     "tsup": "^8.5.0"
   },
   "publishConfig": {
