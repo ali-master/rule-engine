@@ -19,6 +19,10 @@ export default defineConfig({
         entryRoot: "src",
         outDir: "dist",
         insertTypesEntry: true,
+        tsconfigPath: "./tsconfig.build.json",
+        compilerOptions: {
+          preserveSymlinks: false,
+        },
       }),
     nodePolyfills({
       include: ["crypto", "stream", "vm", "buffer", "path", "url"],
