@@ -868,3 +868,17 @@ This project is licensed under the MIT License - see the [LICENSE](./LICENCE) fi
 **Making complex business logic simple, one rule at a time.**
 
 </div>
+
+## Rule visualizer
+
+`@usex/rule-engine-visualizer` is a standalone React Flow viewer for nested rules,
+with explicit TRUE/FALSE decisions, ordered first-match routes and drill-down into
+AND/OR/NONE groups. Search, JSON structure inspection, minimap navigation and light/dark
+themes are included. It displays possible decision paths without executing operators.
+See [usage and limits](packages/visualizer/README.md).
+
+```sh
+bun run --filter @usex/rule-engine-visualizer dev
+```
+
+The JSON playground runs at `http://localhost:5174`.
