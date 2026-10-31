@@ -14,8 +14,9 @@ export default defineConfig({
     tailwindcss(),
     !isDemoMode &&
       dts({
+        tsconfigPath: "./tsconfig.app.json",
         include: ["src/**/*.ts", "src/**/*.tsx"],
-        exclude: ["src/demo.tsx", "src/main.tsx", "src/vite-env.d.ts"],
+        exclude: ["src/demo.tsx", "src/main.tsx"],
         entryRoot: "src",
         outDir: "dist",
         insertTypesEntry: true,

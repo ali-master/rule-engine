@@ -47,6 +47,7 @@
     "preview:demo": "BUILD_MODE=demo vite preview --outDir dist-demo",
     "test:types": "tsc --noEmit",
     "test:unit": "vitest run",
+    "test:package": "tsc -p tests/tsconfig.json",
     "test:knip": "knip",
     "test:knip:fix": "knip --fix",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\"",
