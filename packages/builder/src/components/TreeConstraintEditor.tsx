@@ -96,6 +96,12 @@ export const TreeConstraintEditor: React.FC<TreeConstraintEditorProps> = ({
     const newOperatorConfig = getOperatorConfig(operator);
     if (newOperatorConfig?.valueType === "none") {
       updated.value = undefined;
+    } else if (
+      newOperatorConfig?.valueType === "multiple" &&
+      !Array.isArray(updated.value)
+    ) {
+      updated.value =
+        updated.value == null || updated.value === "" ? [] : [updated.value];
     }
 
     setLocalConstraint(updated);

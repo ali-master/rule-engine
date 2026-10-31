@@ -18,13 +18,14 @@ interface ArrayInputProps {
 }
 
 export const ArrayInput: React.FC<ArrayInputProps> = ({
-  value = defaultValue,
+  value: input = defaultValue,
   onChange,
   itemType = "string",
   placeholder = "Add item",
   disabled = false,
   className,
 }) => {
+  const value = Array.isArray(input) ? input : defaultValue;
   const [inputValue, setInputValue] = React.useState("");
 
   const handleAdd = () => {
