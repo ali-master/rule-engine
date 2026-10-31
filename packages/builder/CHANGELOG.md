@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/ali-master/rule-engine/compare/v0.0.3...v0.0.4) (2026-10-31)
+
+### Features
+
+- add demo build configuration and update related scripts ([73b59e6](https://github.com/ali-master/rule-engine/commit/73b59e6effb14eb4b30cb900403fb124a0f98244))
+- **builder:** add SEO and social media meta tags to improve visibility ([481e5e7](https://github.com/ali-master/rule-engine/commit/481e5e72f96af682a41daeabf8f6de4f8edcf33a))
+- **builder:** add Vercel Analytics integration to demo app ([8f8f99f](https://github.com/ali-master/rule-engine/commit/8f8f99f597fdbdcbca6a393d23a1e67f348750b2))
+- **builder:** add Vercel SpeedInsights integration to demo app ([58042b9](https://github.com/ali-master/rule-engine/commit/58042b976e7ba07f0e6f31c873547c18f8572f9e))
+- **builder:** redesign demo page ([835e0ff](https://github.com/ali-master/rule-engine/commit/835e0ff395d1e49eb29fb68eb208b76c2700caf1))
+- **core:** add clone function and minor improvements ([5d822f5](https://github.com/ali-master/rule-engine/commit/5d822f55ff2cb237b6de1c004759486a7649fa1b))
+- enhance demo layout with header, footer, and GitHub links ([660e2ab](https://github.com/ali-master/rule-engine/commit/660e2ab7d053fcf879c22a068bdcfebdeddc2b85))
+- enhance mobile responsiveness and UI elements ([473ef2c](https://github.com/ali-master/rule-engine/commit/473ef2cc6c45f29d4b8e9ead682b87d29e7d5b45))
+- enhance rule builder functionality and improve UI components ([8cd2065](https://github.com/ali-master/rule-engine/commit/8cd20656edc18c0d05395655ddedb0615dc1a319))
+- rename vite.svg to icon.svg and update HTML title ([71f1175](https://github.com/ali-master/rule-engine/commit/71f117525e3c50db0d8c6af14deb745797c2af36))
+- update build scripts and add Vercel configuration ([bc10d12](https://github.com/ali-master/rule-engine/commit/bc10d124db9f30da384bcb7aed955d96cd97f268))
+- update logo and icon SVGs with modern gradients and design ([79ba608](https://github.com/ali-master/rule-engine/commit/79ba608d22444a12940d3d961703b506cc730d10))
+
+### Bug Fixes
+
+- **builder:** emit public type declarations ([#3](https://github.com/ali-master/rule-engine/issues/3)) ([48d8834](https://github.com/ali-master/rule-engine/commit/48d88346a56e37779ebad83974f596451d4c1ffd))
+- **builder:** normalize array operator values ([#7](https://github.com/ali-master/rule-engine/issues/7)) ([0b89d82](https://github.com/ali-master/rule-engine/commit/0b89d820ad7ac4ef0c40a86ec2e4899ddaadf7a4))
+
 ### 0.0.3 (2025-06-10)
 
 ### Features
