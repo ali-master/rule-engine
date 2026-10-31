@@ -56,9 +56,9 @@
     "lint:fix": "bun run lint --fix",
     "prepublishOnly": "bun run lint",
     "release": "CI=true bun run build",
-    "postrelease": "standard-version && bun publish --access public && git push --follow-tags origin master",
+    "postrelease": "standard-version --tag-prefix rule-engine-builder@ && bun publish --access public && git push --follow-tags origin master",
     "release:beta": "bun run build",
-    "postrelease:beta": "standard-version --prerelease beta && bun publish --access public --tag beta && git push --follow-tags origin master",
+    "postrelease:beta": "standard-version --tag-prefix rule-engine-builder@ --prerelease beta && bun publish --access public --tag beta && git push --follow-tags origin master",
     "test:coverage": "vitest run --coverage",
     "test:junit": "vitest run --reporter=junit --outputFile=test-report.junit.xml",
     "test:watch": "vitest"

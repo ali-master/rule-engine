@@ -74,9 +74,9 @@
     "prepublishOnly": "bun run lint && bun run test",
     "prerelease": "bun run test",
     "release": "CI=true bun run build",
-    "postrelease": "standard-version && bun publish --access public && git push --follow-tags origin master",
+    "postrelease": "standard-version --tag-prefix rule-engine@ && bun publish --access public && git push --follow-tags origin master",
     "release:beta": "bun run build",
-    "postrelease:beta": "standard-version --prerelease beta && bun publish --access public --tag beta && git push --follow-tags origin master",
+    "postrelease:beta": "standard-version --tag-prefix rule-engine@ --prerelease beta && bun publish --access public --tag beta && git push --follow-tags origin master",
     "test:unit": "vitest run"
   },
   "peerDependencies": {
