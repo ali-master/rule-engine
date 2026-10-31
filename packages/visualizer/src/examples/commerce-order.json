@@ -1,0 +1,166 @@
+{
+  "context": {
+    "schemaValid": true,
+    "dataAgeSeconds": 20,
+    "policyVersion": "commerce-2026.10",
+    "localHour": 10
+  },
+  "order": {
+    "id": "DEMO-ORDER-10482",
+    "channel": "retail",
+    "currency": "USD",
+    "total": 320,
+    "itemCount": 3,
+    "duplicate": false,
+    "taxIncluded": true,
+    "taxCalculated": true,
+    "requiresShipping": true,
+    "purchaseOrderVerified": false,
+    "secondApproval": false,
+    "priceOverrideUnapproved": false,
+    "temperatureControlled": false,
+    "hazardous": false,
+    "preorder": false,
+    "manualHold": false,
+    "weightKg": 2,
+    "sellerCount": 1
+  },
+  "customer": {
+    "id": "DEMO-CUSTOMER-204",
+    "status": "active",
+    "suspended": false,
+    "managedAccount": false,
+    "tier": "silver",
+    "completedOrders": 8,
+    "lifetimeSpend": 1200,
+    "returnRatePercent": 5,
+    "conciergeApproved": false,
+    "acceptedImportCharges": true,
+    "acceptsConsolidation": true,
+    "acceptsSplitShipment": true
+  },
+  "risk": {
+    "confirmedFraud": false,
+    "score": 12,
+    "failedPayments24h": 0,
+    "distinctCards1h": 1,
+    "deviceBlocklisted": false,
+    "overrideApproved": false,
+    "analystCleared": false,
+    "orders1h": 1,
+    "distinctAddresses24h": 1
+  },
+  "device": {
+    "trusted": true
+  },
+  "payment": {
+    "method": "card",
+    "authorized": true,
+    "authorizedAmount": 320,
+    "settled": false,
+    "settledAmount": 0,
+    "threeDS": "authenticated",
+    "disputed": false,
+    "retryCount": 0,
+    "failureReason": "none"
+  },
+  "promotion": {
+    "applied": false,
+    "discountPercent": 0,
+    "firstOrderOnly": false
+  },
+  "inventory": {
+    "reserved": true,
+    "shortageUnits": 0,
+    "transferPossible": true,
+    "transferMinutes": 15
+  },
+  "warehouse": {
+    "primary": {
+      "available": true
+    },
+    "backup": {
+      "available": true,
+      "coldChainReady": true
+    },
+    "coldChainReady": true,
+    "dockAvailable": true,
+    "pickQueueMinutes": 15,
+    "capacityPercent": 65
+  },
+  "shipping": {
+    "addressVerified": true,
+    "addressBlocked": false,
+    "postalCode": "94107",
+    "firstUse": false,
+    "crossBorder": false,
+    "sameDayZone": true,
+    "coldChainTransferAllowed": true,
+    "coldChainService": true,
+    "hazmatCertified": false,
+    "appointmentConfirmed": true,
+    "incoterm": "DDP",
+    "brokerAssigned": true,
+    "service": "parcel",
+    "carrier": {
+      "primary": {
+        "available": true,
+        "utilization": 55,
+        "slaAccepted": true
+      },
+      "backup": {
+        "available": true,
+        "utilization": 45,
+        "slaAccepted": true
+      }
+    }
+  },
+  "contract": {
+    "active": true,
+    "currency": "USD",
+    "maxOrderAmount": 20000,
+    "deliveryMode": "scheduled",
+    "onHold": false,
+    "secondApprovalRequired": true
+  },
+  "customs": {
+    "documentsComplete": true,
+    "hsCodesComplete": true,
+    "exportCheck": "cleared",
+    "importCheck": "cleared",
+    "dutiesCalculated": true,
+    "dutiesPaid": true,
+    "restrictedGoods": false,
+    "missingRecipientId": false
+  },
+  "marketplace": {
+    "allSellersActive": true,
+    "allocationsBalanced": true,
+    "allReservationsConfirmed": true,
+    "consolidationEligible": true,
+    "consolidationDelayHours": 8,
+    "shipmentCount": 2,
+    "shippingFeesApproved": true,
+    "settlementModel": "platform",
+    "allSellerPayoutsConfigured": true,
+    "sellerDisputeOpen": false,
+    "mixedRestrictedGoods": false,
+    "priceMismatch": false
+  },
+  "subscription": {
+    "status": "active",
+    "renewalDue": true,
+    "planVersionCurrent": true,
+    "addressConfirmed": true,
+    "billingCycle": "monthly",
+    "daysSinceLastDispatch": 30,
+    "exactSkuAvailable": true,
+    "substitutionsAllowed": true,
+    "substituteApproved": true,
+    "substitutePriceDeltaPercent": 0,
+    "paused": false,
+    "cancelAtPeriodEnd": false,
+    "skipNext": false,
+    "duplicateRenewal": false
+  }
+}

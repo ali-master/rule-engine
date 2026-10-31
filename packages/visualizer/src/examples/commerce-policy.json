@@ -1,0 +1,2490 @@
+{
+  "conditions": [
+    {
+      "and": [
+        {
+          "or": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": false
+            },
+            {
+              "field": "$.order.id",
+              "operator": "empty"
+            },
+            {
+              "field": "$.customer.id",
+              "operator": "empty"
+            },
+            {
+              "field": "$.order.currency",
+              "operator": "not-in",
+              "value": ["USD", "EUR", "GBP"]
+            },
+            {
+              "field": "$.order.total",
+              "operator": "less-than-or-equals",
+              "value": 0
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "less-than-or-equals",
+              "value": 0
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "greater-than-or-equals",
+              "value": 301
+            },
+            {
+              "field": "$.order.duplicate",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "and": [
+                {
+                  "field": "$.order.taxIncluded",
+                  "operator": "equals",
+                  "value": false
+                },
+                {
+                  "field": "$.order.taxCalculated",
+                  "operator": "equals",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.order.requiresShipping",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "or": [
+                    {
+                      "field": "$.shipping.addressVerified",
+                      "operator": "equals",
+                      "value": false
+                    },
+                    {
+                      "field": "$.shipping.postalCode",
+                      "operator": "empty"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "invalid_order",
+          "decision": "hold",
+          "queue": "order-integrity",
+          "slaMinutes": 15,
+          "payment": {
+            "capture": "hold"
+          },
+          "fulfillment": {
+            "service": "none"
+          },
+          "reasonCodes": ["INVALID_ORDER"]
+        },
+        "message": "01 \u00b7 Invalid order / stale operational data"
+      }
+    },
+    {
+      "and": [
+        {
+          "or": [
+            {
+              "field": "$.risk.confirmedFraud",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.customer.suspended",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.payment.disputed",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressBlocked",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "and": [
+                {
+                  "field": "$.risk.score",
+                  "operator": "greater-than-or-equals",
+                  "value": 95
+                },
+                {
+                  "or": [
+                    {
+                      "field": "$.risk.failedPayments24h",
+                      "operator": "greater-than-or-equals",
+                      "value": 8
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.device.trusted",
+                          "operator": "equals",
+                          "value": false
+                        },
+                        {
+                          "field": "$.risk.distinctCards1h",
+                          "operator": "greater-than-or-equals",
+                          "value": 5
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.risk.deviceBlocklisted",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "none": [
+                    {
+                      "field": "$.risk.overrideApproved",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.customer.managedAccount",
+                          "operator": "equals",
+                          "value": true
+                        },
+                        {
+                          "field": "$.risk.analystCleared",
+                          "operator": "equals",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "fraud_block",
+          "decision": "block",
+          "queue": "trust-operations",
+          "slaMinutes": 5,
+          "payment": {
+            "capture": "hold"
+          },
+          "fulfillment": {
+            "service": "none"
+          },
+          "reasonCodes": ["FRAUD_BLOCK"]
+        },
+        "message": "02 \u00b7 Confirmed fraud / account restrictions"
+      }
+    },
+    {
+      "and": [
+        {
+          "none": [
+            {
+              "field": "$.risk.confirmedFraud",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.customer.suspended",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.payment.disputed",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.duplicate",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressBlocked",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "field": "$.payment.method",
+          "operator": "equals",
+          "value": "card"
+        },
+        {
+          "or": [
+            {
+              "field": "$.payment.threeDS",
+              "operator": "equals",
+              "value": "required"
+            },
+            {
+              "and": [
+                {
+                  "field": "$.payment.authorized",
+                  "operator": "equals",
+                  "value": false
+                },
+                {
+                  "or": [
+                    {
+                      "field": "$.payment.failureReason",
+                      "operator": "equals",
+                      "value": "soft_decline"
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.payment.failureReason",
+                          "operator": "equals",
+                          "value": "issuer_timeout"
+                        },
+                        {
+                          "field": "$.payment.retryCount",
+                          "operator": "less-than-or-equals",
+                          "value": 2
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.device.trusted",
+                  "operator": "equals",
+                  "value": false
+                },
+                {
+                  "field": "$.order.total",
+                  "operator": "greater-than-or-equals",
+                  "value": 500
+                },
+                {
+                  "none": [
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.risk.analystCleared",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.payment.failureReason",
+              "operator": "equals",
+              "value": "stolen_card"
+            },
+            {
+              "field": "$.payment.retryCount",
+              "operator": "greater-than-or-equals",
+              "value": 4
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "payment_challenge",
+          "decision": "challenge",
+          "queue": "payment-recovery",
+          "slaMinutes": 10,
+          "payment": {
+            "capture": "hold"
+          },
+          "fulfillment": {
+            "service": "none"
+          },
+          "reasonCodes": ["PAYMENT_CHALLENGE"]
+        },
+        "message": "03 \u00b7 Payment authentication / authorization recovery"
+      }
+    },
+    {
+      "and": [
+        {
+          "none": [
+            {
+              "field": "$.risk.confirmedFraud",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.customer.suspended",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.payment.disputed",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.duplicate",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressBlocked",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 10000
+            },
+            {
+              "and": [
+                {
+                  "field": "$.order.total",
+                  "operator": "greater-than-or-equals",
+                  "value": 2000
+                },
+                {
+                  "or": [
+                    {
+                      "field": "$.customer.completedOrders",
+                      "operator": "less-than-or-equals",
+                      "value": 1
+                    },
+                    {
+                      "field": "$.risk.score",
+                      "operator": "greater-than-or-equals",
+                      "value": 65
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.device.trusted",
+                          "operator": "equals",
+                          "value": false
+                        },
+                        {
+                          "field": "$.shipping.firstUse",
+                          "operator": "equals",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.risk.orders1h",
+                  "operator": "greater-than-or-equals",
+                  "value": 5
+                },
+                {
+                  "or": [
+                    {
+                      "field": "$.risk.distinctAddresses24h",
+                      "operator": "greater-than-or-equals",
+                      "value": 3
+                    },
+                    {
+                      "field": "$.risk.distinctCards1h",
+                      "operator": "greater-than-or-equals",
+                      "value": 3
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.promotion.applied",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "or": [
+                    {
+                      "field": "$.promotion.discountPercent",
+                      "operator": "greater-than-or-equals",
+                      "value": 50
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.promotion.firstOrderOnly",
+                          "operator": "equals",
+                          "value": true
+                        },
+                        {
+                          "field": "$.customer.completedOrders",
+                          "operator": "greater-than-or-equals",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.risk.analystCleared",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "and": [
+                {
+                  "field": "$.customer.managedAccount",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.purchaseOrderVerified",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.risk.score",
+                  "operator": "less-than-or-equals",
+                  "value": 20
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "risk_review",
+          "decision": "review",
+          "queue": "commerce-risk",
+          "slaMinutes": 30,
+          "payment": {
+            "capture": "hold"
+          },
+          "fulfillment": {
+            "service": "none"
+          },
+          "reasonCodes": ["RISK_REVIEW"]
+        },
+        "message": "04 \u00b7 High-value / velocity / promotion review"
+      }
+    },
+    {
+      "and": [
+        {
+          "none": [
+            {
+              "field": "$.risk.confirmedFraud",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.customer.suspended",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.payment.disputed",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.duplicate",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressBlocked",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "field": "$.order.requiresShipping",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "or": [
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": false
+            },
+            {
+              "field": "$.inventory.shortageUnits",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "and": [
+                {
+                  "field": "$.warehouse.primary.available",
+                  "operator": "equals",
+                  "value": false
+                },
+                {
+                  "field": "$.warehouse.backup.available",
+                  "operator": "equals",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.order.temperatureControlled",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "none": [
+                    {
+                      "field": "$.warehouse.coldChainReady",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.warehouse.backup.coldChainReady",
+                          "operator": "equals",
+                          "value": true
+                        },
+                        {
+                          "field": "$.shipping.coldChainTransferAllowed",
+                          "operator": "equals",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.primary.available",
+                  "operator": "equals",
+                  "value": false
+                },
+                {
+                  "field": "$.shipping.carrier.backup.available",
+                  "operator": "equals",
+                  "value": false
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.order.hazardous",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.hazmatCertified",
+                  "operator": "equals",
+                  "value": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "inventory_hold",
+          "decision": "hold",
+          "queue": "fulfillment-exceptions",
+          "slaMinutes": 60,
+          "payment": {
+            "capture": "hold"
+          },
+          "fulfillment": {
+            "service": "none"
+          },
+          "reasonCodes": ["INVENTORY_HOLD"]
+        },
+        "message": "05 \u00b7 Inventory / warehouse / carrier exceptions"
+      }
+    },
+    {
+      "and": [
+        {
+          "field": "$.order.channel",
+          "operator": "equals",
+          "value": "b2b"
+        },
+        {
+          "and": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "less-than-or-equals",
+              "value": 120
+            },
+            {
+              "field": "$.customer.status",
+              "operator": "equals",
+              "value": "active"
+            },
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressVerified",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "none": [
+                {
+                  "field": "$.risk.confirmedFraud",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.suspended",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.payment.disputed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.duplicate",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.addressBlocked",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "equals",
+                      "value": "card"
+                    },
+                    {
+                      "field": "$.payment.authorized",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.payment.authorizedAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "in",
+                      "value": ["wallet", "bank_transfer"]
+                    },
+                    {
+                      "field": "$.payment.settled",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.settledAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.customer.managedAccount",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.contract.active",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.order.purchaseOrderVerified",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.order.currency",
+          "operator": "equals",
+          "value": "$.contract.currency"
+        },
+        {
+          "field": "$.order.total",
+          "operator": "less-than-or-equals",
+          "value": "$.contract.maxOrderAmount"
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.contract.deliveryMode",
+                  "operator": "equals",
+                  "value": "scheduled"
+                },
+                {
+                  "field": "$.shipping.appointmentConfirmed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.warehouse.dockAvailable",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.contract.deliveryMode",
+                  "operator": "equals",
+                  "value": "on_demand"
+                },
+                {
+                  "field": "$.warehouse.pickQueueMinutes",
+                  "operator": "less-than-or-equals",
+                  "value": 90
+                },
+                {
+                  "or": [
+                    {
+                      "and": [
+                        {
+                          "field": "$.shipping.carrier.primary.available",
+                          "operator": "equals",
+                          "value": true
+                        },
+                        {
+                          "field": "$.shipping.carrier.primary.utilization",
+                          "operator": "less-than-or-equals",
+                          "value": 85
+                        },
+                        {
+                          "field": "$.shipping.carrier.primary.slaAccepted",
+                          "operator": "equals",
+                          "value": true
+                        }
+                      ]
+                    },
+                    {
+                      "and": [
+                        {
+                          "field": "$.shipping.carrier.backup.available",
+                          "operator": "equals",
+                          "value": true
+                        },
+                        {
+                          "field": "$.shipping.carrier.backup.utilization",
+                          "operator": "less-than-or-equals",
+                          "value": 75
+                        },
+                        {
+                          "field": "$.shipping.carrier.backup.slaAccepted",
+                          "operator": "equals",
+                          "value": true
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.contract.onHold",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.priceOverrideUnapproved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "and": [
+                {
+                  "field": "$.order.total",
+                  "operator": "greater-than-or-equals",
+                  "value": 5000
+                },
+                {
+                  "field": "$.contract.secondApprovalRequired",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.secondApproval",
+                  "operator": "equals",
+                  "value": false
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "b2b_contract",
+          "decision": "release",
+          "queue": "b2b-fulfillment",
+          "slaMinutes": 120,
+          "payment": {
+            "capture": "on_dispatch"
+          },
+          "fulfillment": {
+            "service": "contract_delivery"
+          },
+          "reasonCodes": ["B2B_CONTRACT"]
+        },
+        "message": "06 \u00b7 Contract B2B / purchase-order fulfillment"
+      }
+    },
+    {
+      "and": [
+        {
+          "field": "$.order.channel",
+          "operator": "equals",
+          "value": "retail"
+        },
+        {
+          "field": "$.shipping.crossBorder",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "and": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "less-than-or-equals",
+              "value": 120
+            },
+            {
+              "field": "$.customer.status",
+              "operator": "equals",
+              "value": "active"
+            },
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressVerified",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "none": [
+                {
+                  "field": "$.risk.confirmedFraud",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.suspended",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.payment.disputed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.duplicate",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.addressBlocked",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "equals",
+                      "value": "card"
+                    },
+                    {
+                      "field": "$.payment.authorized",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.payment.authorizedAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "in",
+                      "value": ["wallet", "bank_transfer"]
+                    },
+                    {
+                      "field": "$.payment.settled",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.settledAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.customs.documentsComplete",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.customs.hsCodesComplete",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.customs.exportCheck",
+          "operator": "equals",
+          "value": "cleared"
+        },
+        {
+          "field": "$.customs.importCheck",
+          "operator": "equals",
+          "value": "cleared"
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.shipping.incoterm",
+                  "operator": "equals",
+                  "value": "DDP"
+                },
+                {
+                  "field": "$.customs.dutiesCalculated",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customs.dutiesPaid",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.shipping.incoterm",
+                  "operator": "equals",
+                  "value": "DAP"
+                },
+                {
+                  "field": "$.customer.acceptedImportCharges",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.brokerAssigned",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "and": [
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.shipping.carrier.primary.available",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.shipping.carrier.primary.utilization",
+                      "operator": "less-than-or-equals",
+                      "value": 85
+                    },
+                    {
+                      "field": "$.shipping.carrier.primary.slaAccepted",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.shipping.carrier.backup.available",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.shipping.carrier.backup.utilization",
+                      "operator": "less-than-or-equals",
+                      "value": 75
+                    },
+                    {
+                      "field": "$.shipping.carrier.backup.slaAccepted",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.order.weightKg",
+                      "operator": "less-than-or-equals",
+                      "value": 30
+                    },
+                    {
+                      "field": "$.shipping.service",
+                      "operator": "equals",
+                      "value": "parcel"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.order.weightKg",
+                      "operator": "greater-than-or-equals",
+                      "value": 30
+                    },
+                    {
+                      "field": "$.shipping.service",
+                      "operator": "equals",
+                      "value": "freight"
+                    },
+                    {
+                      "field": "$.shipping.appointmentConfirmed",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.order.hazardous",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.customs.restrictedGoods",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.customs.missingRecipientId",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "international",
+          "decision": "release",
+          "queue": "international-fulfillment",
+          "slaMinutes": 180,
+          "payment": {
+            "capture": "on_dispatch"
+          },
+          "fulfillment": {
+            "service": "tracked_international"
+          },
+          "reasonCodes": ["INTERNATIONAL"]
+        },
+        "message": "07 \u00b7 Cross-border / customs-ready dispatch"
+      }
+    },
+    {
+      "and": [
+        {
+          "field": "$.order.channel",
+          "operator": "equals",
+          "value": "retail"
+        },
+        {
+          "field": "$.shipping.crossBorder",
+          "operator": "equals",
+          "value": false
+        },
+        {
+          "field": "$.customer.tier",
+          "operator": "in",
+          "value": ["gold", "platinum"]
+        },
+        {
+          "and": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "less-than-or-equals",
+              "value": 120
+            },
+            {
+              "field": "$.customer.status",
+              "operator": "equals",
+              "value": "active"
+            },
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressVerified",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "none": [
+                {
+                  "field": "$.risk.confirmedFraud",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.suspended",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.payment.disputed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.duplicate",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.addressBlocked",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "equals",
+                      "value": "card"
+                    },
+                    {
+                      "field": "$.payment.authorized",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.payment.authorizedAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "in",
+                      "value": ["wallet", "bank_transfer"]
+                    },
+                    {
+                      "field": "$.payment.settled",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.settledAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.customer.completedOrders",
+                  "operator": "greater-than-or-equals",
+                  "value": 10
+                },
+                {
+                  "field": "$.customer.lifetimeSpend",
+                  "operator": "greater-than-or-equals",
+                  "value": 2000
+                },
+                {
+                  "field": "$.customer.returnRatePercent",
+                  "operator": "less-than-or-equals",
+                  "value": 15
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.customer.managedAccount",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.conciergeApproved",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "and": [
+            {
+              "field": "$.shipping.sameDayZone",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.localHour",
+              "operator": "less-than-or-equals",
+              "value": 14
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.warehouse.primary.available",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.warehouse.pickQueueMinutes",
+                      "operator": "less-than-or-equals",
+                      "value": 30
+                    },
+                    {
+                      "field": "$.warehouse.capacityPercent",
+                      "operator": "greater-than-or-equals",
+                      "value": 20
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.warehouse.backup.available",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.inventory.transferPossible",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.inventory.transferMinutes",
+                      "operator": "less-than-or-equals",
+                      "value": 20
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.primary.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.carrier.primary.utilization",
+                  "operator": "less-than-or-equals",
+                  "value": 85
+                },
+                {
+                  "field": "$.shipping.carrier.primary.slaAccepted",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.backup.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.carrier.backup.utilization",
+                  "operator": "less-than-or-equals",
+                  "value": 75
+                },
+                {
+                  "field": "$.shipping.carrier.backup.slaAccepted",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.order.preorder",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.hazardous",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.temperatureControlled",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.weightKg",
+              "operator": "greater-than-or-equals",
+              "value": 20
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "vip_express",
+          "decision": "release",
+          "queue": "priority-fulfillment",
+          "slaMinutes": 20,
+          "payment": {
+            "capture": "on_dispatch"
+          },
+          "fulfillment": {
+            "service": "same_day"
+          },
+          "reasonCodes": ["VIP_EXPRESS"]
+        },
+        "message": "08 \u00b7 VIP / same-day priority fulfillment"
+      }
+    },
+    {
+      "and": [
+        {
+          "field": "$.order.channel",
+          "operator": "equals",
+          "value": "marketplace"
+        },
+        {
+          "and": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "less-than-or-equals",
+              "value": 120
+            },
+            {
+              "field": "$.customer.status",
+              "operator": "equals",
+              "value": "active"
+            },
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressVerified",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "none": [
+                {
+                  "field": "$.risk.confirmedFraud",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.suspended",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.payment.disputed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.duplicate",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.addressBlocked",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "equals",
+                      "value": "card"
+                    },
+                    {
+                      "field": "$.payment.authorized",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.payment.authorizedAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "in",
+                      "value": ["wallet", "bank_transfer"]
+                    },
+                    {
+                      "field": "$.payment.settled",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.settledAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.order.sellerCount",
+          "operator": "greater-than-or-equals",
+          "value": 2
+        },
+        {
+          "field": "$.marketplace.allSellersActive",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.marketplace.allocationsBalanced",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.marketplace.allReservationsConfirmed",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.marketplace.consolidationEligible",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.marketplace.consolidationDelayHours",
+                  "operator": "less-than-or-equals",
+                  "value": 24
+                },
+                {
+                  "field": "$.customer.acceptsConsolidation",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.customer.acceptsSplitShipment",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.marketplace.shipmentCount",
+                  "operator": "less-than-or-equals",
+                  "value": 3
+                },
+                {
+                  "field": "$.marketplace.shippingFeesApproved",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "and": [
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.shipping.carrier.primary.available",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.shipping.carrier.primary.utilization",
+                      "operator": "less-than-or-equals",
+                      "value": 85
+                    },
+                    {
+                      "field": "$.shipping.carrier.primary.slaAccepted",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.shipping.carrier.backup.available",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.shipping.carrier.backup.utilization",
+                      "operator": "less-than-or-equals",
+                      "value": 75
+                    },
+                    {
+                      "field": "$.shipping.carrier.backup.slaAccepted",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "field": "$.marketplace.settlementModel",
+                  "operator": "equals",
+                  "value": "platform"
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.marketplace.settlementModel",
+                      "operator": "equals",
+                      "value": "seller"
+                    },
+                    {
+                      "field": "$.marketplace.allSellerPayoutsConfigured",
+                      "operator": "equals",
+                      "value": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.marketplace.sellerDisputeOpen",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.marketplace.mixedRestrictedGoods",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.marketplace.priceMismatch",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "marketplace_split",
+          "decision": "release",
+          "queue": "marketplace-operations",
+          "slaMinutes": 90,
+          "payment": {
+            "capture": "per_shipment"
+          },
+          "fulfillment": {
+            "service": "split_tracked"
+          },
+          "reasonCodes": ["MARKETPLACE_SPLIT"]
+        },
+        "message": "09 \u00b7 Marketplace / multi-seller split shipment"
+      }
+    },
+    {
+      "and": [
+        {
+          "field": "$.order.channel",
+          "operator": "equals",
+          "value": "subscription"
+        },
+        {
+          "and": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "less-than-or-equals",
+              "value": 120
+            },
+            {
+              "field": "$.customer.status",
+              "operator": "equals",
+              "value": "active"
+            },
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressVerified",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "none": [
+                {
+                  "field": "$.risk.confirmedFraud",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.suspended",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.payment.disputed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.duplicate",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.addressBlocked",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "equals",
+                      "value": "card"
+                    },
+                    {
+                      "field": "$.payment.authorized",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.payment.authorizedAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "in",
+                      "value": ["wallet", "bank_transfer"]
+                    },
+                    {
+                      "field": "$.payment.settled",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.settledAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "field": "$.subscription.status",
+          "operator": "equals",
+          "value": "active"
+        },
+        {
+          "field": "$.subscription.renewalDue",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.subscription.planVersionCurrent",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "field": "$.subscription.addressConfirmed",
+          "operator": "equals",
+          "value": true
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.subscription.billingCycle",
+                  "operator": "equals",
+                  "value": "monthly"
+                },
+                {
+                  "field": "$.subscription.daysSinceLastDispatch",
+                  "operator": "less-than-or-equals",
+                  "value": 45
+                },
+                {
+                  "field": "$.subscription.daysSinceLastDispatch",
+                  "operator": "greater-than-or-equals",
+                  "value": 25
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.subscription.billingCycle",
+                  "operator": "equals",
+                  "value": "quarterly"
+                },
+                {
+                  "field": "$.subscription.daysSinceLastDispatch",
+                  "operator": "greater-than-or-equals",
+                  "value": 80
+                },
+                {
+                  "field": "$.subscription.daysSinceLastDispatch",
+                  "operator": "less-than-or-equals",
+                  "value": 100
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "field": "$.subscription.exactSkuAvailable",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "and": [
+                {
+                  "field": "$.subscription.substitutionsAllowed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.subscription.substituteApproved",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.subscription.substitutePriceDeltaPercent",
+                  "operator": "less-than-or-equals",
+                  "value": 5
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.primary.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.carrier.primary.utilization",
+                  "operator": "less-than-or-equals",
+                  "value": 85
+                },
+                {
+                  "field": "$.shipping.carrier.primary.slaAccepted",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.backup.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.carrier.backup.utilization",
+                  "operator": "less-than-or-equals",
+                  "value": 75
+                },
+                {
+                  "field": "$.shipping.carrier.backup.slaAccepted",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.subscription.paused",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.subscription.cancelAtPeriodEnd",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.subscription.skipNext",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.subscription.duplicateRenewal",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "subscription",
+          "decision": "release",
+          "queue": "subscription-operations",
+          "slaMinutes": 240,
+          "payment": {
+            "capture": "on_dispatch"
+          },
+          "fulfillment": {
+            "service": "scheduled_standard"
+          },
+          "reasonCodes": ["SUBSCRIPTION"]
+        },
+        "message": "10 \u00b7 Subscription / renewal fulfillment"
+      }
+    },
+    {
+      "and": [
+        {
+          "field": "$.order.channel",
+          "operator": "equals",
+          "value": "retail"
+        },
+        {
+          "field": "$.shipping.crossBorder",
+          "operator": "equals",
+          "value": false
+        },
+        {
+          "and": [
+            {
+              "field": "$.context.schemaValid",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.context.dataAgeSeconds",
+              "operator": "less-than-or-equals",
+              "value": 120
+            },
+            {
+              "field": "$.customer.status",
+              "operator": "equals",
+              "value": "active"
+            },
+            {
+              "field": "$.inventory.reserved",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.shipping.addressVerified",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.itemCount",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "field": "$.order.total",
+              "operator": "greater-than-or-equals",
+              "value": 1
+            },
+            {
+              "none": [
+                {
+                  "field": "$.risk.confirmedFraud",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.customer.suspended",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.payment.disputed",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.order.duplicate",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.addressBlocked",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "or": [
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "equals",
+                      "value": "card"
+                    },
+                    {
+                      "field": "$.payment.authorized",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.threeDS",
+                      "operator": "equals",
+                      "value": "authenticated"
+                    },
+                    {
+                      "field": "$.payment.authorizedAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                },
+                {
+                  "and": [
+                    {
+                      "field": "$.payment.method",
+                      "operator": "in",
+                      "value": ["wallet", "bank_transfer"]
+                    },
+                    {
+                      "field": "$.payment.settled",
+                      "operator": "equals",
+                      "value": true
+                    },
+                    {
+                      "field": "$.payment.settledAmount",
+                      "operator": "greater-than-or-equals",
+                      "value": "$.order.total"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.warehouse.primary.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.warehouse.pickQueueMinutes",
+                  "operator": "less-than-or-equals",
+                  "value": 240
+                },
+                {
+                  "field": "$.warehouse.capacityPercent",
+                  "operator": "greater-than-or-equals",
+                  "value": 5
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.warehouse.backup.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.inventory.transferPossible",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.inventory.transferMinutes",
+                  "operator": "less-than-or-equals",
+                  "value": 120
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.primary.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.carrier.primary.utilization",
+                  "operator": "less-than-or-equals",
+                  "value": 85
+                },
+                {
+                  "field": "$.shipping.carrier.primary.slaAccepted",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "and": [
+                {
+                  "field": "$.shipping.carrier.backup.available",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.carrier.backup.utilization",
+                  "operator": "less-than-or-equals",
+                  "value": 75
+                },
+                {
+                  "field": "$.shipping.carrier.backup.slaAccepted",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "or": [
+            {
+              "field": "$.order.temperatureControlled",
+              "operator": "equals",
+              "value": false
+            },
+            {
+              "and": [
+                {
+                  "field": "$.warehouse.coldChainReady",
+                  "operator": "equals",
+                  "value": true
+                },
+                {
+                  "field": "$.shipping.coldChainService",
+                  "operator": "equals",
+                  "value": true
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "none": [
+            {
+              "field": "$.order.preorder",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.hazardous",
+              "operator": "equals",
+              "value": true
+            },
+            {
+              "field": "$.order.manualHold",
+              "operator": "equals",
+              "value": true
+            }
+          ]
+        },
+        {
+          "field": "$.context.policyVersion",
+          "operator": "equals",
+          "value": "commerce-2026.10"
+        }
+      ],
+      "result": {
+        "value": {
+          "route": "standard_domestic",
+          "decision": "release",
+          "queue": "standard-fulfillment",
+          "slaMinutes": 360,
+          "payment": {
+            "capture": "on_dispatch"
+          },
+          "fulfillment": {
+            "service": "tracked_standard"
+          },
+          "reasonCodes": ["STANDARD_DOMESTIC"]
+        },
+        "message": "11 \u00b7 Standard domestic / warehouse allocation"
+      }
+    }
+  ],
+  "default": {
+    "value": {
+      "route": "unmatched_review",
+      "decision": "review",
+      "queue": "order-triage",
+      "slaMinutes": 60,
+      "payment": {
+        "capture": "hold"
+      },
+      "fulfillment": {
+        "service": "none"
+      },
+      "reasonCodes": ["NO_APPROVED_ROUTE"]
+    },
+    "message": "No approved route \u2014 manual triage"
+  }
+}
