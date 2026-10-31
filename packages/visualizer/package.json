@@ -1,0 +1,62 @@
+{
+  "name": "@usex/rule-engine-visualizer",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Interactive React Flow explorer for nested JSON rules.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ali-master/rule-engine.git",
+    "directory": "packages/visualizer"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles": "./dist/style.css"
+  },
+  "scripts": {
+    "dev": "vite --port 5174",
+    "build": "bun check && vite build",
+    "build:demo": "VISUALIZER_DEMO=1 vite build",
+    "preview:demo": "vite preview --outDir dist-demo --port 4174",
+    "test:types": "bun check",
+    "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:junit": "vitest run --reporter=junit --outputFile=test-report.junit.xml",
+    "format": "bun fmt",
+    "format:check": "bun fmt --check",
+    "lint": "eslint src tests",
+    "lint:fix": "bun run lint --fix",
+    "release": "bun run test:unit && bun run build",
+    "postrelease": "standard-version --tag-prefix rule-engine-visualizer@ && bun publish --access public && git push --follow-tags origin master",
+    "release:beta": "bun run test:unit && bun run build",
+    "postrelease:beta": "standard-version --tag-prefix rule-engine-visualizer@ --prerelease beta && bun publish --access public --tag beta && git push --follow-tags origin master",
+    "test:package": "bun check -p tests/tsconfig.package.json"
+  },
+  "peerDependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "dependencies": {
+    "@usex/rule-engine": "workspace:*",
+    "@xyflow/react": "^12.10.0",
+    "lucide-react": "1.66.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "vite": "^8.3.5",
+    "vite-plugin-dts": "^5.1.2",
+    "@vitejs/plugin-react-swc": "^4.3.3"
+  }
+}
