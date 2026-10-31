@@ -61,7 +61,7 @@ export const DateInput: React.FC<DateInputProps> = ({
               onChange(newDate.toISOString());
             }
           }}
-          initialFocus
+          autoFocus
           disabled={(date) =>
             date > new Date() || date < new Date("1900-01-01")
           }

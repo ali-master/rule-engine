@@ -1,10 +1,9 @@
-import { expect, describe, bench } from "vitest";
+import { it, expect, describe } from "vitest";
 import { RuleEngine, Operators, ConditionTypes } from "@root";
 
 describe("builder correctly", () => {
-  bench(
-    "creates a valid ruleset",
-    () => {
+  it("creates a valid ruleset", async ({ bench }) => {
+    await bench("creates a valid ruleset", () => {
       const builder = RuleEngine.builder();
 
       builder
@@ -14,15 +13,13 @@ describe("builder correctly", () => {
           ]),
         )
         .build();
-    },
-    {
+    }).run({
       iterations: 10_000,
-    },
-  );
+    });
+  });
 
-  bench(
-    "creates a complex ruleset properly",
-    () => {
+  it("creates a complex ruleset properly", async ({ bench }) => {
+    await bench("creates a complex ruleset properly", () => {
       const builder = RuleEngine.builder();
 
       const rule = builder
@@ -75,9 +72,8 @@ describe("builder correctly", () => {
         ],
         default: { value: 2 },
       });
-    },
-    {
+    }).run({
       iterations: 10_000,
-    },
-  );
+    });
+  });
 });

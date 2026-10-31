@@ -497,8 +497,8 @@ export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
     );
   };
 
-  // Result indicator component
-  const ResultIndicator = () => {
+  // Render the result without creating a new component type on each render.
+  const renderResultIndicator = () => {
     if (!evaluationResult && !error) return null;
 
     return (
@@ -547,7 +547,7 @@ export const RuleEvaluator: React.FC<RuleEvaluatorProps> = ({
                 </p>
               </div>
             </div>
-            <ResultIndicator />
+            {renderResultIndicator()}
           </div>
         </CardHeader>
 

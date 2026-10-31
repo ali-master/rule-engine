@@ -2,7 +2,7 @@
   "name": "@usex/rule-engine",
   "type": "module",
   "version": "0.0.2",
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "bun@1.4.4",
   "description": "The ultimate JSON-based rule engine that turns complex business logic into declarative configurations. Built for developers who believe code should be expressive, not repetitive.",
   "author": {
     "name": "Ali Torki",
@@ -49,46 +49,47 @@
     "dist"
   ],
   "engines": {
-    "node": ">=18.12.0"
+    "node": ">=22.12.0"
   },
   "scripts": {
-    "start": "nodemon ./dist/index.js --watch",
+    "start": "bun --watch ./dist/esm/index.js",
     "dev": "tsup-node --watch",
     "build": "tsup-node",
-    "test": "cross-env CI=true vitest --typecheck",
-    "test:junit": "cross-env CI=true vitest --reporter=junit --outputFile=test-report.junit.xml --typecheck",
-    "test:watch": "pnpm run test --watch",
-    "test:ui": "pnpm run test:watch --ui --coverage.enabled=true",
-    "test:bench": "cross-env CI=true vitest bench",
-    "test:coverage": "pnpm run test run --coverage",
-    "test:debug": "vitest --inspect-brk --pool forks --poolOptions.forks.singleFork",
-    "test:debug:watch": "pnpm run test:debug --watch --poolOptions.threads.isolate false",
+    "test": "vitest run",
+    "test:junit": "vitest run --reporter=junit --outputFile=test-report.junit.xml",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui --coverage",
+    "test:bench": "CI=true vitest bench",
+    "test:coverage": "vitest run --coverage",
+    "test:debug": "vitest --inspect-brk --pool forks --maxWorkers 1 --no-file-parallelism",
+    "test:debug:watch": "bun run test:debug --watch --no-isolate",
     "inspect": "node-modules-inspector",
-    "test:types": "tsc --noEmit",
+    "test:types": "bun check",
     "test:knip": "knip",
     "test:knip:fix": "knip --fix",
-    "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\"",
-    "format": "prettier --write \"**/*.{ts,tsx,mdx}\"",
+    "format:check": "bun fmt --check",
+    "format": "bun fmt",
     "lint": "eslint \"src/**/*.ts\"",
-    "lint:fix": "pnpm run lint --fix",
-    "prepublishOnly": "pnpm lint && pnpm test",
-    "prerelease": "pnpm run test",
-    "release": "cross-env CI=true pnpm run build",
-    "postrelease": "standard-version && pnpm publish --access public && git push --follow-tags origin master",
-    "release:beta": "pnpm run build",
-    "postrelease:beta": "standard-version --prerelease beta && pnpm publish --access public --tag beta && git push --follow-tags origin master"
+    "lint:fix": "bun run lint --fix",
+    "prepublishOnly": "bun run lint && bun run test",
+    "prerelease": "bun run test",
+    "release": "CI=true bun run build",
+    "postrelease": "standard-version && bun publish --access public && git push --follow-tags origin master",
+    "release:beta": "bun run build",
+    "postrelease:beta": "standard-version --prerelease beta && bun publish --access public --tag beta && git push --follow-tags origin master",
+    "test:unit": "vitest run"
   },
   "peerDependencies": {
-    "@persian-tools/persian-tools": "^3.6.0",
-    "date-fns": "^4.1.0",
-    "eventemitter3": "^5.0.1",
-    "jsonpath-plus": "^10.3.0",
-    "ramda": "^0.30.1"
+    "@persian-tools/persian-tools": "^4.0.4",
+    "date-fns": "^4.4.0",
+    "eventemitter3": "^5.0.4",
+    "jsonpath-plus": "^11.2.2",
+    "ramda": "^0.32.0"
   },
   "devDependencies": {
-    "@types/ramda": "^0.31.1",
-    "axios": "^1.12.2",
-    "tsup": "^8.5.0"
+    "@types/ramda": "^0.32.0",
+    "axios": "^1.21.0",
+    "tsup": "^9.0.0"
   },
   "publishConfig": {
     "access": "public"

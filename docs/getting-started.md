@@ -49,29 +49,29 @@ The builder requires React 18 or 19:
 Let's create a simple rule to check if a user is eligible for a discount:
 
 ```typescript
-import { RuleEngine } from '@usex/rule-engine';
+import { RuleEngine } from "@usex/rule-engine";
 
 // Define the rule
 const discountRule = {
   conditions: {
     and: [
       { field: "age", operator: "greater-than", value: 18 },
-      { field: "membershipLevel", operator: "equals", value: "gold" }
-    ]
+      { field: "membershipLevel", operator: "equals", value: "gold" },
+    ],
   },
-  default: { value: false }
+  default: { value: false },
 };
 
 // Test data
 const customer = {
   age: 25,
   membershipLevel: "gold",
-  totalPurchases: 1500
+  totalPurchases: 1500,
 };
 
 // Evaluate the rule
 const result = await RuleEngine.evaluate(discountRule, customer);
-console.log(result); 
+console.log(result);
 // { value: true, isPassed: true }
 ```
 
@@ -79,11 +79,11 @@ console.log(result);
 
 The evaluation returns an object with:
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `value` | `any` | The result value (from condition or default) |
-| `isPassed` | `boolean` | Whether any condition matched |
-| `message` | `string?` | Optional message from constraints |
+| Property   | Type      | Description                                  |
+| ---------- | --------- | -------------------------------------------- |
+| `value`    | `any`     | The result value (from condition or default) |
+| `isPassed` | `boolean` | Whether any condition matched                |
+| `message`  | `string?` | Optional message from constraints            |
 
 ## Understanding Rules
 
@@ -93,8 +93,8 @@ Every rule has two main parts:
 
 ```typescript
 interface Rule {
-  conditions: Condition | Condition[];  // What to evaluate
-  default?: any;                       // Fallback if no match
+  conditions: Condition | Condition[]; // What to evaluate
+  default?: any; // Fallback if no match
 }
 ```
 
@@ -107,24 +107,24 @@ Conditions group constraints using logical operators:
 {
   and: [
     { field: "age", operator: "greater-than", value: 21 },
-    { field: "country", operator: "equals", value: "US" }
-  ]
+    { field: "country", operator: "equals", value: "US" },
+  ];
 }
 
 // OR - Any must match
 {
   or: [
     { field: "role", operator: "equals", value: "admin" },
-    { field: "role", operator: "equals", value: "moderator" }
-  ]
+    { field: "role", operator: "equals", value: "moderator" },
+  ];
 }
 
 // NONE - None must match
 {
   none: [
     { field: "status", operator: "equals", value: "banned" },
-    { field: "status", operator: "equals", value: "suspended" }
-  ]
+    { field: "status", operator: "equals", value: "suspended" },
+  ];
 }
 ```
 
@@ -134,10 +134,10 @@ The basic building blocks:
 
 ```typescript
 interface Constraint {
-  field: string;      // What to check
-  operator: string;   // How to check
-  value?: any;        // What to compare against
-  message?: string;   // Optional validation message
+  field: string; // What to check
+  operator: string; // How to check
+  value?: any; // What to compare against
+  message?: string; // Optional validation message
 }
 ```
 
@@ -146,17 +146,17 @@ interface Constraint {
 ### Basic Setup
 
 ```tsx
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
-import '@usex/rule-engine-builder/styles';
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
+import "@usex/rule-engine-builder/styles";
 
 function App() {
   const [rule, setRule] = useState(null);
-  
+
   const handleRuleChange = (newRule) => {
     setRule(newRule);
-    console.log('Rule updated:', newRule);
+    console.log("Rule updated:", newRule);
   };
-  
+
   return (
     <div className="app">
       <TreeRuleBuilder
@@ -164,7 +164,7 @@ function App() {
         showJsonViewer={true}
         showToolbar={true}
       />
-      
+
       {rule && (
         <div className="result">
           <h3>Generated Rule:</h3>
@@ -183,34 +183,31 @@ Define your business fields:
 ```tsx
 const fields = [
   {
-    name: 'customer.tier',
-    label: 'Customer Tier',
-    type: 'string',
-    group: 'Customer',
+    name: "customer.tier",
+    label: "Customer Tier",
+    type: "string",
+    group: "Customer",
     values: [
-      { value: 'bronze', label: 'Bronze' },
-      { value: 'silver', label: 'Silver' },
-      { value: 'gold', label: 'Gold' }
-    ]
+      { value: "bronze", label: "Bronze" },
+      { value: "silver", label: "Silver" },
+      { value: "gold", label: "Gold" },
+    ],
   },
   {
-    name: 'order.total',
-    label: 'Order Total',
-    type: 'number',
-    group: 'Order'
+    name: "order.total",
+    label: "Order Total",
+    type: "number",
+    group: "Order",
   },
   {
-    name: 'order.items.length',
-    label: 'Item Count',
-    type: 'number',
-    group: 'Order'
-  }
+    name: "order.items.length",
+    label: "Item Count",
+    type: "number",
+    group: "Order",
+  },
 ];
 
-<TreeRuleBuilder
-  fields={fields}
-  onChange={handleRuleChange}
-/>
+<TreeRuleBuilder fields={fields} onChange={handleRuleChange} />;
 ```
 
 ### With Sample Data
@@ -220,14 +217,14 @@ Provide sample data for testing:
 ```tsx
 const sampleData = {
   customer: {
-    tier: 'gold',
-    joinDate: '2023-01-15',
-    totalSpent: 2500
+    tier: "gold",
+    joinDate: "2023-01-15",
+    totalSpent: 2500,
   },
   order: {
     total: 150,
-    items: ['item1', 'item2', 'item3']
-  }
+    items: ["item1", "item2", "item3"],
+  },
 };
 
 <TreeRuleBuilder
@@ -235,7 +232,7 @@ const sampleData = {
   sampleData={sampleData}
   onChange={handleRuleChange}
   showJsonViewer={true}
-/>
+/>;
 ```
 
 ## Common Patterns
@@ -249,20 +246,20 @@ const discountRule = {
     {
       and: [
         { field: "customer.tier", operator: "equals", value: "vip" },
-        { field: "order.total", operator: "greater-than", value: 100 }
+        { field: "order.total", operator: "greater-than", value: 100 },
       ],
-      result: { discount: 0.20, message: "VIP discount applied!" }
+      result: { discount: 0.2, message: "VIP discount applied!" },
     },
     // New customers get 10% off
     {
       and: [
         { field: "customer.isNew", operator: "equals", value: true },
-        { field: "order.total", operator: "greater-than", value: 50 }
+        { field: "order.total", operator: "greater-than", value: 50 },
       ],
-      result: { discount: 0.10, message: "Welcome discount!" }
-    }
+      result: { discount: 0.1, message: "Welcome discount!" },
+    },
   ],
-  default: { discount: 0, message: "No discount available" }
+  default: { discount: 0, message: "No discount available" },
 };
 ```
 
@@ -278,14 +275,14 @@ const accessRule = {
       {
         and: [
           { field: "user.id", operator: "equals", value: "$.resource.ownerId" },
-          { field: "resource.public", operator: "equals", value: false }
-        ]
+          { field: "resource.public", operator: "equals", value: false },
+        ],
       },
       // Anyone can access public resources
-      { field: "resource.public", operator: "equals", value: true }
-    ]
+      { field: "resource.public", operator: "equals", value: true },
+    ],
   },
-  default: { value: false }
+  default: { value: false },
 };
 ```
 
@@ -296,28 +293,28 @@ const validationRule = {
   conditions: {
     and: [
       // Email validation
-      { 
-        field: "email", 
-        operator: "matches", 
+      {
+        field: "email",
+        operator: "matches",
         value: "^[^@]+@[^@]+\\.[^@]+$",
-        message: "Invalid email format"
+        message: "Invalid email format",
       },
       // Age restriction
-      { 
-        field: "age", 
-        operator: "between", 
+      {
+        field: "age",
+        operator: "between",
         value: [18, 100],
-        message: "Age must be between 18 and 100"
+        message: "Age must be between 18 and 100",
       },
       // Password strength
-      { 
-        field: "password", 
-        operator: "matches", 
+      {
+        field: "password",
+        operator: "matches",
         value: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$",
-        message: "Password must contain uppercase, lowercase, and number"
-      }
-    ]
-  }
+        message: "Password must contain uppercase, lowercase, and number",
+      },
+    ],
+  },
 };
 ```
 
@@ -328,21 +325,19 @@ const pricingRule = {
   conditions: [
     // Bulk discount
     {
-      and: [
-        { field: "quantity", operator: "greater-than", value: 100 }
-      ],
-      result: { multiplier: 0.8, reason: "Bulk discount" }
+      and: [{ field: "quantity", operator: "greater-than", value: 100 }],
+      result: { multiplier: 0.8, reason: "Bulk discount" },
     },
     // Premium customer discount
     {
       and: [
         { field: "customer.tier", operator: "in", value: ["gold", "platinum"] },
-        { field: "quantity", operator: "greater-than", value: 10 }
+        { field: "quantity", operator: "greater-than", value: 10 },
       ],
-      result: { multiplier: 0.85, reason: "Premium customer discount" }
-    }
+      result: { multiplier: 0.85, reason: "Premium customer discount" },
+    },
   ],
-  default: { multiplier: 1, reason: "Standard pricing" }
+  default: { multiplier: 1, reason: "Standard pricing" },
 };
 ```
 
@@ -358,14 +353,14 @@ const rule = {
     and: [
       // Access nested object
       { field: "$.user.profile.age", operator: "greater-than", value: 18 },
-      
+
       // Access array element
       { field: "$.orders[0].total", operator: "greater-than", value: 100 },
-      
+
       // Filter arrays
-      { field: "$.items[?(@.price > 50)]", operator: "not-empty", value: true }
-    ]
-  }
+      { field: "$.items[?(@.price > 50)]", operator: "not-empty", value: true },
+    ],
+  },
 };
 ```
 
@@ -379,11 +374,15 @@ const rule = {
     and: [
       // Compare two fields
       { field: "$.currentPrice", operator: "less-than", value: "$.maxPrice" },
-      
+
       // Percentage of another field
-      { field: "$.discount", operator: "less-than-or-equals", value: "$.maxDiscount" }
-    ]
-  }
+      {
+        field: "$.discount",
+        operator: "less-than-or-equals",
+        value: "$.maxDiscount",
+      },
+    ],
+  },
 };
 ```
 
@@ -400,15 +399,15 @@ const complexRule = {
           {
             or: [
               { field: "purchases", operator: "greater-than", value: 10 },
-              { field: "totalSpent", operator: "greater-than", value: 1000 }
-            ]
-          }
-        ]
+              { field: "totalSpent", operator: "greater-than", value: 1000 },
+            ],
+          },
+        ],
       },
       // VIP override
-      { field: "isVIP", operator: "equals", value: true }
-    ]
-  }
+      { field: "isVIP", operator: "equals", value: true },
+    ],
+  },
 };
 ```
 
@@ -419,11 +418,11 @@ const complexRule = {
 ```typescript
 // Quick boolean check
 const isPassed = await RuleEngine.checkIsPassed(rule, data);
-console.log('Rule passed:', isPassed); // true or false
+console.log("Rule passed:", isPassed); // true or false
 
 // Get just the result value
 const value = await RuleEngine.getEvaluateResult(rule, data);
-console.log('Result:', value); // The actual result value
+console.log("Result:", value); // The actual result value
 ```
 
 ### Batch Testing
@@ -432,7 +431,7 @@ console.log('Result:', value); // The actual result value
 const testCases = [
   { name: "John", age: 25, tier: "gold" },
   { name: "Jane", age: 17, tier: "silver" },
-  { name: "Bob", age: 30, tier: "bronze" }
+  { name: "Bob", age: 30, tier: "bronze" },
 ];
 
 const results = await RuleEngine.evaluate(rule, testCases);
@@ -449,7 +448,7 @@ Always validate rules before using them:
 const validation = RuleEngine.validate(rule);
 
 if (!validation.isValid) {
-  console.error('Invalid rule:', validation.error.message);
+  console.error("Invalid rule:", validation.error.message);
 } else {
   // Safe to use the rule
   const result = await RuleEngine.evaluate(rule, data);
@@ -470,25 +469,25 @@ Now that you understand the basics:
 
 ### Common Operators
 
-| Operator | Description | Example |
-|----------|-------------|---------|
-| `equals` | Exact match | `{ operator: "equals", value: "active" }` |
-| `greater-than` | Greater than | `{ operator: "greater-than", value: 18 }` |
-| `contains` | Array/string contains | `{ operator: "contains", value: "admin" }` |
-| `between` | Range check | `{ operator: "between", value: [10, 20] }` |
-| `matches` | Regex match | `{ operator: "matches", value: "^[A-Z]" }` |
-| `exists` | Field exists | `{ operator: "exists", value: true }` |
-| `empty` | Is empty | `{ operator: "empty", value: true }` |
+| Operator       | Description           | Example                                    |
+| -------------- | --------------------- | ------------------------------------------ |
+| `equals`       | Exact match           | `{ operator: "equals", value: "active" }`  |
+| `greater-than` | Greater than          | `{ operator: "greater-than", value: 18 }`  |
+| `contains`     | Array/string contains | `{ operator: "contains", value: "admin" }` |
+| `between`      | Range check           | `{ operator: "between", value: [10, 20] }` |
+| `matches`      | Regex match           | `{ operator: "matches", value: "^[A-Z]" }` |
+| `exists`       | Field exists          | `{ operator: "exists", value: true }`      |
+| `empty`        | Is empty              | `{ operator: "empty", value: true }`       |
 
 ### Keyboard Shortcuts (Builder)
 
-| Shortcut | Action |
-|----------|--------|
-| `Ctrl/Cmd + Z` | Undo |
-| `Ctrl/Cmd + Y` | Redo |
-| `Ctrl/Cmd + S` | Save |
+| Shortcut       | Action            |
+| -------------- | ----------------- |
+| `Ctrl/Cmd + Z` | Undo              |
+| `Ctrl/Cmd + Y` | Redo              |
+| `Ctrl/Cmd + S` | Save              |
 | `Ctrl/Cmd + E` | Toggle evaluation |
-| `?` | Show help |
+| `?`            | Show help         |
 
 ---
 

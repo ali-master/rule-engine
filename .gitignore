@@ -9,3 +9,5 @@
 .husky
 .claude
 apps/*/.next/
+
+**/test-report.junit.xml

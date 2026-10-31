@@ -2,9 +2,7 @@
 import type { Operators, ConditionTypes } from "@root/enums";
 
 export type ConditionType =
-  | ConditionTypes.OR
-  | ConditionTypes.AND
-  | ConditionTypes.NONE;
+  ConditionTypes.OR | ConditionTypes.AND | ConditionTypes.NONE;
 export type OperatorsType =
   | Operators.Equals
   | Operators.NotEquals

@@ -39,7 +39,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({
     try {
       await navigator.clipboard.writeText(jsonString);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(setCopied, 2000, false);
     } catch (error) {
       console.error("Failed to copy:", error);
     }

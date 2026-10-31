@@ -13,19 +13,24 @@ The refactoring focused on enhancing TypeScript support through method overloads
 Added TypeScript method overloads to automatically infer return types based on input:
 
 #### Evaluator Class (`evaluator.ts`)
+
 - `evaluate()` - Returns `EvaluationResult<T>` for single object, `Array<EvaluationResult<T>>` for arrays
 
 #### RuleEngine Class (`rule-engine.ts`)
+
 **Instance Methods:**
+
 - `evaluate()` - Async evaluation with type inference
 - `checkIsPassed()` - Returns `boolean` for single, `boolean | boolean[]` for arrays
 - `getEvaluateResult()` - Returns `T` for single, `T[]` for arrays
 - `evaluateMany()` (formerly `evaluateMultiple`) - Handles both single and array criteria
 
 **Static Methods:**
+
 - All instance methods also available as static methods with matching overloads
 
 #### ObjectDiscovery Class (`object-discovery.ts`)
+
 - `resolveProperty()` - Works with both objects and arrays
 - `updateProperty()` - Works with both objects and arrays
 - `resolveTextPathExpressions()` - Template string resolution for both types
@@ -33,6 +38,7 @@ Added TypeScript method overloads to automatically infer return types based on i
 ### 2. Singleton Pattern Enforcement
 
 **Change:** Made RuleEngine constructor private
+
 ```typescript
 // Before
 const engine = new RuleEngine();
@@ -41,7 +47,8 @@ const engine = new RuleEngine();
 const engine = RuleEngine.getInstance();
 ```
 
-**Impact:** 
+**Impact:**
+
 - Better resource management
 - Prevents multiple instances
 - Required updating all test files
@@ -49,19 +56,23 @@ const engine = RuleEngine.getInstance();
 ### 3. Bug Fixes
 
 #### Message Priority Fix
+
 **Issue:** Default rule messages were incorrectly prioritized over constraint-specific messages
 
 **Fix in `evaluator.ts`:**
+
 ```typescript
 // Before (incorrect)
-defaultResult?.message || lastErrorMessage
+defaultResult?.message || lastErrorMessage;
 
 // After (correct)
-lastErrorMessage || defaultResult?.message
+lastErrorMessage || defaultResult?.message;
 ```
 
 #### Test Data Fix
+
 **Issue:** Test was using wrong field name
+
 ```typescript
 // Before
 { tenantId: "1", name: "John" }
@@ -71,9 +82,11 @@ lastErrorMessage || defaultResult?.message
 ```
 
 #### Mutation Management
+
 **Issue:** `clearMutations()` only cleared cache, not mutations
 
 **Fix:**
+
 - Added `removeAll()` method to Mutator class
 - Updated `clearMutations()` to call `removeAll()`
 - Moved test cleanup from `beforeEach` to `afterEach` for proper isolation
@@ -111,9 +124,10 @@ Created/Updated the following documentation:
 ## Code Statistics
 
 ### Files Modified
+
 - **Core Services:** 5 files
   - `evaluator.ts`
-  - `rule-engine.ts` 
+  - `rule-engine.ts`
   - `object-discovery.ts`
   - `mutator.ts`
   - `introspector.ts`
@@ -130,6 +144,7 @@ Created/Updated the following documentation:
   - `README.md`
 
 ### Lines Changed
+
 - Approximately 500+ lines of code changes
 - 1000+ lines of documentation added
 
@@ -158,6 +173,7 @@ Created/Updated the following documentation:
 ## Testing
 
 All 546 tests pass successfully:
+
 - 9 test files
 - No TypeScript errors (in vitest)
 - Performance tests show no regression

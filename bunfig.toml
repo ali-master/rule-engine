@@ -1,0 +1,7 @@
+[install]
+minimumReleaseAge = 604800
+# Vite injects polyfill imports into sibling workspace modules.
+linker = "hoisted"
+
+[fmt]
+ignorePatterns = ["**/dist/**", "**/dist-demo/**", "**/coverage/**", ".idea/**"]

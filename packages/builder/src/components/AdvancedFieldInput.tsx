@@ -323,7 +323,7 @@ export function AdvancedFieldInput({
 
     // Add recent fields
     recentFields.forEach((path) => {
-      if (!suggestions.find((s) => s.path === path)) {
+      if (!suggestions.some((s) => s.path === path)) {
         suggestions.push({
           path,
           label: path.split(".").pop() || path,

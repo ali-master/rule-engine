@@ -5,6 +5,7 @@ The `RuleEvaluator` component provides a comprehensive interface for testing and
 ## Features
 
 ### Core Features
+
 - **Live Rule Evaluation**: Automatically evaluates rules as they change
 - **Manual Evaluation**: Evaluate rules on-demand with a single click
 - **Pass/Fail Indicators**: Clear visual feedback with red/green indicators
@@ -13,10 +14,12 @@ The `RuleEvaluator` component provides a comprehensive interface for testing and
 - **Smooth Animations**: Beautiful transitions powered by Framer Motion
 
 ### Keyboard Shortcuts
+
 - `Ctrl/Cmd + E`: Toggle live evaluation mode
 - `Ctrl/Cmd + Shift + E`: Run evaluation once
 
 ### UI Components
+
 - **Result Tab**: Shows overall evaluation result with pass/fail status
 - **Details Tab**: Hierarchical view of condition evaluation with drill-down capability
 - **Test Data Tab**: Editable JSON viewer for modifying test data on the fly
@@ -24,11 +27,11 @@ The `RuleEvaluator` component provides a comprehensive interface for testing and
 ## Usage
 
 ```tsx
-import { RuleEvaluator } from '@usex/rule-engine-builder';
+import { RuleEvaluator } from "@usex/rule-engine-builder";
 
 function MyApp() {
   const handleEvaluationChange = (result) => {
-    console.log('Evaluation result:', result);
+    console.log("Evaluation result:", result);
   };
 
   return (
@@ -43,27 +46,30 @@ function MyApp() {
 
 ## Props
 
-| Prop | Type | Description | Default |
-|------|------|-------------|---------|
-| `className` | `string` | Additional CSS classes for styling | - |
-| `defaultSampleData` | `any` | Initial sample data for evaluation | `sampleEcommerceData` |
-| `onEvaluationChange` | `(result: EvaluationResult \| null) => void` | Callback when evaluation result changes | - |
+| Prop                 | Type                                         | Description                             | Default               |
+| -------------------- | -------------------------------------------- | --------------------------------------- | --------------------- |
+| `className`          | `string`                                     | Additional CSS classes for styling      | -                     |
+| `defaultSampleData`  | `any`                                        | Initial sample data for evaluation      | `sampleEcommerceData` |
+| `onEvaluationChange` | `(result: EvaluationResult \| null) => void` | Callback when evaluation result changes | -                     |
 
 ## How It Works
 
 ### Evaluation Process
+
 1. The component uses the `@usex/rule-engine` package to evaluate rules
 2. It subscribes to the enhanced rule store for rule updates
 3. In live mode, it automatically re-evaluates when rules change
 4. Results are displayed with detailed condition breakdowns
 
 ### Visual Feedback
+
 - **Green indicators**: Rule or condition passed
 - **Red indicators**: Rule or condition failed
 - **Animated transitions**: Smooth UI updates for better UX
 - **Hierarchical display**: Nested conditions are indented and collapsible
 
 ### Test Data Management
+
 - Edit test data directly in the component
 - Reset to default data with one click
 - JSON syntax validation
@@ -87,7 +93,9 @@ The `RuleEvaluator` component is designed to work seamlessly with the `TreeRuleB
 ## Advanced Features
 
 ### Condition Details
+
 The component evaluates each condition recursively and shows:
+
 - Condition type (AND, OR, NONE)
 - Number of sub-conditions
 - Individual constraint evaluation results
@@ -95,6 +103,7 @@ The component evaluates each condition recursively and shows:
 - Custom error messages
 
 ### Performance
+
 - Debounced evaluation in live mode
 - Efficient re-rendering with React hooks
 - Minimal state updates
@@ -103,6 +112,7 @@ The component evaluates each condition recursively and shows:
 ## Styling
 
 The component uses Tailwind CSS and follows the design system of the rule builder. It supports:
+
 - Light and dark themes
 - Responsive design
 - Custom color schemes via CSS variables
@@ -111,6 +121,7 @@ The component uses Tailwind CSS and follows the design system of the rule builde
 ## Error Handling
 
 The component gracefully handles:
+
 - Invalid rule structures
 - Malformed test data
 - Evaluation errors

@@ -25,12 +25,12 @@ const engine = RuleEngine.getInstance(config?: RuleEngineConfig);
 
 ```typescript
 interface RuleEngineConfig {
-  trustMode?: boolean;              // Skip validation for performance
+  trustMode?: boolean; // Skip validation for performance
   autoInitializeOperators?: boolean; // Auto-register built-in operators
-  customOperatorInit?: () => void;   // Custom initialization function
-  enableOptimizations?: boolean;     // Enable performance optimizations
-  enableCaching?: boolean;          // Cache evaluation results
-  maxCacheSize?: number;            // Maximum cache entries
+  customOperatorInit?: () => void; // Custom initialization function
+  enableOptimizations?: boolean; // Enable performance optimizations
+  enableCaching?: boolean; // Cache evaluation results
+  maxCacheSize?: number; // Maximum cache entries
 }
 ```
 
@@ -361,7 +361,7 @@ abstract class BaseOperatorStrategy<TField = any, TConstraint = any> {
   abstract evaluate(context: OperatorContext): boolean;
   abstract isValidFieldType(value: unknown): value is TField;
   abstract isValidConstraintType(value: unknown): value is TConstraint;
-  
+
   // Optional overrides
   validate?(context: OperatorContext): ValidationResult;
   formatMessage?(template: string, context: OperatorContext): string;
@@ -392,11 +392,13 @@ interface OperatorMetadata {
 ## Best Practices
 
 1. **Use TypeScript generics** for type-safe results:
+
    ```typescript
    const result = await engine.evaluate<MyResultType>(rule, criteria);
    ```
 
 2. **Leverage overloads** for better type inference:
+
    ```typescript
    // Let TypeScript infer based on input
    const result = await engine.evaluate(rule, { age: 25 }); // Single result
@@ -404,11 +406,13 @@ interface OperatorMetadata {
    ```
 
 3. **Use singleton pattern** for resource efficiency:
+
    ```typescript
    const engine = RuleEngine.getInstance(); // Reuses existing instance
    ```
 
 4. **Clean up in tests** to avoid state pollution:
+
    ```typescript
    afterEach(() => {
      const engine = RuleEngine.getInstance();
@@ -421,6 +425,6 @@ interface OperatorMetadata {
    ```typescript
    const engine = RuleEngine.getInstance({
      enableCaching: true,
-     maxCacheSize: 1000
+     maxCacheSize: 1000,
    });
    ```

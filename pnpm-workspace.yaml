@@ -1,9 +1,0 @@
-packages:
-  - "packages/*"
-  - "apps/*"
-
-ignoredBuiltDependencies:
-  - esbuild
-
-onlyBuiltDependencies:
-  - simple-git-hooks

@@ -222,7 +222,7 @@ export const SmartOperatorSelector: React.FC<ExtendedOperatorSelectorProps> = ({
             );
             if (
               operator &&
-              !recommended.find((r) => r.name === operator.name)
+              !recommended.some((r) => r.name === operator.name)
             ) {
               recommended.push({
                 ...operator,

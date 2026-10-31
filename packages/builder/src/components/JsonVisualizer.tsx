@@ -75,7 +75,7 @@ function JsonNode({
     e.stopPropagation();
     navigator.clipboard.writeText(JSON.stringify(data, null, 2));
     setIsCopied(true);
-    setTimeout(() => setIsCopied(false), 2000);
+    setTimeout(setIsCopied, 2000, false);
   };
 
   const dataType =

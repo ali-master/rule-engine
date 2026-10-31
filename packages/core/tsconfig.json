@@ -5,7 +5,7 @@
     "moduleDetection": "force",
     "module": "preserve",
     "strictNullChecks": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "allowJs": true,
     "strict": true,
@@ -21,17 +21,16 @@
     "declarationMap": true,
     "noUnusedLocals": false,
     "strictBindCallApply": true,
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "incremental": true,
     "sourceMap": true,
-    "baseUrl": "./",
     "outDir": "dist",
     "paths": {
       "@root": ["./src"],
       "@root/*": ["./src/*"]
-    }
+    },
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*", "test/**/*", "benchmarks/**/*"],
   "exclude": [

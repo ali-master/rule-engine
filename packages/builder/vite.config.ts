@@ -18,7 +18,7 @@ export default defineConfig({
         include: ["src/**/*.ts", "src/**/*.tsx"],
         exclude: ["src/demo.tsx", "src/main.tsx"],
         entryRoot: "src",
-        outDir: "dist",
+        outDirs: ["dist"],
         insertTypesEntry: true,
       }),
     nodePolyfills({
@@ -31,7 +31,7 @@ export default defineConfig({
         outDir: "dist-demo",
         rollupOptions: {
           input: {
-            main: path.resolve(__dirname, "index.html"),
+            main: path.resolve(import.meta.dirname, "index.html"),
           },
         },
       }
@@ -39,7 +39,7 @@ export default defineConfig({
         // Library build configuration
         outDir: "dist",
         lib: {
-          entry: path.resolve(__dirname, "src/index.ts"),
+          entry: path.resolve(import.meta.dirname, "src/index.ts"),
           name: "RuleEngineBuilder",
           formats: ["es", "cjs"],
           fileName: "index",

@@ -1,18 +1,7 @@
 import antfu from "@antfu/eslint-config";
 
 export default antfu({
-  formatters: {
-    prettierOptions: {
-      printWidth: 100,
-      trailingComma: "all",
-      singleQuote: false,
-      semi: true,
-      tabWidth: 2,
-      quoteProps: "as-needed",
-      jsxSingleQuote: false,
-      arrowParens: "always",
-    },
-  },
+  formatters: false,
   stylistic: false,
   typescript: true,
   name: "rule-engine",
@@ -33,6 +22,8 @@ export default antfu({
   ],
   files: ["./packages/**/*.ts", "./packages/**/*.tsx"],
   rules: {
+    // Keep URL validation compatible with browsers without URL.canParse.
+    "e18e/prefer-url-canparse": "off",
     eqeqeq: "off",
     "prefer-regex-literals": "off",
     "unicorn/number-literal-case": "off",

@@ -29,15 +29,13 @@ The rule engine now provides enhanced TypeScript support through:
 The `evaluate` method now has overloads that automatically infer the return type based on your input:
 
 ```typescript
-import { RuleEngine } from '@usex/rule-engine';
+import { RuleEngine } from "@usex/rule-engine";
 
 const engine = RuleEngine.getInstance();
 const rule = {
   conditions: {
-    and: [
-      { field: "age", operator: "greater-than", value: 18 }
-    ]
-  }
+    and: [{ field: "age", operator: "greater-than", value: 18 }],
+  },
 };
 
 // Single object input - TypeScript knows result is EvaluationResult<T>
@@ -45,10 +43,7 @@ const singleResult = await engine.evaluate(rule, { age: 25 });
 console.log(singleResult.isPassed); // ✅ TypeScript knows this property exists
 
 // Array input - TypeScript knows result is Array<EvaluationResult<T>>
-const arrayResults = await engine.evaluate(rule, [
-  { age: 25 },
-  { age: 16 }
-]);
+const arrayResults = await engine.evaluate(rule, [{ age: 25 }, { age: 16 }]);
 console.log(arrayResults[0].isPassed); // ✅ TypeScript knows this is an array
 ```
 
@@ -59,7 +54,10 @@ Similar overloads are available for:
 ```typescript
 // checkIsPassed - returns boolean or boolean[]
 const isPassed = await engine.checkIsPassed(rule, { age: 25 }); // boolean
-const areAllPassed = await engine.checkIsPassed(rule, [{ age: 25 }, { age: 16 }]); // boolean | boolean[]
+const areAllPassed = await engine.checkIsPassed(rule, [
+  { age: 25 },
+  { age: 16 },
+]); // boolean | boolean[]
 
 // getEvaluateResult - returns T or T[]
 const value = await engine.getEvaluateResult<number>(rule, { age: 25 }); // number
@@ -78,7 +76,7 @@ The RuleEngine uses a singleton pattern for better resource management:
 const engine = RuleEngine.getInstance({
   autoInitializeOperators: true,
   enableCaching: true,
-  maxCacheSize: 100
+  maxCacheSize: 100,
 });
 
 // Static methods are also available
@@ -105,7 +103,7 @@ afterEach(() => {
 The library provides two main criteria types:
 
 ```typescript
-import type { Criteria, CriteriaObject } from '@usex/rule-engine';
+import type { Criteria, CriteriaObject } from "@usex/rule-engine";
 
 // CriteriaObject<T> - A single object
 type UserCriteria = CriteriaObject<{
@@ -129,7 +127,7 @@ Use TypeScript generics for type-safe rule results:
 
 ```typescript
 interface AccessRule {
-  level: 'admin' | 'user' | 'guest';
+  level: "admin" | "user" | "guest";
   permissions: string[];
 }
 
@@ -138,28 +136,28 @@ const accessRule = {
     {
       and: [
         { field: "role", operator: "equals", value: "admin" },
-        { field: "active", operator: "equals", value: true }
+        { field: "active", operator: "equals", value: true },
       ],
       result: {
         value: {
-          level: 'admin' as const,
-          permissions: ['read', 'write', 'delete']
-        } as AccessRule
-      }
-    }
+          level: "admin" as const,
+          permissions: ["read", "write", "delete"],
+        } as AccessRule,
+      },
+    },
   ],
   default: {
     value: {
-      level: 'guest' as const,
-      permissions: ['read']
-    } as AccessRule
-  }
+      level: "guest" as const,
+      permissions: ["read"],
+    } as AccessRule,
+  },
 };
 
 // Type-safe evaluation
-const result = await engine.evaluate<AccessRule>(accessRule, { 
-  role: 'admin', 
-  active: true 
+const result = await engine.evaluate<AccessRule>(accessRule, {
+  role: "admin",
+  active: true,
 });
 
 if (!Array.isArray(result)) {
@@ -173,37 +171,42 @@ if (!Array.isArray(result)) {
 Create type-safe custom operators:
 
 ```typescript
-import { BaseOperatorStrategy, OperatorMetadata, OperatorContext, OperatorCategory } from '@usex/rule-engine';
+import {
+  BaseOperatorStrategy,
+  OperatorMetadata,
+  OperatorContext,
+  OperatorCategory,
+} from "@usex/rule-engine";
 
 class EmailDomainOperator extends BaseOperatorStrategy<string, string> {
   readonly metadata: OperatorMetadata = {
-    name: 'email-domain',
-    displayName: 'Email Domain',
+    name: "email-domain",
+    displayName: "Email Domain",
     category: OperatorCategory.STRING,
-    description: 'Checks if email has specific domain',
-    acceptedFieldTypes: ['string'],
-    expectedValueType: 'string',
+    description: "Checks if email has specific domain",
+    acceptedFieldTypes: ["string"],
+    expectedValueType: "string",
     requiresValue: true,
-    example: '{ field: "email", operator: "email-domain", value: "gmail.com" }'
+    example: '{ field: "email", operator: "email-domain", value: "gmail.com" }',
   };
 
   evaluate(context: OperatorContext): boolean {
     const { fieldValue, constraintValue } = context;
-    
-    if (typeof fieldValue !== 'string' || typeof constraintValue !== 'string') {
+
+    if (typeof fieldValue !== "string" || typeof constraintValue !== "string") {
       return false;
     }
-    
-    const domain = fieldValue.split('@')[1];
+
+    const domain = fieldValue.split("@")[1];
     return domain === constraintValue;
   }
 
   isValidFieldType(value: unknown): value is string {
-    return typeof value === 'string' && value.includes('@');
+    return typeof value === "string" && value.includes("@");
   }
 
   isValidConstraintType(value: unknown): value is string {
-    return typeof value === 'string' && !value.includes('@');
+    return typeof value === "string" && !value.includes("@");
   }
 }
 
@@ -220,7 +223,7 @@ const results = await engine.evaluate(rule, criteriaArray);
 
 if (Array.isArray(results)) {
   // TypeScript knows results is Array<EvaluationResult<T>>
-  results.forEach(result => {
+  results.forEach((result) => {
     console.log(result.isPassed);
   });
 } else {
@@ -239,7 +242,7 @@ interface BaseEntity {
 
 async function evaluateEntity<T extends BaseEntity>(
   rule: RuleType,
-  entity: T
+  entity: T,
 ): Promise<EvaluationResult<boolean>> {
   return await engine.evaluate<boolean>(rule, entity);
 }
@@ -249,15 +252,13 @@ async function evaluateEntity<T extends BaseEntity>(
 
 ```typescript
 // Define mutation with proper types
-engine.addMutation<number>('doubleValue', (value: number) => value * 2);
+engine.addMutation<number>("doubleValue", (value: number) => value * 2);
 
 // Use in rules
 const rule = {
   conditions: {
-    and: [
-      { field: "score", operator: "greater-than", value: 50 }
-    ]
-  }
+    and: [{ field: "score", operator: "greater-than", value: 50 }],
+  },
 };
 
 // The mutation will be applied to the score field
@@ -295,7 +296,8 @@ const engine = RuleEngine.getInstance();
 
 ### Issue: Type inference not working in IDE
 
-**Solution**: 
+**Solution**:
+
 1. Restart TypeScript language server
 2. Ensure you're importing from the correct path
 3. Check that your `tsconfig.json` includes the rule engine types
@@ -307,25 +309,36 @@ const engine = RuleEngine.getInstance();
 ```typescript
 class MyOperator extends BaseOperatorStrategy<FieldType, ConstraintType> {
   // Implement all required methods
-  evaluate(context: OperatorContext): boolean { /* ... */ }
-  isValidFieldType(value: unknown): value is FieldType { /* ... */ }
-  isValidConstraintType(value: unknown): value is ConstraintType { /* ... */ }
+  evaluate(context: OperatorContext): boolean {
+    /* ... */
+  }
+  isValidFieldType(value: unknown): value is FieldType {
+    /* ... */
+  }
+  isValidConstraintType(value: unknown): value is ConstraintType {
+    /* ... */
+  }
 }
 ```
 
 ## Best Practices
 
 1. **Always specify generic types** when you know the result type:
+
    ```typescript
    const result = await engine.evaluate<MyResultType>(rule, criteria);
    ```
 
 2. **Use const assertions** for literal types in rules:
+
    ```typescript
-   result: { value: 'admin' as const }
+   result: {
+     value: "admin" as const;
+   }
    ```
 
 3. **Leverage type guards** instead of type assertions:
+
    ```typescript
    if (!Array.isArray(result)) {
      // TypeScript knows result is not an array
@@ -333,6 +346,7 @@ class MyOperator extends BaseOperatorStrategy<FieldType, ConstraintType> {
    ```
 
 4. **Define interfaces** for complex rule results:
+
    ```typescript
    interface RuleResult {
      status: string;

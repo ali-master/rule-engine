@@ -47,7 +47,10 @@ The way to add custom operators has changed:
 ```typescript
 // Old - directly modify operator map
 // New - use operator registry
-import { registerCustomOperator, BaseOperatorStrategy } from "@usex/rule-engine";
+import {
+  registerCustomOperator,
+  BaseOperatorStrategy,
+} from "@usex/rule-engine";
 
 operatorsProcessorMap["custom-operator"] = (a, b) => customLogic(a, b);
 
@@ -70,7 +73,7 @@ const result = RuleEngine.introspect(rule);
 // New
 const result = RuleEngine.introspect(rule, {
   includeMetadata: true,
-  includeComplexity: true
+  includeComplexity: true,
 });
 // Returns: Enhanced result with operator metadata and complexity metrics
 ```
@@ -84,10 +87,10 @@ import { RuleEngine } from "@usex/rule-engine";
 
 // Configure the engine
 const engine = RuleEngine.getInstance({
-  trustMode: true,              // Skip validation for trusted rules
-  enableCaching: true,          // Cache evaluation results
-  maxCacheSize: 1000,          // Maximum cache entries
-  enableOptimizations: true,    // Enable performance optimizations
+  trustMode: true, // Skip validation for trusted rules
+  enableCaching: true, // Cache evaluation results
+  maxCacheSize: 1000, // Maximum cache entries
+  enableOptimizations: true, // Enable performance optimizations
 });
 ```
 
@@ -111,7 +114,11 @@ const usedOperators = engine.getUsedOperators(rule);
 ### 3. Custom Operator Creation
 
 ```typescript
-import { registerCustomOperator, OperatorCategory, BaseOperatorStrategy } from "@usex/rule-engine";
+import {
+  registerCustomOperator,
+  OperatorCategory,
+  BaseOperatorStrategy,
+} from "@usex/rule-engine";
 
 class EmailDomainOperator extends BaseOperatorStrategy<string, string> {
   readonly metadata = {
@@ -122,14 +129,14 @@ class EmailDomainOperator extends BaseOperatorStrategy<string, string> {
     acceptedFieldTypes: ["string"],
     expectedValueType: "string",
     requiresValue: true,
-    example: '{ field: "email", operator: "email-domain", value: "gmail.com" }'
+    example: '{ field: "email", operator: "email-domain", value: "gmail.com" }',
   };
 
   evaluate(context) {
     const { fieldValue, constraintValue } = context;
     if (!fieldValue || !constraintValue) return false;
 
-    const domain = fieldValue.split('@')[1];
+    const domain = fieldValue.split("@")[1];
     return domain === constraintValue;
   }
 
@@ -200,15 +207,15 @@ Constraint-specific error messages now have proper priority:
 const rule = {
   conditions: {
     and: [
-      { 
-        field: "length", 
-        operator: "length-between", 
+      {
+        field: "length",
+        operator: "length-between",
         value: [4, 20],
-        message: "Length must be between 4 and 20 characters"
-      }
-    ]
+        message: "Length must be between 4 and 20 characters",
+      },
+    ],
   },
-  default: { message: "Rule failed" }
+  default: { message: "Rule failed" },
 };
 
 // Now returns: "Length must be between 4 and 20 characters"
@@ -224,7 +231,7 @@ const rule = {
 import { RuleEngine } from "@usex/rule-engine";
 
 // Or use both during migration
-import { RuleEngine,  } from "@usex/rule-engine";
+import { RuleEngine } from "@usex/rule-engine";
 ```
 
 ### Step 2: Update Rule Evaluation Calls
@@ -286,9 +293,9 @@ const introspection = RuleEngine.introspect(rule);
 
 // New with enhanced features
 const introspection = RuleEngine.introspect(rule, {
-  includeMetadata: true,    // Include operator metadata
-  includeComplexity: true,  // Include complexity metrics
-  validateOperators: true   // Validate all operators exist
+  includeMetadata: true, // Include operator metadata
+  includeComplexity: true, // Include complexity metrics
+  validateOperators: true, // Validate all operators exist
 });
 
 // Access new metadata
@@ -346,10 +353,10 @@ Operators receive a context object with:
 
 ```typescript
 interface OperatorContext {
-  fieldValue: any;          // The resolved field value
-  constraintValue?: any;    // The constraint value
-  criteria?: Record<string, any>;  // Full criteria object
-  fieldPath?: string;       // The field path
+  fieldValue: any; // The resolved field value
+  constraintValue?: any; // The constraint value
+  criteria?: Record<string, any>; // Full criteria object
+  fieldPath?: string; // The field path
 }
 ```
 
@@ -368,7 +375,7 @@ interface OperatorContext {
 ```typescript
 const engine = RuleEngine.getInstance({
   enableCaching: true,
-  maxCacheSize: 1000
+  maxCacheSize: 1000,
 });
 
 // Clear cache when needed
@@ -390,6 +397,7 @@ await engine.evaluate(rule, data, true); // Skip validation
 ### 3. Operator Registry
 
 The registry enables:
+
 - Fast operator lookup (O(1) instead of O(n))
 - Lazy loading of operators
 - Better memory management
@@ -433,9 +441,9 @@ const rule = {
   conditions: {
     and: [
       { field: "age", operator: "greater-than", value: 18 },
-      { field: "status", operator: "equals", value: "active" }
-    ]
-  }
+      { field: "status", operator: "equals", value: "active" },
+    ],
+  },
 };
 
 const result = await RuleEngine.evaluate(rule, { age: 25, status: "active" });
@@ -446,7 +454,7 @@ initializeOperators();
 // Configure engine
 const engine = RuleEngine.getInstance({
   enableCaching: true,
-  trustMode: false
+  trustMode: false,
 });
 
 // Same rule works without changes
@@ -455,7 +463,7 @@ const result = await engine.evaluate(rule, { age: 25, status: "active" });
 // Use new features
 const introspection = await engine.introspect(rule, {
   includeMetadata: true,
-  includeComplexity: true
+  includeComplexity: true,
 });
 
 console.log("Rule complexity:", introspection.complexity);

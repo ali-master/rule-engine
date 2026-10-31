@@ -173,9 +173,10 @@ export interface OperatorStrategy<TField = any, TValue = any> {
 /**
  * Base abstract class for operator strategies
  */
-export abstract class BaseOperatorStrategy<TField = any, TValue = any>
-  implements OperatorStrategy<TField, TValue>
-{
+export abstract class BaseOperatorStrategy<
+  TField = any,
+  TValue = any,
+> implements OperatorStrategy<TField, TValue> {
   abstract readonly metadata: OperatorMetadata;
 
   /**

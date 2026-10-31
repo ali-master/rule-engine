@@ -30,8 +30,14 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- Node.js >= 18.12.0
-- pnpm >= 10.11.0
+- Node.js >= 22.12.0
+- Bun >= 1.4.4
+
+Use `bun run test:types` for Bun’s built-in type checker and `bun run format`
+(or `bun run format:check` in CI) for its built-in formatter. Build first before
+checking the public package declarations. The `typescript` dependency aliases
+the official TypeScript 6 compatibility package solely for declaration generation
+and ESLint’s compiler API; type checking runs with `bun check`.
 
 ### Installation
 
@@ -41,10 +47,10 @@ git clone https://github.com/YOUR_USERNAME/rule-engine.git
 cd rule-engine
 
 # Install dependencies
-pnpm install
+bun install
 
 # Build all packages
-pnpm build
+bun run build
 ```
 
 ### Project Structure
@@ -101,7 +107,7 @@ Feature suggestions are welcome! Please:
 // Good
 export function evaluateRule<T>(
   rule: RuleType<T>,
-  data: unknown
+  data: unknown,
 ): Promise<EvaluationResult<T>> {
   // Implementation
 }
@@ -122,21 +128,21 @@ export function evaluateRule(rule: any, data: any): any {
 
 ### Comments
 
-```typescript
+````typescript
 /**
  * Evaluates a rule against the provided criteria.
- * 
+ *
  * @param rule - The rule to evaluate
  * @param criteria - The data to evaluate against
  * @param trustRule - Skip validation if true
  * @returns The evaluation result
- * 
+ *
  * @example
  * ```typescript
  * const result = await evaluateRule(rule, { age: 25 });
  * ```
  */
-```
+````
 
 ## Testing
 
@@ -144,34 +150,32 @@ export function evaluateRule(rule: any, data: any): any {
 
 ```bash
 # Run all tests
-pnpm test
+bun run test
 
 # Run tests in watch mode
-pnpm test:watch
+bun run test:watch
 
 # Run tests with coverage
-pnpm test:coverage
+bun run test:coverage
 
 # Run specific package tests
-cd packages/core && pnpm test
+cd packages/core && bun run test
 ```
 
 ### Writing Tests
 
 ```typescript
-describe('RuleEngine', () => {
-  describe('evaluate', () => {
-    it('should evaluate simple rule correctly', async () => {
+describe("RuleEngine", () => {
+  describe("evaluate", () => {
+    it("should evaluate simple rule correctly", async () => {
       const rule = {
         conditions: {
-          and: [
-            { field: 'age', operator: 'greater-than', value: 18 }
-          ]
-        }
+          and: [{ field: "age", operator: "greater-than", value: 18 }],
+        },
       };
-      
+
       const result = await RuleEngine.evaluate(rule, { age: 25 });
-      
+
       expect(result.isPassed).toBe(true);
       expect(result.value).toBe(true);
     });
@@ -198,6 +202,7 @@ describe('RuleEngine', () => {
 ### README Updates
 
 Update relevant README files when:
+
 - Adding new features
 - Changing APIs
 - Adding new operators
@@ -227,6 +232,7 @@ packages/core/
 ### PR Guidelines
 
 #### Title Format
+
 ```
 <type>(<scope>): <subject>
 
@@ -237,6 +243,7 @@ docs(core): update migration guide
 ```
 
 #### Types
+
 - `feat`: New feature
 - `fix`: Bug fix
 - `docs`: Documentation only
@@ -247,24 +254,31 @@ docs(core): update migration guide
 - `chore`: Maintenance tasks
 
 #### Description Template
+
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Motivation
+
 Why these changes are needed
 
 ## Changes
+
 - Change 1
 - Change 2
 
 ## Testing
+
 How the changes were tested
 
 ## Breaking Changes
+
 List any breaking changes
 
 ## Related Issues
+
 Fixes #123
 ```
 
@@ -278,6 +292,7 @@ Fixes #123
 ## Questions?
 
 Feel free to:
+
 - Open an issue for questions
 - Join discussions in existing issues
 - Contact maintainers

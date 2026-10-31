@@ -18,16 +18,13 @@ Complete guide for integrating @usex/rule-engine-builder into your applications.
 #### Basic Setup
 
 ```tsx
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
-import '@usex/rule-engine-builder/styles';
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
+import "@usex/rule-engine-builder/styles";
 
 function App() {
   return (
     <div className="App">
-      <TreeRuleBuilder
-        fields={fields}
-        onChange={handleRuleChange}
-      />
+      <TreeRuleBuilder fields={fields} onChange={handleRuleChange} />
     </div>
   );
 }
@@ -36,25 +33,20 @@ function App() {
 #### With React Router
 
 ```tsx
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 function RuleBuilderPage() {
   const { ruleId } = useParams();
   const [rule, setRule] = useState(null);
-  
+
   useEffect(() => {
     if (ruleId) {
       loadRule(ruleId).then(setRule);
     }
   }, [ruleId]);
-  
-  return (
-    <TreeRuleBuilder
-      initialRule={rule}
-      onChange={handleRuleChange}
-    />
-  );
+
+  return <TreeRuleBuilder initialRule={rule} onChange={handleRuleChange} />;
 }
 
 function App() {
@@ -72,7 +64,10 @@ function App() {
 #### With Context Providers
 
 ```tsx
-import { RuleBuilderProvider, useEnhancedRuleStore } from '@usex/rule-engine-builder';
+import {
+  RuleBuilderProvider,
+  useEnhancedRuleStore,
+} from "@usex/rule-engine-builder";
 
 function RuleBuilderWithContext() {
   return (
@@ -84,7 +79,7 @@ function RuleBuilderWithContext() {
 
 function RuleBuilderContent() {
   const { rule, updateRule } = useEnhancedRuleStore();
-  
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <TreeRuleBuilder onChange={updateRule} />
@@ -100,29 +95,29 @@ function RuleBuilderContent() {
 
 ```tsx
 // app/rules/page.tsx
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import dynamic from "next/dynamic";
+import { useState } from "react";
 
 const TreeRuleBuilder = dynamic(
-  () => import('@usex/rule-engine-builder').then(mod => ({ default: mod.TreeRuleBuilder })),
-  { 
+  () =>
+    import("@usex/rule-engine-builder").then((mod) => ({
+      default: mod.TreeRuleBuilder,
+    })),
+  {
     ssr: false,
-    loading: () => <div>Loading rule builder...</div>
-  }
+    loading: () => <div>Loading rule builder...</div>,
+  },
 );
 
 export default function RulesPage() {
   const [rule, setRule] = useState(null);
-  
+
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Rule Builder</h1>
-      <TreeRuleBuilder
-        onChange={setRule}
-        className="min-h-[600px]"
-      />
+      <TreeRuleBuilder onChange={setRule} className="min-h-[600px]" />
     </div>
   );
 }
@@ -132,31 +127,28 @@ export default function RulesPage() {
 
 ```tsx
 // app/api/rules/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { RuleEngine } from '@usex/rule-engine';
+import { NextRequest, NextResponse } from "next/server";
+import { RuleEngine } from "@usex/rule-engine";
 
 export async function POST(request: NextRequest) {
   const { rule, data } = await request.json();
-  
+
   try {
     // Validate rule
     const validation = RuleEngine.validate(rule);
     if (!validation.isValid) {
       return NextResponse.json(
         { error: validation.error.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
-    
+
     // Evaluate rule
     const result = await RuleEngine.evaluate(rule, data);
-    
+
     return NextResponse.json({ result });
   } catch (error) {
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 ```
@@ -165,7 +157,7 @@ export async function POST(request: NextRequest) {
 
 ```tsx
 // app/rules/[id]/page.tsx
-import { RuleBuilderClient } from './rule-builder-client';
+import { RuleBuilderClient } from "./rule-builder-client";
 
 async function getRuleData(id: string) {
   // Fetch rule data on server
@@ -175,7 +167,7 @@ async function getRuleData(id: string) {
 
 export default async function RulePage({ params }: { params: { id: string } }) {
   const ruleData = await getRuleData(params.id);
-  
+
   return (
     <div>
       <h1>Edit Rule: {ruleData.name}</h1>
@@ -187,9 +179,9 @@ export default async function RulePage({ params }: { params: { id: string } }) {
 
 ```tsx
 // app/rules/[id]/rule-builder-client.tsx
-'use client';
+"use client";
 
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 interface RuleBuilderClientProps {
   initialRule: any;
@@ -197,10 +189,7 @@ interface RuleBuilderClientProps {
 
 export function RuleBuilderClient({ initialRule }: RuleBuilderClientProps) {
   return (
-    <TreeRuleBuilder
-      initialRule={initialRule}
-      onChange={handleRuleChange}
-    />
+    <TreeRuleBuilder initialRule={initialRule} onChange={handleRuleChange} />
   );
 }
 ```
@@ -209,24 +198,24 @@ export function RuleBuilderClient({ initialRule }: RuleBuilderClientProps) {
 
 ```tsx
 // vite.config.ts
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['@usex/rule-engine-builder']
+    include: ["@usex/rule-engine-builder"],
   },
   css: {
-    postcss: './postcss.config.js'
-  }
+    postcss: "./postcss.config.js",
+  },
 });
 ```
 
 ```tsx
 // src/App.tsx
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
-import '@usex/rule-engine-builder/styles';
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
+import "@usex/rule-engine-builder/styles";
 
 function App() {
   return (
@@ -245,7 +234,7 @@ export default App;
 
 ```tsx
 // store/ruleSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface RuleState {
   currentRule: any;
@@ -258,11 +247,11 @@ const initialState: RuleState = {
   currentRule: null,
   rules: {},
   isLoading: false,
-  error: null
+  error: null,
 };
 
 const ruleSlice = createSlice({
-  name: 'rules',
+  name: "rules",
   initialState,
   reducers: {
     setCurrentRule: (state, action: PayloadAction<any>) => {
@@ -278,36 +267,34 @@ const ruleSlice = createSlice({
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
-    }
-  }
+    },
+  },
 });
 
-export const { setCurrentRule, saveRule, setLoading, setError } = ruleSlice.actions;
+export const { setCurrentRule, saveRule, setLoading, setError } =
+  ruleSlice.actions;
 export default ruleSlice.reducer;
 ```
 
 ```tsx
 // components/RuleBuilderRedux.tsx
-import { useSelector, useDispatch } from 'react-redux';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
-import { setCurrentRule } from '../store/ruleSlice';
+import { useSelector, useDispatch } from "react-redux";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
+import { setCurrentRule } from "../store/ruleSlice";
 
 function RuleBuilderRedux() {
   const dispatch = useDispatch();
-  const { currentRule, isLoading } = useSelector((state: RootState) => state.rules);
-  
+  const { currentRule, isLoading } = useSelector(
+    (state: RootState) => state.rules,
+  );
+
   const handleRuleChange = (rule: any) => {
     dispatch(setCurrentRule(rule));
   };
-  
+
   if (isLoading) return <div>Loading...</div>;
-  
-  return (
-    <TreeRuleBuilder
-      rule={currentRule}
-      onChange={handleRuleChange}
-    />
-  );
+
+  return <TreeRuleBuilder rule={currentRule} onChange={handleRuleChange} />;
 }
 ```
 
@@ -315,8 +302,8 @@ function RuleBuilderRedux() {
 
 ```tsx
 // store/ruleStore.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface RuleStore {
   rule: any;
@@ -338,15 +325,15 @@ const useRuleStore = create<RuleStore>()(
       },
       addToHistory: (rule) => {
         set((state) => ({
-          history: [...state.history.slice(-9), rule] // Keep last 10
+          history: [...state.history.slice(-9), rule], // Keep last 10
         }));
       },
-      clearHistory: () => set({ history: [] })
+      clearHistory: () => set({ history: [] }),
     }),
     {
-      name: 'rule-storage'
-    }
-  )
+      name: "rule-storage",
+    },
+  ),
 );
 
 export default useRuleStore;
@@ -356,69 +343,69 @@ export default useRuleStore;
 
 ```tsx
 // hooks/useRuleQueries.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { RuleEngine } from '@usex/rule-engine';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { RuleEngine } from "@usex/rule-engine";
 
 export function useRule(ruleId: string) {
   return useQuery({
-    queryKey: ['rule', ruleId],
+    queryKey: ["rule", ruleId],
     queryFn: () => fetchRule(ruleId),
-    enabled: !!ruleId
+    enabled: !!ruleId,
   });
 }
 
 export function useSaveRule() {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: saveRule,
     onSuccess: (data, variables) => {
-      queryClient.setQueryData(['rule', variables.id], data);
-      queryClient.invalidateQueries({ queryKey: ['rules'] });
-    }
+      queryClient.setQueryData(["rule", variables.id], data);
+      queryClient.invalidateQueries({ queryKey: ["rules"] });
+    },
   });
 }
 
 export function useValidateRule() {
   return useMutation({
-    mutationFn: (rule: any) => Promise.resolve(RuleEngine.validate(rule))
+    mutationFn: (rule: any) => Promise.resolve(RuleEngine.validate(rule)),
   });
 }
 
 export function useEvaluateRule() {
   return useMutation({
     mutationFn: ({ rule, data }: { rule: any; data: any }) =>
-      RuleEngine.evaluate(rule, data)
+      RuleEngine.evaluate(rule, data),
   });
 }
 ```
 
 ```tsx
 // components/RuleBuilderWithQuery.tsx
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
-import { useRule, useSaveRule, useValidateRule } from '../hooks/useRuleQueries';
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
+import { useRule, useSaveRule, useValidateRule } from "../hooks/useRuleQueries";
 
 function RuleBuilderWithQuery({ ruleId }: { ruleId: string }) {
   const { data: rule, isLoading } = useRule(ruleId);
   const saveRuleMutation = useSaveRule();
   const validateRuleMutation = useValidateRule();
-  
+
   const handleSave = async (ruleToSave: any) => {
     // Validate first
     const validation = await validateRuleMutation.mutateAsync(ruleToSave);
     if (!validation.isValid) {
       throw new Error(validation.error.message);
     }
-    
+
     // Save if valid
     await saveRuleMutation.mutateAsync({
       id: ruleId,
-      rule: ruleToSave
+      rule: ruleToSave,
     });
   };
-  
+
   if (isLoading) return <div>Loading rule...</div>;
-  
+
   return (
     <TreeRuleBuilder
       rule={rule}
@@ -435,13 +422,13 @@ function RuleBuilderWithQuery({ ruleId }: { ruleId: string }) {
 
 ```typescript
 // routes/rules.ts
-import express from 'express';
-import { RuleEngine } from '@usex/rule-engine';
+import express from "express";
+import { RuleEngine } from "@usex/rule-engine";
 
 const router = express.Router();
 
 // Validate rule endpoint
-router.post('/validate', async (req, res) => {
+router.post("/validate", async (req, res) => {
   try {
     const { rule } = req.body;
     const validation = RuleEngine.validate(rule);
@@ -452,7 +439,7 @@ router.post('/validate', async (req, res) => {
 });
 
 // Evaluate rule endpoint
-router.post('/evaluate', async (req, res) => {
+router.post("/evaluate", async (req, res) => {
   try {
     const { rule, data } = req.body;
     const result = await RuleEngine.evaluate(rule, data);
@@ -463,25 +450,25 @@ router.post('/evaluate', async (req, res) => {
 });
 
 // Save rule endpoint
-router.post('/rules', async (req, res) => {
+router.post("/rules", async (req, res) => {
   try {
     const { rule, name, description } = req.body;
-    
+
     // Validate rule before saving
     const validation = RuleEngine.validate(rule);
     if (!validation.isValid) {
       return res.status(400).json({ error: validation.error.message });
     }
-    
+
     // Save to database
     const savedRule = await saveRuleToDatabase({
       rule,
       name,
       description,
       createdAt: new Date(),
-      userId: req.user.id
+      userId: req.user.id,
     });
-    
+
     res.json(savedRule);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -495,8 +482,8 @@ export default router;
 
 ```typescript
 // schema/rule.ts
-import { gql } from 'apollo-server-express';
-import { RuleEngine } from '@usex/rule-engine';
+import { gql } from "apollo-server-express";
+import { RuleEngine } from "@usex/rule-engine";
 
 export const typeDefs = gql`
   type Rule {
@@ -507,23 +494,23 @@ export const typeDefs = gql`
     createdAt: String!
     updatedAt: String!
   }
-  
+
   type ValidationResult {
     isValid: Boolean!
     error: String
   }
-  
+
   type EvaluationResult {
     value: JSON!
     isPassed: Boolean!
     message: String
   }
-  
+
   type Query {
     rule(id: ID!): Rule
     rules: [Rule!]!
   }
-  
+
   type Mutation {
     createRule(name: String!, description: String, rule: JSON!): Rule!
     updateRule(id: ID!, name: String, description: String, rule: JSON): Rule!
@@ -539,31 +526,31 @@ export const resolvers = {
     },
     rules: async (_, __, { dataSources }) => {
       return await dataSources.ruleAPI.getRules();
-    }
+    },
   },
-  
+
   Mutation: {
     createRule: async (_, { name, description, rule }, { dataSources }) => {
       const validation = RuleEngine.validate(rule);
       if (!validation.isValid) {
         throw new Error(validation.error.message);
       }
-      
+
       return await dataSources.ruleAPI.createRule({
         name,
         description,
-        rule
+        rule,
       });
     },
-    
+
     validateRule: async (_, { rule }) => {
       return RuleEngine.validate(rule);
     },
-    
+
     evaluateRule: async (_, { rule, data }) => {
       return await RuleEngine.evaluate(rule, data);
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -571,7 +558,7 @@ export const resolvers = {
 
 ```typescript
 // models/Rule.ts
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document } from "mongoose";
 
 interface IRule extends Document {
   name: string;
@@ -594,23 +581,23 @@ const ruleSchema = new Schema<IRule>({
   tags: [{ type: String }],
   createdBy: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+  updatedAt: { type: Date, default: Date.now },
 });
 
 // Add validation middleware
-ruleSchema.pre('save', function(next) {
-  const { RuleEngine } = require('@usex/rule-engine');
-  
+ruleSchema.pre("save", function (next) {
+  const { RuleEngine } = require("@usex/rule-engine");
+
   const validation = RuleEngine.validate(this.rule);
   if (!validation.isValid) {
     return next(new Error(validation.error.message));
   }
-  
+
   this.updatedAt = new Date();
   next();
 });
 
-export const Rule = model<IRule>('Rule', ruleSchema);
+export const Rule = model<IRule>("Rule", ruleSchema);
 ```
 
 ## Styling Integration
@@ -621,50 +608,50 @@ export const Rule = model<IRule>('Rule', ruleSchema);
 // tailwind.config.js
 module.exports = {
   content: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './node_modules/@usex/rule-engine-builder/**/*.{js,jsx,ts,tsx}'
+    "./src/**/*.{js,jsx,ts,tsx}",
+    "./node_modules/@usex/rule-engine-builder/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        'rule-builder': {
-          primary: '#3b82f6',
-          secondary: '#6366f1',
-          success: '#10b981',
-          warning: '#f59e0b',
-          danger: '#ef4444'
-        }
-      }
-    }
+        "rule-builder": {
+          primary: "#3b82f6",
+          secondary: "#6366f1",
+          success: "#10b981",
+          warning: "#f59e0b",
+          danger: "#ef4444",
+        },
+      },
+    },
   },
-  plugins: []
+  plugins: [],
 };
 ```
 
 ### Styled Components Integration
 
 ```tsx
-import styled, { ThemeProvider } from 'styled-components';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import styled, { ThemeProvider } from "styled-components";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 const theme = {
   colors: {
-    primary: '#3b82f6',
-    background: '#ffffff',
-    border: '#e5e7eb'
+    primary: "#3b82f6",
+    background: "#ffffff",
+    border: "#e5e7eb",
   },
   spacing: {
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem'
-  }
+    sm: "0.5rem",
+    md: "1rem",
+    lg: "1.5rem",
+  },
 };
 
 const StyledRuleBuilder = styled.div`
   .rule-builder {
-    --primary-color: ${props => props.theme.colors.primary};
-    --background-color: ${props => props.theme.colors.background};
-    --border-color: ${props => props.theme.colors.border};
+    --primary-color: ${(props) => props.theme.colors.primary};
+    --background-color: ${(props) => props.theme.colors.background};
+    --border-color: ${(props) => props.theme.colors.border};
   }
 `;
 
@@ -707,8 +694,8 @@ function App() {
 ```
 
 ```tsx
-import styles from './RuleBuilder.module.css';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import styles from "./RuleBuilder.module.css";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 function RuleBuilderComponent() {
   return (
@@ -730,45 +717,40 @@ function RuleBuilderComponent() {
 
 ```tsx
 // __tests__/RuleBuilder.test.tsx
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 // Mock the heavy dependencies
-jest.mock('@usex/rule-engine-builder', () => ({
-  TreeRuleBuilder: jest.fn(() => <div data-testid="rule-builder">Rule Builder</div>)
+jest.mock("@usex/rule-engine-builder", () => ({
+  TreeRuleBuilder: jest.fn(() => (
+    <div data-testid="rule-builder">Rule Builder</div>
+  )),
 }));
 
-describe('RuleBuilder Integration', () => {
-  it('renders rule builder component', () => {
+describe("RuleBuilder Integration", () => {
+  it("renders rule builder component", () => {
     const handleChange = jest.fn();
-    
-    render(
-      <TreeRuleBuilder
-        onChange={handleChange}
-        fields={[]}
-      />
-    );
-    
-    expect(screen.getByTestId('rule-builder')).toBeInTheDocument();
+
+    render(<TreeRuleBuilder onChange={handleChange} fields={[]} />);
+
+    expect(screen.getByTestId("rule-builder")).toBeInTheDocument();
   });
-  
-  it('calls onChange when rule changes', async () => {
+
+  it("calls onChange when rule changes", async () => {
     const handleChange = jest.fn();
     const mockRule = { conditions: [], default: null };
-    
+
     // Mock implementation that calls onChange
     const MockTreeRuleBuilder = jest.fn(({ onChange }) => (
-      <button onClick={() => onChange(mockRule)}>
-        Update Rule
-      </button>
+      <button onClick={() => onChange(mockRule)}>Update Rule</button>
     ));
-    
+
     jest.mocked(TreeRuleBuilder).mockImplementation(MockTreeRuleBuilder);
-    
+
     render(<TreeRuleBuilder onChange={handleChange} />);
-    
-    fireEvent.click(screen.getByText('Update Rule'));
-    
+
+    fireEvent.click(screen.getByText("Update Rule"));
+
     await waitFor(() => {
       expect(handleChange).toHaveBeenCalledWith(mockRule);
     });
@@ -780,28 +762,28 @@ describe('RuleBuilder Integration', () => {
 
 ```tsx
 // __tests__/setup.ts
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
+import { setupServer } from "msw/node";
+import { rest } from "msw";
 
 export const server = setupServer(
-  rest.post('/api/rules/validate', (req, res, ctx) => {
+  rest.post("/api/rules/validate", (req, res, ctx) => {
     return res(
       ctx.json({
         isValid: true,
-        error: null
-      })
+        error: null,
+      }),
     );
   }),
-  
-  rest.post('/api/rules/evaluate', (req, res, ctx) => {
+
+  rest.post("/api/rules/evaluate", (req, res, ctx) => {
     return res(
       ctx.json({
         value: true,
         isPassed: true,
-        message: null
-      })
+        message: null,
+      }),
     );
-  })
+  }),
 );
 
 beforeAll(() => server.listen());
@@ -813,44 +795,44 @@ afterAll(() => server.close());
 
 ```typescript
 // tests/rule-builder.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Rule Builder', () => {
-  test('should create a new rule', async ({ page }) => {
-    await page.goto('/rules/new');
-    
+test.describe("Rule Builder", () => {
+  test("should create a new rule", async ({ page }) => {
+    await page.goto("/rules/new");
+
     // Wait for rule builder to load
     await page.waitForSelector('[data-testid="rule-builder"]');
-    
+
     // Add a condition group
     await page.click('[data-testid="add-condition-group"]');
-    
+
     // Select a field
     await page.click('[data-testid="field-selector"]');
-    await page.click('text=User Email');
-    
+    await page.click("text=User Email");
+
     // Select an operator
     await page.click('[data-testid="operator-selector"]');
-    await page.click('text=equals');
-    
+    await page.click("text=equals");
+
     // Enter a value
-    await page.fill('[data-testid="value-input"]', 'admin@example.com');
-    
+    await page.fill('[data-testid="value-input"]', "admin@example.com");
+
     // Save the rule
     await page.click('[data-testid="save-button"]');
-    
+
     // Verify success message
-    await expect(page.locator('text=Rule saved successfully')).toBeVisible();
+    await expect(page.locator("text=Rule saved successfully")).toBeVisible();
   });
-  
-  test('should validate rule before saving', async ({ page }) => {
-    await page.goto('/rules/new');
-    
+
+  test("should validate rule before saving", async ({ page }) => {
+    await page.goto("/rules/new");
+
     // Try to save empty rule
     await page.click('[data-testid="save-button"]');
-    
+
     // Should show validation error
-    await expect(page.locator('text=Rule is invalid')).toBeVisible();
+    await expect(page.locator("text=Rule is invalid")).toBeVisible();
   });
 });
 ```
@@ -860,12 +842,12 @@ test.describe('Rule Builder', () => {
 ### Code Splitting
 
 ```tsx
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense } from "react";
 
 const TreeRuleBuilder = lazy(() =>
-  import('@usex/rule-engine-builder').then(module => ({
-    default: module.TreeRuleBuilder
-  }))
+  import("@usex/rule-engine-builder").then((module) => ({
+    default: module.TreeRuleBuilder,
+  })),
 );
 
 function App() {
@@ -880,8 +862,8 @@ function App() {
 ### Memoization
 
 ```tsx
-import { memo, useMemo, useCallback } from 'react';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import { memo, useMemo, useCallback } from "react";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 const MemoizedRuleBuilder = memo(TreeRuleBuilder);
 
@@ -889,44 +871,40 @@ function OptimizedRuleBuilder({ data, onRuleChange }) {
   const fields = useMemo(() => {
     return discoverFields(data);
   }, [data]);
-  
-  const handleRuleChange = useCallback((rule) => {
-    onRuleChange(rule);
-  }, [onRuleChange]);
-  
-  return (
-    <MemoizedRuleBuilder
-      fields={fields}
-      onChange={handleRuleChange}
-    />
+
+  const handleRuleChange = useCallback(
+    (rule) => {
+      onRuleChange(rule);
+    },
+    [onRuleChange],
   );
+
+  return <MemoizedRuleBuilder fields={fields} onChange={handleRuleChange} />;
 }
 ```
 
 ### Virtual Scrolling
 
 ```tsx
-import { FixedSizeList as List } from 'react-window';
-import { TreeRuleBuilder } from '@usex/rule-engine-builder';
+import { FixedSizeList as List } from "react-window";
+import { TreeRuleBuilder } from "@usex/rule-engine-builder";
 
 function VirtualizedRuleList({ rules }) {
-  const renderRule = useCallback(({ index, style }) => (
-    <div style={style}>
-      <TreeRuleBuilder
-        key={rules[index].id}
-        rule={rules[index]}
-        compact={true}
-      />
-    </div>
-  ), [rules]);
-  
+  const renderRule = useCallback(
+    ({ index, style }) => (
+      <div style={style}>
+        <TreeRuleBuilder
+          key={rules[index].id}
+          rule={rules[index]}
+          compact={true}
+        />
+      </div>
+    ),
+    [rules],
+  );
+
   return (
-    <List
-      height={600}
-      itemCount={rules.length}
-      itemSize={200}
-      itemData={rules}
-    >
+    <List height={600} itemCount={rules.length} itemSize={200} itemData={rules}>
       {renderRule}
     </List>
   );
@@ -953,10 +931,10 @@ npm run analyze
 ### Performance Monitoring
 
 ```tsx
-import { Profiler } from 'react';
+import { Profiler } from "react";
 
 function onRenderCallback(id, phase, actualDuration) {
-  console.log('Component:', id, 'Phase:', phase, 'Duration:', actualDuration);
+  console.log("Component:", id, "Phase:", phase, "Duration:", actualDuration);
 }
 
 function App() {

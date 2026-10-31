@@ -1,4 +1,4 @@
-import { describe, bench } from "vitest";
+import { it, describe } from "vitest";
 import type { OperatorsType } from "@root";
 import { RuleEngine, Operators } from "@root";
 // Assets
@@ -62,69 +62,56 @@ const largnestedData = {
 
 describe("rule Engine Performance Benchmarks", () => {
   describe("simple Rules (3-5 conditions)", () => {
-    bench(
-      "simple rule - basic evaluation",
-      async () => {
+    it("simple rule - basic evaluation", async ({ bench }) => {
+      await bench("simple rule - basic evaluation", async () => {
         await RuleEngine.getEvaluateResult(valid1Json, simpleData);
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "simple rule - single condition",
-      async () => {
+    it("simple rule - single condition", async ({ bench }) => {
+      await bench("simple rule - single condition", async () => {
         await RuleEngine.getEvaluateResult(valid13Json, {}, false);
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "simple rule - different data",
-      async () => {
+    it("simple rule - different data", async ({ bench }) => {
+      await bench("simple rule - different data", async () => {
         await RuleEngine.getEvaluateResult(valid1Json, {
           payload: { ProfitPercentage: 11 },
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 
   describe("complex Rules (10+ conditions)", () => {
-    bench(
-      "complex rule - nested evaluation",
-      async () => {
+    it("complex rule - nested evaluation", async ({ bench }) => {
+      await bench("complex rule - nested evaluation", async () => {
         await RuleEngine.getEvaluateResult(valid3Json, complexData);
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "complex rule - priority conditions",
-      async () => {
+    it("complex rule - priority conditions", async ({ bench }) => {
+      await bench("complex rule - priority conditions", async () => {
         await RuleEngine.getEvaluateResult(valid4Json, {
           CountryIso: "GB",
           Monetization: "Real",
           Category: 13,
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "complex rule - array operations",
-      async () => {
+    it("complex rule - array operations", async ({ bench }) => {
+      await bench("complex rule - array operations", async () => {
         await RuleEngine.getEvaluateResult(valid5Json, {
           countries: ["US", "FR"],
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 
   describe("jSONPath Resolution", () => {
-    bench(
-      "jSONPath - simple nested field",
-      async () => {
+    it("jSONPath - simple nested field", async ({ bench }) => {
+      await bench("jSONPath - simple nested field", async () => {
         await RuleEngine.getEvaluateResult(
           {
             conditions: [
@@ -145,13 +132,11 @@ describe("rule Engine Performance Benchmarks", () => {
             },
           },
         );
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "jSONPath - deep nested access",
-      async () => {
+    it("jSONPath - deep nested access", async ({ bench }) => {
+      await bench("jSONPath - deep nested access", async () => {
         await RuleEngine.getEvaluateResult(
           {
             conditions: [
@@ -168,13 +153,11 @@ describe("rule Engine Performance Benchmarks", () => {
           },
           largnestedData,
         );
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "jSONPath - array processing",
-      async () => {
+    it("jSONPath - array processing", async ({ bench }) => {
+      await bench("jSONPath - array processing", async () => {
         await RuleEngine.getEvaluateResult(
           {
             conditions: [
@@ -191,15 +174,13 @@ describe("rule Engine Performance Benchmarks", () => {
           },
           [{ foo: { bar: "test" } }, { foo: { bar: "bar" } }, {}],
         );
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 
   describe("self-Referencing Rules", () => {
-    bench(
-      "self-referencing - complex validation",
-      async () => {
+    it("self-referencing - complex validation", async ({ bench }) => {
+      await bench("self-referencing - complex validation", async () => {
         await RuleEngine.evaluate(selfFieldsConstraintsJson, {
           meta: {
             default: {
@@ -210,13 +191,11 @@ describe("rule Engine Performance Benchmarks", () => {
           name: "john",
           family: "doe",
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "self-referencing - field comparison",
-      async () => {
+    it("self-referencing - field comparison", async ({ bench }) => {
+      await bench("self-referencing - field comparison", async () => {
         await RuleEngine.evaluate(selfFieldsConstraintsJson, {
           meta: {
             default: {
@@ -227,28 +206,24 @@ describe("rule Engine Performance Benchmarks", () => {
           name: "john",
           family: "doe",
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 
   describe("special Conditions", () => {
-    bench(
-      "exists/NotExists operators",
-      async () => {
+    it("exists/NotExists operators", async ({ bench }) => {
+      await bench("exists/NotExists operators", async () => {
         await RuleEngine.getEvaluateResult(Valid10Json, {
           name: "John",
           age: 20,
           family: "Doe",
           relationship: "Father",
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "priority-based evaluation",
-      async () => {
+    it("priority-based evaluation", async ({ bench }) => {
+      await bench("priority-based evaluation", async () => {
         await RuleEngine.evaluate(Valid11Json, {
           payload: {
             depositAmount: "3",
@@ -257,28 +232,24 @@ describe("rule Engine Performance Benchmarks", () => {
             tenantId: "1",
           },
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "early termination optimization",
-      async () => {
+    it("early termination optimization", async ({ bench }) => {
+      await bench("early termination optimization", async () => {
         await RuleEngine.getEvaluateResult(valid4Json, {
           Leverage: 500, // First condition match - should terminate early
           CountryIso: "GB",
           Monetization: "Real",
           Category: 22,
         });
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 
   describe("error Handling", () => {
-    bench(
-      "unknown operator handling",
-      async () => {
+    it("unknown operator handling", async ({ bench }) => {
+      await bench("unknown operator handling", async () => {
         await RuleEngine.getEvaluateResult(
           {
             conditions: [
@@ -296,18 +267,15 @@ describe("rule Engine Performance Benchmarks", () => {
           { name: "test" },
           true,
         );
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "invalid ruleset handling",
-      async () => {
+    it("invalid ruleset handling", async ({ bench }) => {
+      await bench("invalid ruleset handling", async () => {
         try {
           await RuleEngine.getEvaluateResult({ conditions: [] }, {});
         } catch {}
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 });

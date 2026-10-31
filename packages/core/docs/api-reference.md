@@ -23,11 +23,11 @@ new RuleEngine(options?: RuleEngineOptions)
 
 #### Options
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `logger` | `Logger` | `console` | Custom logger implementation |
-| `cache` | `boolean` | `true` | Enable/disable mutation caching |
-| `mutations` | `Map<string, MutationFunction>` | `new Map()` | Initial mutations |
+| Property    | Type                            | Default     | Description                     |
+| ----------- | ------------------------------- | ----------- | ------------------------------- |
+| `logger`    | `Logger`                        | `console`   | Custom logger implementation    |
+| `cache`     | `boolean`                       | `true`      | Enable/disable mutation caching |
+| `mutations` | `Map<string, MutationFunction>` | `new Map()` | Initial mutations               |
 
 ### Instance Methods
 
@@ -44,15 +44,18 @@ async evaluate<R = any>(
 ```
 
 **Parameters:**
+
 - `rule`: The rule to evaluate
 - `criteria`: Single object or array of objects to evaluate against
 - `trustRule`: Skip rule validation if true (default: false)
 
 **Returns:**
+
 - Single `EvaluationResult` for single criteria
 - Array of `EvaluationResult` for array criteria
 
 **Example:**
+
 ```typescript
 const engine = new RuleEngine();
 const result = await engine.evaluate(rule, { age: 25 });
@@ -72,12 +75,15 @@ async checkIsPassed(
 ```
 
 **Parameters:**
+
 - Same as `evaluate`
 
 **Returns:**
+
 - `true` if rule passes, `false` otherwise
 
 **Example:**
+
 ```typescript
 const passed = await engine.checkIsPassed(rule, { age: 25 });
 // true
@@ -96,12 +102,15 @@ async getEvaluateResult<R = any>(
 ```
 
 **Parameters:**
+
 - Same as `evaluate`
 
 **Returns:**
+
 - Result value(s) only, without `isPassed` flag
 
 **Example:**
+
 ```typescript
 const result = await engine.getEvaluateResult(rule, data);
 // { discount: 0.15, message: "15% off" }
@@ -120,14 +129,17 @@ async evaluateMany<R = any>(
 ```
 
 **Parameters:**
+
 - `rules`: Array of rules to evaluate
 - `criteria`: Single criteria object
 - `trustRule`: Skip validation for all rules
 
 **Returns:**
+
 - Array of evaluation results
 
 **Example:**
+
 ```typescript
 const results = await engine.evaluateMany([rule1, rule2], data);
 // [{ value: true, isPassed: true }, { value: false, isPassed: false }]
@@ -142,9 +154,11 @@ validate(rule: RuleType<any>): ValidationResult
 ```
 
 **Parameters:**
+
 - `rule`: Rule to validate
 
 **Returns:**
+
 ```typescript
 interface ValidationResult {
   isValid: boolean;
@@ -157,6 +171,7 @@ interface ValidationResult {
 ```
 
 **Example:**
+
 ```typescript
 const validation = engine.validate(rule);
 if (!validation.isValid) {
@@ -173,9 +188,11 @@ introspect(rule: RuleType<any>): IntrospectionResult
 ```
 
 **Parameters:**
+
 - `rule`: Rule to analyze
 
 **Returns:**
+
 ```typescript
 interface IntrospectionResult {
   possibleCriteria: any[];
@@ -186,6 +203,7 @@ interface IntrospectionResult {
 ```
 
 **Example:**
+
 ```typescript
 const analysis = engine.introspect(rule);
 console.log(analysis.fields); // ["age", "country"]
@@ -200,9 +218,11 @@ builder(): RuleBuilder
 ```
 
 **Returns:**
+
 - New `RuleBuilder` instance
 
 **Example:**
+
 ```typescript
 const builder = engine.builder();
 const rule = builder
@@ -222,12 +242,14 @@ addMutation(name: string, fn: MutationFunction): void
 ```
 
 **Parameters:**
+
 - `name`: Unique mutation name
 - `fn`: Function that transforms criteria
 
 **Example:**
+
 ```typescript
-engine.addMutation('normalize', (criteria) => {
+engine.addMutation("normalize", (criteria) => {
   if (criteria.email) {
     criteria.email = criteria.email.toLowerCase();
   }
@@ -244,9 +266,11 @@ removeMutation(name: string): boolean
 ```
 
 **Parameters:**
+
 - `name`: Mutation name to remove
 
 **Returns:**
+
 - `true` if removed, `false` if not found
 
 #### clearMutationCache
@@ -258,6 +282,7 @@ clearMutationCache(name?: string): void
 ```
 
 **Parameters:**
+
 - `name`: Optional specific mutation to clear (clears all if omitted)
 
 ### Static Methods
@@ -290,13 +315,16 @@ static resolveProperty(
 ```
 
 **Parameters:**
+
 - `path`: Property path or JSONPath expression
 - `json`: Object to resolve from
 
 **Returns:**
+
 - Resolved value or undefined
 
 **Example:**
+
 ```typescript
 const value = ObjectDiscovery.resolveProperty("$.user.profile.age", data);
 // 25
@@ -315,11 +343,13 @@ static updateProperty(
 ```
 
 **Parameters:**
+
 - `path`: Property path or JSONPath expression
 - `json`: Object to update
 - `value`: New value to set
 
 **Example:**
+
 ```typescript
 ObjectDiscovery.updateProperty("$.user.age", data, 26);
 ```
@@ -336,17 +366,20 @@ static resolveTextPathExpressions(
 ```
 
 **Parameters:**
+
 - `text`: Template string with JSONPath expressions
 - `criteria`: Data object for resolution
 
 **Returns:**
+
 - Resolved string
 
 **Example:**
+
 ```typescript
 const result = ObjectDiscovery.resolveTextPathExpressions(
   "Hello $.user.name, you have $.points points",
-  { user: { name: "John" }, points: 100 }
+  { user: { name: "John" }, points: 100 },
 );
 // "Hello John, you have 100 points"
 ```
@@ -362,6 +395,7 @@ static isCondition(obj: any): obj is Condition
 ```
 
 **Example:**
+
 ```typescript
 if (ObjectDiscovery.isCondition(obj)) {
   // obj is typed as Condition
@@ -377,6 +411,7 @@ static isConstraint(obj: any): obj is Constraint
 ```
 
 **Example:**
+
 ```typescript
 if (ObjectDiscovery.isConstraint(obj)) {
   // obj is typed as Constraint
@@ -392,6 +427,7 @@ static isGranular(rule: RuleType<any>): boolean
 ```
 
 **Example:**
+
 ```typescript
 if (ObjectDiscovery.isGranular(rule)) {
   // Rule has result values in conditions
@@ -413,13 +449,12 @@ add(condition: Condition<R>): RuleBuilder<R>
 ```
 
 **Example:**
+
 ```typescript
 builder.add({
-  and: [
-    { field: "age", operator: "greater-than", value: 18 }
-  ],
-  result: { allowed: true }
-})
+  and: [{ field: "age", operator: "greater-than", value: 18 }],
+  result: { allowed: true },
+});
 ```
 
 #### default
@@ -431,8 +466,9 @@ default(result: R): RuleBuilder<R>
 ```
 
 **Example:**
+
 ```typescript
-builder.default({ allowed: false })
+builder.default({ allowed: false });
 ```
 
 #### build
@@ -444,12 +480,15 @@ build(validate?: boolean): RuleType<R>
 ```
 
 **Parameters:**
+
 - `validate`: Validate rule before returning (default: false)
 
 **Returns:**
+
 - Complete rule object
 
 **Example:**
+
 ```typescript
 const rule = builder.build(true); // Validates before returning
 ```
@@ -461,16 +500,16 @@ const rule = RuleEngine.builder()
   .add({
     and: [
       { field: "age", operator: "greater-than", value: 21 },
-      { field: "country", operator: "equals", value: "US" }
+      { field: "country", operator: "equals", value: "US" },
     ],
-    result: { canDrink: true }
+    result: { canDrink: true },
   })
   .add({
     and: [
       { field: "age", operator: "greater-than", value: 18 },
-      { field: "country", operator: "not-equals", value: "US" }
+      { field: "country", operator: "not-equals", value: "US" },
     ],
-    result: { canDrink: true }
+    result: { canDrink: true },
   })
   .default({ canDrink: false })
   .build(true);
@@ -568,7 +607,7 @@ interface IntrospectionResult {
 enum ConditionType {
   Or = "or",
   And = "and",
-  None = "none"
+  None = "none",
 }
 ```
 

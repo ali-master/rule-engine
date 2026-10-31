@@ -164,7 +164,7 @@ updateItemsAtPath = (
   const [currentPart, ...remainingParts] = pathParts;
 
   // Handle numeric indices (e.g., "0", "1")
-  if (currentPart.match(/^\d+$/)) {
+  if (/^\d+$/.test(currentPart)) {
     const index = Number.parseInt(currentPart, 10);
     if (index >= 0 && index < items.length) {
       const newItems = [...items];

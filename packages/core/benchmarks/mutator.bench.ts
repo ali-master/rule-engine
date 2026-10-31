@@ -1,14 +1,13 @@
 // Utilities
-import { describe, bench } from "vitest";
+import { it, describe } from "vitest";
 import { RuleEngine, Operators } from "@root";
 // Assets
 import { valid1Json } from "../test/rulesets/valid1.json";
 
 describe("mutation Performance Benchmarks", () => {
   describe("data Mutations", () => {
-    bench(
-      "simple field mutation",
-      async () => {
+    it("simple field mutation", async ({ bench }) => {
+      await bench("simple field mutation", async () => {
         const rp = RuleEngine.getInstance();
         rp.addMutation("WinRate", (value: number) => value * 2);
 
@@ -20,13 +19,11 @@ describe("mutation Performance Benchmarks", () => {
         });
 
         rp.clearMutations();
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "multiple field mutations",
-      async () => {
+    it("multiple field mutations", async ({ bench }) => {
+      await bench("multiple field mutations", async () => {
         const rp = RuleEngine.getInstance();
         rp.addMutation("WinRate", (value: number) => value * 2);
         rp.addMutation("AverageTradeDuration", (value: number) => value / 2);
@@ -39,13 +36,11 @@ describe("mutation Performance Benchmarks", () => {
         });
 
         rp.clearMutations();
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "jSONPath nested mutation",
-      async () => {
+    it("jSONPath nested mutation", async ({ bench }) => {
+      await bench("jSONPath nested mutation", async () => {
         const rp = RuleEngine.getInstance();
         rp.addMutation("$.foo.bar", (value: number) => value * 2);
 
@@ -67,13 +62,11 @@ describe("mutation Performance Benchmarks", () => {
         );
 
         rp.clearMutations();
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
 
-    bench(
-      "complex data transformation",
-      async () => {
+    it("complex data transformation", async ({ bench }) => {
+      await bench("complex data transformation", async () => {
         const rp = RuleEngine.getInstance();
         rp.addMutation("$.user.score", (value: number) =>
           Math.round(value * 1.15),
@@ -98,8 +91,7 @@ describe("mutation Performance Benchmarks", () => {
         );
 
         rp.clearMutations();
-      },
-      { iterations: 10_000 },
-    );
+      }).run({ iterations: 10_000 });
+    });
   });
 });

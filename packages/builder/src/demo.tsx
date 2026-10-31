@@ -13,7 +13,6 @@ import {
   Shield,
   Moon,
   Layers,
-  Github,
   GitFork,
   ExternalLink,
   Code2,
@@ -223,7 +222,7 @@ function DemoApp() {
                   rel="noopener noreferrer"
                   className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg"
                 >
-                  <Github className="w-4 h-4" />
+                  <GitFork className="w-4 h-4" />
                   <span>GitHub</span>
                 </a>
 
@@ -304,7 +303,7 @@ function DemoApp() {
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 px-8 py-4 border border-gray-700 rounded-xl font-semibold text-gray-300 hover:text-white hover:border-gray-600 transition-all duration-300"
                 >
-                  <Github className="w-5 h-5" />
+                  <GitFork className="w-5 h-5" />
                   View on GitHub
                   <ExternalLink className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />
                 </a>
@@ -710,7 +709,7 @@ function DemoApp() {
                   rel="noopener noreferrer"
                   className="p-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors"
                 >
-                  <Github className="w-5 h-5 text-gray-300" />
+                  <GitFork className="w-5 h-5 text-gray-300" />
                 </a>
                 <a
                   href="#"

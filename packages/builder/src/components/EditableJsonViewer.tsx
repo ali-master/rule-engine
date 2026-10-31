@@ -81,7 +81,7 @@ export const EditableJsonViewer: React.FC<EditableJsonViewerProps> = ({
     try {
       await navigator.clipboard.writeText(jsonString);
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(setCopied, 2000, false);
       toast.success("JSON copied to clipboard");
     } catch (error) {
       console.error("Failed to copy:", error);

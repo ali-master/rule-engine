@@ -39,6 +39,7 @@ interface TreeRuleBuilderProps {
 ```
 
 **Features:**
+
 - Tree-based rule construction
 - Drag-and-drop reordering
 - Keyboard shortcuts
@@ -47,6 +48,7 @@ interface TreeRuleBuilderProps {
 - Import/export functionality
 
 **Example:**
+
 ```tsx
 <TreeRuleBuilder
   fields={fields}
@@ -71,6 +73,7 @@ interface ModernRuleBuilderProps extends TreeRuleBuilderProps {
 ```
 
 **Features:**
+
 - Framer Motion animations
 - Enhanced drag-and-drop
 - Virtual scrolling for large datasets
@@ -91,6 +94,7 @@ interface RuleEvaluatorProps {
 ```
 
 **Features:**
+
 - Live rule evaluation
 - Sample data editing
 - Pass/fail indicators
@@ -98,6 +102,7 @@ interface RuleEvaluatorProps {
 - Keyboard shortcuts (Ctrl+E, Ctrl+Shift+E)
 
 **Example:**
+
 ```tsx
 <RuleEvaluator
   rule={currentRule}
@@ -118,6 +123,7 @@ interface HistoryViewerProps {
 ```
 
 **Features:**
+
 - 100-entry history
 - Version comparison
 - Diff visualization
@@ -125,6 +131,7 @@ interface HistoryViewerProps {
 - Search and filter
 
 **Example:**
+
 ```tsx
 <HistoryViewer className="mt-4" />
 ```
@@ -154,6 +161,7 @@ interface TreeConditionGroupProps {
 ```
 
 **Features:**
+
 - AND/OR/NONE logic groups
 - Nested conditions
 - Drag-and-drop reordering
@@ -179,6 +187,7 @@ interface TreeConstraintEditorProps {
 ```
 
 **Features:**
+
 - Field selection with groups
 - Operator categorization
 - Smart value inputs
@@ -203,6 +212,7 @@ interface FieldSelectorProps {
 ```
 
 **Features:**
+
 - Grouped field display
 - Search and filtering
 - JSONPath support
@@ -210,6 +220,7 @@ interface FieldSelectorProps {
 - Type indicators
 
 **Example:**
+
 ```tsx
 <FieldSelector
   fields={fields}
@@ -238,6 +249,7 @@ interface OperatorSelectorProps {
 ```
 
 **Features:**
+
 - Category-based grouping
 - Search functionality
 - Field type filtering
@@ -264,6 +276,7 @@ interface SmartValueInputProps {
 ```
 
 **Features:**
+
 - Type-aware rendering
 - Operator-specific inputs
 - Validation feedback
@@ -271,6 +284,7 @@ interface SmartValueInputProps {
 - Multi-value support
 
 **Example:**
+
 ```tsx
 <SmartValueInput
   value={constraintValue}
@@ -299,6 +313,7 @@ interface ArrayInputProps {
 ```
 
 **Features:**
+
 - Add/remove items
 - Drag-and-drop reordering
 - Type-specific item inputs
@@ -323,6 +338,7 @@ interface DateInputProps {
 ```
 
 **Features:**
+
 - Calendar popup
 - Time selection
 - Time zone support
@@ -348,6 +364,7 @@ interface NumberInputProps {
 ```
 
 **Features:**
+
 - Smooth animations
 - Range validation
 - Step controls
@@ -373,6 +390,7 @@ interface JsonViewerProps {
 ```
 
 **Features:**
+
 - Syntax highlighting
 - Collapsible nodes
 - Search functionality
@@ -380,6 +398,7 @@ interface JsonViewerProps {
 - Copy to clipboard
 
 **Example:**
+
 ```tsx
 <JsonViewer
   data={rule}
@@ -408,6 +427,7 @@ interface DiffViewerProps {
 ```
 
 **Features:**
+
 - Side-by-side comparison
 - Unified diff view
 - Change statistics
@@ -415,6 +435,7 @@ interface DiffViewerProps {
 - Property-level analysis
 
 **Example:**
+
 ```tsx
 <DiffViewer
   oldValue={previousRule}
@@ -439,6 +460,7 @@ interface ImportExportProps {
 ```
 
 **Features:**
+
 - JSON/YAML support
 - File upload/download
 - Validation on import
@@ -458,6 +480,7 @@ interface ThemeToggleProps {
 ```
 
 **Features:**
+
 - System theme detection
 - Smooth transitions
 - Customizable appearance
@@ -551,40 +574,40 @@ const useKeyboardShortcuts = (shortcuts: ShortcutConfig[]) => {
 
 Built on Radix UI primitives with full accessibility support:
 
-| Component | Purpose | Features |
-|-----------|---------|----------|
-| `Button` | Actions and triggers | Variants, sizes, loading states |
-| `Input` | Text input | Validation, prefixes, suffixes |
-| `Select` | Dropdown selection | Search, grouping, custom options |
-| `Dialog` | Modal dialogs | Zoom animations, scroll management |
-| `Popover` | Floating content | Auto-positioning, close triggers |
-| `Tooltip` | Help text | Delays, positioning, rich content |
-| `Tabs` | Content organization | Keyboard navigation, indicators |
-| `Card` | Content containers | Headers, footers, actions |
-| `Badge` | Status indicators | Variants, sizes, icons |
-| `Alert` | Notifications | Types, dismissible, actions |
+| Component | Purpose              | Features                           |
+| --------- | -------------------- | ---------------------------------- |
+| `Button`  | Actions and triggers | Variants, sizes, loading states    |
+| `Input`   | Text input           | Validation, prefixes, suffixes     |
+| `Select`  | Dropdown selection   | Search, grouping, custom options   |
+| `Dialog`  | Modal dialogs        | Zoom animations, scroll management |
+| `Popover` | Floating content     | Auto-positioning, close triggers   |
+| `Tooltip` | Help text            | Delays, positioning, rich content  |
+| `Tabs`    | Content organization | Keyboard navigation, indicators    |
+| `Card`    | Content containers   | Headers, footers, actions          |
+| `Badge`   | Status indicators    | Variants, sizes, icons             |
+| `Alert`   | Notifications        | Types, dismissible, actions        |
 
 ### Advanced UI Components
 
-| Component | Purpose | Features |
-|-----------|---------|----------|
-| `ZoomDialog` | Full-screen editing | Smooth zoom animations |
-| `ScrollArea` | Custom scrollbars | Virtual scrolling, smooth scroll |
-| `Collapsible` | Expandable content | Animations, nested support |
-| `Command` | Command palette | Search, keyboard navigation |
-| `Calendar` | Date selection | Range selection, disabled dates |
-| `Slider` | Range input | Multiple handles, step values |
-| `Switch` | Boolean toggle | Animated, labeled |
-| `Separator` | Visual dividers | Orientation, spacing |
+| Component     | Purpose             | Features                         |
+| ------------- | ------------------- | -------------------------------- |
+| `ZoomDialog`  | Full-screen editing | Smooth zoom animations           |
+| `ScrollArea`  | Custom scrollbars   | Virtual scrolling, smooth scroll |
+| `Collapsible` | Expandable content  | Animations, nested support       |
+| `Command`     | Command palette     | Search, keyboard navigation      |
+| `Calendar`    | Date selection      | Range selection, disabled dates  |
+| `Slider`      | Range input         | Multiple handles, step values    |
+| `Switch`      | Boolean toggle      | Animated, labeled                |
+| `Separator`   | Visual dividers     | Orientation, spacing             |
 
 ### Layout Components
 
-| Component | Purpose | Features |
-|-----------|---------|----------|
-| `ResizablePanel` | Resizable layouts | Horizontal/vertical, constraints |
-| `Sheet` | Side panels | Slide animations, overlay |
-| `DropdownMenu` | Contextual menus | Submenus, separators, icons |
-| `HoverCard` | Rich tooltips | Delays, rich content, positioning |
+| Component        | Purpose           | Features                          |
+| ---------------- | ----------------- | --------------------------------- |
+| `ResizablePanel` | Resizable layouts | Horizontal/vertical, constraints  |
+| `Sheet`          | Side panels       | Slide animations, overlay         |
+| `DropdownMenu`   | Contextual menus  | Submenus, separators, icons       |
+| `HoverCard`      | Rich tooltips     | Delays, rich content, positioning |
 
 ## Component Composition Examples
 
@@ -596,12 +619,12 @@ import {
   TreeConditionGroup,
   FieldSelector,
   JsonViewer,
-  useEnhancedRuleStore
-} from '@usex/rule-engine-builder';
+  useEnhancedRuleStore,
+} from "@usex/rule-engine-builder";
 
 function CustomRuleBuilder() {
   const { rule, updateRule } = useEnhancedRuleStore();
-  
+
   return (
     <RuleBuilderProvider>
       <div className="grid grid-cols-3 gap-4">
@@ -615,10 +638,7 @@ function CustomRuleBuilder() {
           />
         </div>
         <div>
-          <JsonViewer
-            data={rule}
-            highlightLogicalOperators={true}
-          />
+          <JsonViewer data={rule} highlightLogicalOperators={true} />
         </div>
       </div>
     </RuleBuilderProvider>
@@ -633,28 +653,21 @@ import {
   TreeRuleBuilder,
   RuleEvaluator,
   HistoryViewer,
-  DiffViewer
-} from '@usex/rule-engine-builder';
+  DiffViewer,
+} from "@usex/rule-engine-builder";
 
 function EvaluationDashboard() {
   const [rule, setRule] = useState(null);
   const [testData, setTestData] = useState({});
   const [selectedVersions, setSelectedVersions] = useState([]);
-  
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-6">
-        <TreeRuleBuilder
-          onChange={setRule}
-          sampleData={testData}
-        />
-        <RuleEvaluator
-          rule={rule}
-          data={testData}
-          onDataChange={setTestData}
-        />
+        <TreeRuleBuilder onChange={setRule} sampleData={testData} />
+        <RuleEvaluator rule={rule} data={testData} onDataChange={setTestData} />
       </div>
-      
+
       <div className="grid grid-cols-2 gap-6">
         <HistoryViewer />
         {selectedVersions.length === 2 && (

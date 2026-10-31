@@ -263,7 +263,7 @@ export function jsonPathToField(path: string): string {
   }
 
   // Simple paths like $.field
-  if (path.match(/^\$\.\w+$/)) {
+  if (/^\$\.\w+$/.test(path)) {
     return path.slice(2);
   }
 

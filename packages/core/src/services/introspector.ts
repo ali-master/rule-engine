@@ -20,8 +20,9 @@ import type {
 /**
  * Enhanced introspection result with operator metadata
  */
-export interface EnhancedIntrospectionResult<R = any>
-  extends IntrospectionResult<R> {
+export interface EnhancedIntrospectionResult<
+  R = any,
+> extends IntrospectionResult<R> {
   /**
    * Metadata about operators used in the rule
    */
@@ -450,7 +451,7 @@ export class Introspector {
         criteriaRange,
         Array.from(options.values()).reduce((prev, curr) => {
           for (const [key, value] of Object.entries(curr)) {
-            prev[key] = Object.prototype.hasOwnProperty.call(prev, key)
+            prev[key] = Object.hasOwn(prev, key)
               ? [...new Set([prev[key], value].flat())]
               : value;
           }
@@ -500,7 +501,7 @@ export class Introspector {
       }
     }
 
-    if (!Object.prototype.hasOwnProperty.call(option, $constraint.field)) {
+    if (!Object.hasOwn(option, $constraint.field)) {
       // When condition is an all, we need to create a new object in the criteria range
       // options and add all the possible inputs which would satisfy the condition.
       if (type === ConditionTypes.AND || type === ConditionTypes.NONE) {
@@ -611,10 +612,7 @@ export class Introspector {
         }
 
         for (const [key, value] of Object.entries(option)) {
-          baseOption[key] = Object.prototype.hasOwnProperty.call(
-            baseOption,
-            key,
-          )
+          baseOption[key] = Object.hasOwn(baseOption, key)
             ? [...new Set([baseOption[key], value].flat())]
             : value;
         }
@@ -657,8 +655,9 @@ export class Introspector {
             entry.options[lastIdx] = {};
           }
           // If the last option already has this key, we need to update it
-          // eslint-disable-next-line no-prototype-builtins
-          entry.options[lastIdx][key] = entry.options?.[lastIdx].hasOwnProperty(
+
+          entry.options[lastIdx][key] = Object.hasOwn(
+            entry.options?.[lastIdx],
             key,
           )
             ? [...new Set([entry.options[lastIdx][key], value].flat())]

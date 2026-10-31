@@ -65,13 +65,13 @@ Rule Engine Core
 
 ### Monorepo Organization
 
-| Directory | Purpose | Key Contents |
-|-----------|---------|--------------|
-| `/packages/core` | Core rule engine | Engine, operators, types |
-| `/packages/builder` | React UI components | Visual builder, inputs |
-| `/apps/web` | Documentation site | Docs, examples, guides |
-| `/docs` | Project documentation | Architecture, guides |
-| `/scripts` | Build scripts | Automation, tooling |
+| Directory           | Purpose               | Key Contents             |
+| ------------------- | --------------------- | ------------------------ |
+| `/packages/core`    | Core rule engine      | Engine, operators, types |
+| `/packages/builder` | React UI components   | Visual builder, inputs   |
+| `/apps/web`         | Documentation site    | Docs, examples, guides   |
+| `/docs`             | Project documentation | Architecture, guides     |
+| `/scripts`          | Build scripts         | Automation, tooling      |
 
 ### Package Dependencies
 
@@ -91,22 +91,22 @@ export {
   // Main Classes
   RuleEngine,
   ObjectDiscovery,
-  
+
   // Types
   RuleType,
   Condition,
   Constraint,
   EvaluationResult,
-  
+
   // Enums
   OperatorsType,
   ConditionType,
-  
+
   // Utilities
   validateRule,
   introspectRule,
-  buildRule
-} from '@usex/rule-engine';
+  buildRule,
+} from "@usex/rule-engine";
 
 // Builder Package Exports
 export {
@@ -115,16 +115,16 @@ export {
   ModernRuleBuilder,
   RuleEvaluator,
   HistoryViewer,
-  
+
   // Hooks
   useEnhancedRuleStore,
   useFieldDiscovery,
   useKeyboardShortcuts,
-  
+
   // Types
   FieldConfig,
-  ThemeConfig
-} from '@usex/rule-engine-builder';
+  ThemeConfig,
+} from "@usex/rule-engine-builder";
 ```
 
 ## Core Components
@@ -137,18 +137,21 @@ The main service responsible for rule evaluation:
 class RuleEngine {
   // Singleton instance
   private static instance: RuleEngine;
-  
+
   // Mutation system for data preprocessing
   private mutations: Map<string, MutationFunction>;
-  
+
   // Cache for performance
   private cache: Map<string, any>;
-  
+
   // Core methods
-  async evaluate<T>(rule: RuleType<T>, criteria: any): Promise<EvaluationResult<T>>;
+  async evaluate<T>(
+    rule: RuleType<T>,
+    criteria: any,
+  ): Promise<EvaluationResult<T>>;
   validate(rule: RuleType<any>): ValidationResult;
   introspect(rule: RuleType<any>): IntrospectionResult;
-  
+
   // Static API
   static evaluate<T>(...args): Promise<EvaluationResult<T>>;
   static validate(...args): ValidationResult;
@@ -166,13 +169,13 @@ Input Data → Mutations → Validation → Evaluation → Result
 
 ### Operator System
 
-| Layer | Description | Example |
-|-------|-------------|---------|
-| **Registration** | Operator definition | `{ name: 'equals', evaluate: (a, b) => a === b }` |
-| **Categorization** | Logical grouping | Comparison, String, Numeric, etc. |
-| **Type Safety** | Input/output types | `<T>(field: T, value: T) => boolean` |
-| **Validation** | Pre-evaluation checks | Value type, range, format |
-| **Evaluation** | Actual comparison | Field value vs constraint value |
+| Layer              | Description           | Example                                           |
+| ------------------ | --------------------- | ------------------------------------------------- |
+| **Registration**   | Operator definition   | `{ name: 'equals', evaluate: (a, b) => a === b }` |
+| **Categorization** | Logical grouping      | Comparison, String, Numeric, etc.                 |
+| **Type Safety**    | Input/output types    | `<T>(field: T, value: T) => boolean`              |
+| **Validation**     | Pre-evaluation checks | Value type, range, format                         |
+| **Evaluation**     | Actual comparison     | Field value vs constraint value                   |
 
 ## Design Patterns
 
@@ -193,7 +196,7 @@ class EqualsOperator implements OperatorStrategy {
 
 class OperatorFactory {
   private strategies: Map<string, OperatorStrategy>;
-  
+
   getOperator(type: string): OperatorStrategy {
     return this.strategies.get(type);
   }
@@ -208,10 +211,10 @@ For programmatic rule construction:
 const rule = RuleEngine.builder()
   .add({
     and: [
-      { field: 'age', operator: 'greater-than', value: 18 },
-      { field: 'country', operator: 'equals', value: 'US' }
+      { field: "age", operator: "greater-than", value: 18 },
+      { field: "country", operator: "equals", value: "US" },
     ],
-    result: { allowed: true }
+    result: { allowed: true },
   })
   .default({ allowed: false })
   .build();
@@ -225,14 +228,14 @@ Used in the UI for state management:
 class RuleStore {
   private listeners: Set<() => void> = new Set();
   private state: RuleState;
-  
+
   subscribe(listener: () => void) {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
-  
+
   notify() {
-    this.listeners.forEach(listener => listener());
+    this.listeners.forEach((listener) => listener());
   }
 }
 ```
@@ -251,13 +254,13 @@ class UpdateRuleCommand implements Command {
   constructor(
     private store: RuleStore,
     private oldRule: Rule,
-    private newRule: Rule
+    private newRule: Rule,
   ) {}
-  
+
   execute() {
     this.store.setRule(this.newRule);
   }
-  
+
   undo() {
     this.store.setRule(this.oldRule);
   }
@@ -307,13 +310,13 @@ User Action → Component → Hook → Store → State Update → UI Update
 
 ### Optimization Strategies
 
-| Strategy | Implementation | Impact |
-|----------|----------------|--------|
-| **Caching** | Memoize evaluation results | 40% faster for repeated rules |
-| **Lazy Evaluation** | Stop on first failure | 60% faster for failing rules |
-| **Path Optimization** | Pre-compile JSONPath | 30% faster path resolution |
-| **Batch Processing** | Evaluate multiple items | 50% throughput increase |
-| **Trust Mode** | Skip validation | 20% faster for trusted rules |
+| Strategy              | Implementation             | Impact                        |
+| --------------------- | -------------------------- | ----------------------------- |
+| **Caching**           | Memoize evaluation results | 40% faster for repeated rules |
+| **Lazy Evaluation**   | Stop on first failure      | 60% faster for failing rules  |
+| **Path Optimization** | Pre-compile JSONPath       | 30% faster path resolution    |
+| **Batch Processing**  | Evaluate multiple items    | 50% throughput increase       |
+| **Trust Mode**        | Skip validation            | 20% faster for trusted rules  |
 
 ### Memory Management
 
@@ -321,7 +324,7 @@ User Action → Component → Hook → Store → State Update → UI Update
 class CacheManager {
   private cache: LRUCache<string, any>;
   private maxSize: number = 1000;
-  
+
   set(key: string, value: any) {
     if (this.cache.size >= this.maxSize) {
       const firstKey = this.cache.keys().next().value;
@@ -339,18 +342,18 @@ class BatchEvaluator {
   async evaluateBatch<T>(
     rule: RuleType<T>,
     items: any[],
-    concurrency: number = 10
+    concurrency: number = 10,
   ): Promise<EvaluationResult<T>[]> {
     const chunks = chunk(items, concurrency);
     const results = [];
-    
+
     for (const chunk of chunks) {
       const chunkResults = await Promise.all(
-        chunk.map(item => this.evaluate(rule, item))
+        chunk.map((item) => this.evaluate(rule, item)),
       );
       results.push(...chunkResults);
     }
-    
+
     return results;
   }
 }
@@ -360,13 +363,13 @@ class BatchEvaluator {
 
 ### Input Validation
 
-| Layer | Protection | Implementation |
-|-------|------------|----------------|
-| **Schema Validation** | Rule structure | JSON Schema validation |
-| **Type Checking** | Data types | TypeScript + runtime checks |
-| **Path Validation** | JSONPath safety | Whitelist allowed paths |
-| **Operator Validation** | Valid operators | Operator registry check |
-| **Value Sanitization** | Input cleaning | XSS prevention, type coercion |
+| Layer                   | Protection      | Implementation                |
+| ----------------------- | --------------- | ----------------------------- |
+| **Schema Validation**   | Rule structure  | JSON Schema validation        |
+| **Type Checking**       | Data types      | TypeScript + runtime checks   |
+| **Path Validation**     | JSONPath safety | Whitelist allowed paths       |
+| **Operator Validation** | Valid operators | Operator registry check       |
+| **Value Sanitization**  | Input cleaning  | XSS prevention, type coercion |
 
 ### Security Patterns
 
@@ -374,24 +377,26 @@ class BatchEvaluator {
 class SecurityValidator {
   // Prevent prototype pollution
   validatePath(path: string): boolean {
-    const dangerous = ['__proto__', 'constructor', 'prototype'];
-    return !dangerous.some(d => path.includes(d));
+    const dangerous = ["__proto__", "constructor", "prototype"];
+    return !dangerous.some((d) => path.includes(d));
   }
-  
+
   // Limit complexity
   validateComplexity(rule: RuleType): boolean {
     const depth = this.calculateDepth(rule);
     const conditions = this.countConditions(rule);
-    
+
     return depth <= MAX_DEPTH && conditions <= MAX_CONDITIONS;
   }
-  
+
   // Sanitize regex patterns
   validateRegex(pattern: string): boolean {
     try {
       new RegExp(pattern);
-      return !pattern.includes('(?<') && // No lookbehind
-             !pattern.includes('{1000,}'); // No large repetitions
+      return (
+        !pattern.includes("(?<") && // No lookbehind
+        !pattern.includes("{1000,}")
+      ); // No large repetitions
     } catch {
       return false;
     }
@@ -414,10 +419,10 @@ class RuleEngineWithACL extends RuleEngine {
   constructor(private acl: RuleAccessControl) {
     super();
   }
-  
+
   async evaluate(rule: RuleType, criteria: any, user: User) {
     if (!this.acl.canEvaluate(user, rule)) {
-      throw new Error('Access denied');
+      throw new Error("Access denied");
     }
     return super.evaluate(rule, criteria);
   }
@@ -432,12 +437,12 @@ class RuleEngineWithACL extends RuleEngine {
 interface RuleEnginePlugin {
   name: string;
   version: string;
-  
+
   // Lifecycle hooks
   onInit?(engine: RuleEngine): void;
   beforeEvaluate?(rule: RuleType, criteria: any): void;
   afterEvaluate?(result: EvaluationResult): void;
-  
+
   // Extension points
   operators?: Record<string, OperatorDefinition>;
   mutations?: Record<string, MutationFunction>;
@@ -446,7 +451,7 @@ interface RuleEnginePlugin {
 
 class PluginManager {
   private plugins: Map<string, RuleEnginePlugin> = new Map();
-  
+
   register(plugin: RuleEnginePlugin) {
     this.plugins.set(plugin.name, plugin);
     plugin.onInit?.(this.engine);
@@ -461,17 +466,17 @@ interface CustomOperator {
   name: string;
   category: string;
   description: string;
-  
+
   // Type constraints
   acceptedFieldTypes: FieldType[];
   acceptedValueTypes: ValueType[];
-  
+
   // Validation
   validate(value: any): ValidationResult;
-  
+
   // Evaluation
   evaluate(fieldValue: any, constraintValue: any): boolean;
-  
+
   // UI hints
   ui?: {
     icon?: string;

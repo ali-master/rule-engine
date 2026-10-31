@@ -15,6 +15,7 @@ This guide helps you migrate from other rule engines to @usex/rule-engine.
 ### Rule Structure Comparison
 
 #### json-rules-engine
+
 ```javascript
 {
   conditions: {
@@ -38,6 +39,7 @@ This guide helps you migrate from other rule engines to @usex/rule-engine.
 ```
 
 #### @usex/rule-engine
+
 ```javascript
 {
   conditions: {
@@ -60,65 +62,75 @@ This guide helps you migrate from other rule engines to @usex/rule-engine.
 
 ### Key Differences
 
-| Feature | json-rules-engine | @usex/rule-engine |
-|---------|------------------|-------------------|
-| Field Reference | `fact` | `field` |
-| Logical Operators | `all`, `any` | `and`, `or`, `none` |
-| Results | `event` system | `result` in conditions or `default` |
-| Async Support | Facts can be promises | Built-in async evaluation |
-| JSONPath | Not supported | Full support with `$.path.to.field` |
+| Feature           | json-rules-engine     | @usex/rule-engine                   |
+| ----------------- | --------------------- | ----------------------------------- |
+| Field Reference   | `fact`                | `field`                             |
+| Logical Operators | `all`, `any`          | `and`, `or`, `none`                 |
+| Results           | `event` system        | `result` in conditions or `default` |
+| Async Support     | Facts can be promises | Built-in async evaluation           |
+| JSONPath          | Not supported         | Full support with `$.path.to.field` |
 
 ### Migration Example
 
 ```javascript
 // json-rules-engine
 // @usex/rule-engine
-import { RuleEngine } from '@usex/rule-engine';
+import { RuleEngine } from "@usex/rule-engine";
 
-const Engine = require('json-rules-engine');
+const Engine = require("json-rules-engine");
 const engine = new Engine();
 
 engine.addRule({
   conditions: {
-    any: [{
-      all: [{
-        fact: 'account.balance',
-        operator: 'greaterThan',
-        value: 100
-      }]
-    }, {
-      fact: 'account.type',
-      operator: 'equal',
-      value: 'premium'
-    }]
+    any: [
+      {
+        all: [
+          {
+            fact: "account.balance",
+            operator: "greaterThan",
+            value: 100,
+          },
+        ],
+      },
+      {
+        fact: "account.type",
+        operator: "equal",
+        value: "premium",
+      },
+    ],
   },
   event: {
-    type: 'offer-discount',
-    params: { discount: 0.25 }
-  }
+    type: "offer-discount",
+    params: { discount: 0.25 },
+  },
 });
 
-const facts = { account: { balance: 150, type: 'basic' } };
+const facts = { account: { balance: 150, type: "basic" } };
 const { events } = await engine.run(facts);
 
 const rule = {
   conditions: {
-    or: [{
-      and: [{
-        field: '$.account.balance',
-        operator: 'greater-than',
-        value: 100
-      }]
-    }, {
-      field: '$.account.type',
-      operator: 'equals',
-      value: 'premium'
-    }],
+    or: [
+      {
+        and: [
+          {
+            field: "$.account.balance",
+            operator: "greater-than",
+            value: 100,
+          },
+        ],
+      },
+      {
+        field: "$.account.type",
+        operator: "equals",
+        value: "premium",
+      },
+    ],
     result: {
       discount: 0.25,
-      type: 'offer-discount'
-    }
-  }
+      type: "offer-discount",
+    },
+  },
 };
 
 const result = await RuleEngine.evaluate(rule, facts);
@@ -129,6 +141,7 @@ const result = await RuleEngine.evaluate(rule, facts);
 ### Rule Structure Comparison
 
 #### node-rules
+
 ```javascript
 {
   name: "transaction-rule",
@@ -147,6 +160,7 @@ const result = await RuleEngine.evaluate(rule, facts);
 ```
 
 #### @usex/rule-engine
+
 ```javascript
 {
   conditions: {
@@ -169,84 +183,95 @@ const result = await RuleEngine.evaluate(rule, facts);
 
 ### Key Differences
 
-| Feature | node-rules | @usex/rule-engine |
-|---------|-----------|-------------------|
-| Rule Definition | JavaScript functions | JSON structure |
-| Priority System | Built-in priority | Order-based evaluation |
-| Flow Control | `R.stop()`, `R.next()` | Automatic based on conditions |
-| Rule Chaining | Sequential with flow control | Declarative with logical operators |
+| Feature         | node-rules                   | @usex/rule-engine                  |
+| --------------- | ---------------------------- | ---------------------------------- |
+| Rule Definition | JavaScript functions         | JSON structure                     |
+| Priority System | Built-in priority            | Order-based evaluation             |
+| Flow Control    | `R.stop()`, `R.next()`       | Automatic based on conditions      |
+| Rule Chaining   | Sequential with flow control | Declarative with logical operators |
 
 ### Migration Example
 
 ```javascript
 // node-rules
-const RuleEngine = require('node-rules');
+const RuleEngine = require("node-rules");
 
-const rules = [{
-  name: "premium-discount",
-  condition: function(R) {
-    R.when(this.customer.tier === 'premium' && this.orderTotal > 100);
+const rules = [
+  {
+    name: "premium-discount",
+    condition: function (R) {
+      R.when(this.customer.tier === "premium" && this.orderTotal > 100);
+    },
+    consequence: function (R) {
+      this.discount = 0.2;
+      this.message = "Premium customer discount";
+      R.stop();
+    },
   },
-  consequence: function(R) {
-    this.discount = 0.20;
-    this.message = 'Premium customer discount';
-    R.stop();
-  }
-}, {
-  name: "bulk-discount",
-  condition: function(R) {
-    R.when(this.orderTotal > 500);
+  {
+    name: "bulk-discount",
+    condition: function (R) {
+      R.when(this.orderTotal > 500);
+    },
+    consequence: function (R) {
+      this.discount = 0.15;
+      this.message = "Bulk order discount";
+      R.stop();
+    },
   },
-  consequence: function(R) {
-    this.discount = 0.15;
-    this.message = 'Bulk order discount';
-    R.stop();
-  }
-}];
+];
 
 const R = new RuleEngine(rules);
 const fact = {
-  customer: { tier: 'premium' },
-  orderTotal: 150
+  customer: { tier: "premium" },
+  orderTotal: 150,
 };
 
-R.execute(fact, function(result) {
+R.execute(fact, function (result) {
   console.log(result.discount); // 0.20
 });
 
 // @usex/rule-engine
-import { RuleEngine } from '@usex/rule-engine';
+import { RuleEngine } from "@usex/rule-engine";
 
 const rule = {
-  conditions: [{
-    and: [{
-      field: '$.customer.tier',
-      operator: 'equals',
-      value: 'premium'
-    }, {
-      field: 'orderTotal',
-      operator: 'greater-than',
-      value: 100
-    }],
-    result: {
-      discount: 0.20,
-      message: 'Premium customer discount'
-    }
-  }, {
-    and: [{
-      field: 'orderTotal',
-      operator: 'greater-than',
-      value: 500
-    }],
-    result: {
-      discount: 0.15,
-      message: 'Bulk order discount'
-    }
-  }],
+  conditions: [
+    {
+      and: [
+        {
+          field: "$.customer.tier",
+          operator: "equals",
+          value: "premium",
+        },
+        {
+          field: "orderTotal",
+          operator: "greater-than",
+          value: 100,
+        },
+      ],
+      result: {
+        discount: 0.2,
+        message: "Premium customer discount",
+      },
+    },
+    {
+      and: [
+        {
+          field: "orderTotal",
+          operator: "greater-than",
+          value: 500,
+        },
+      ],
+      result: {
+        discount: 0.15,
+        message: "Bulk order discount",
+      },
+    },
+  ],
   default: {
     discount: 0,
-    message: 'No discount applicable'
-  }
+    message: "No discount applicable",
+  },
 };
 
 const result = await RuleEngine.evaluate(rule, fact);
@@ -258,6 +283,7 @@ console.log(result.value.discount); // 0.20
 ### Rule Structure Comparison
 
 #### business-rules-engine
+
 ```javascript
 {
   name: "age-validation",
@@ -279,38 +305,42 @@ console.log(result.value.discount); // 0.20
 ```
 
 #### @usex/rule-engine
+
 ```javascript
 {
   conditions: {
-    and: [{
-      field: 'age',
-      operator: 'greater-than',
-      value: 18,
-      message: 'Must be over 18'
-    }, {
-      field: 'age',
-      operator: 'less-than',
-      value: 100,
-      message: 'Invalid age'
-    }]
+    and: [
+      {
+        field: "age",
+        operator: "greater-than",
+        value: 18,
+        message: "Must be over 18",
+      },
+      {
+        field: "age",
+        operator: "less-than",
+        value: 100,
+        message: "Invalid age",
+      },
+    ];
   }
 }
 ```
 
 ### Key Differences
 
-| Feature | business-rules-engine | @usex/rule-engine |
-|---------|---------------------|-------------------|
-| Validation Focus | Built for validation | General purpose with validation support |
-| Error Messages | Built-in message handling | Optional message field |
-| Rule Grouping | Array of rules | Logical operators |
-| Custom Validators | Method-based | Operator-based |
+| Feature           | business-rules-engine     | @usex/rule-engine                       |
+| ----------------- | ------------------------- | --------------------------------------- |
+| Validation Focus  | Built for validation      | General purpose with validation support |
+| Error Messages    | Built-in message handling | Optional message field                  |
+| Rule Grouping     | Array of rules            | Logical operators                       |
+| Custom Validators | Method-based              | Operator-based                          |
 
 ### Migration Example
 
 ```javascript
 // business-rules-engine
-const BusinessRulesEngine = require('business-rules-engine');
+const BusinessRulesEngine = require("business-rules-engine");
 
 const rule = new BusinessRulesEngine.Rule();
 rule.name = "user-registration";
@@ -318,50 +348,53 @@ rule.name = "user-registration";
 rule.addRule({
   field: "email",
   method: "email",
-  message: "Invalid email"
+  message: "Invalid email",
 });
 
 rule.addRule({
   field: "password",
   method: "minLength",
   value: 8,
-  message: "Password too short"
+  message: "Password too short",
 });
 
 const result = rule.validate({
   email: "user@example.com",
-  password: "short"
+  password: "short",
 });
 
 // @usex/rule-engine
-import { RuleEngine } from '@usex/rule-engine';
+import { RuleEngine } from "@usex/rule-engine";
 
 const rule = {
   conditions: {
-    and: [{
-      field: 'email',
-      operator: 'email',
-      value: true,
-      message: 'Invalid email'
-    }, {
-      field: 'password',
-      operator: 'min-length',
-      value: 8,
-      message: 'Password too short'
-    }]
-  }
+    and: [
+      {
+        field: "email",
+        operator: "email",
+        value: true,
+        message: "Invalid email",
+      },
+      {
+        field: "password",
+        operator: "min-length",
+        value: 8,
+        message: "Password too short",
+      },
+    ],
+  },
 };
 
 const result = await RuleEngine.evaluate(rule, {
   email: "user@example.com",
-  password: "short"
+  password: "short",
 });
 
 // Extract validation errors
 if (!result.isPassed) {
   const errors = rule.conditions.and
-    .filter(c => !evaluateConstraint(c, data))
-    .map(c => c.message);
+    .filter((c) => !evaluateConstraint(c, data))
+    .map((c) => c.message);
 }
 ```
 
@@ -370,17 +403,18 @@ if (!result.isPassed) {
 ### Common Patterns
 
 #### If-Else Chains
+
 ```javascript
 // Before
 function calculateDiscount(customer, order) {
-  if (customer.tier === 'platinum' && order.total > 1000) {
+  if (customer.tier === "platinum" && order.total > 1000) {
     return 0.25;
-  } else if (customer.tier === 'gold' && order.total > 500) {
-    return 0.20;
+  } else if (customer.tier === "gold" && order.total > 500) {
+    return 0.2;
   } else if (order.total > 1000) {
     return 0.15;
   } else if (customer.isNewCustomer && order.total > 100) {
-    return 0.10;
+    return 0.1;
   } else {
     return 0;
   }
@@ -388,46 +422,53 @@ function calculateDiscount(customer, order) {
 
 // After
 const discountRule = {
-  conditions: [{
-    and: [
-      { field: '$.customer.tier', operator: 'equals', value: 'platinum' },
-      { field: '$.order.total', operator: 'greater-than', value: 1000 }
-    ],
-    result: 0.25
-  }, {
-    and: [
-      { field: '$.customer.tier', operator: 'equals', value: 'gold' },
-      { field: '$.order.total', operator: 'greater-than', value: 500 }
-    ],
-    result: 0.20
-  }, {
-    and: [
-      { field: '$.order.total', operator: 'greater-than', value: 1000 }
-    ],
-    result: 0.15
-  }, {
-    and: [
-      { field: '$.customer.isNewCustomer', operator: 'equals', value: true },
-      { field: '$.order.total', operator: 'greater-than', value: 100 }
-    ],
-    result: 0.10
-  }],
-  default: 0
+  conditions: [
+    {
+      and: [
+        { field: "$.customer.tier", operator: "equals", value: "platinum" },
+        { field: "$.order.total", operator: "greater-than", value: 1000 },
+      ],
+      result: 0.25,
+    },
+    {
+      and: [
+        { field: "$.customer.tier", operator: "equals", value: "gold" },
+        { field: "$.order.total", operator: "greater-than", value: 500 },
+      ],
+      result: 0.2,
+    },
+    {
+      and: [{ field: "$.order.total", operator: "greater-than", value: 1000 }],
+      result: 0.15,
+    },
+    {
+      and: [
+        { field: "$.customer.isNewCustomer", operator: "equals", value: true },
+        { field: "$.order.total", operator: "greater-than", value: 100 },
+      ],
+      result: 0.1,
+    },
+  ],
+  default: 0,
 };
 
-const discount = await RuleEngine.getEvaluateResult(discountRule, { customer, order });
+const discount = await RuleEngine.getEvaluateResult(discountRule, {
+  customer,
+  order,
+});
 ```
 
 #### Switch Statements
+
 ```javascript
 // Before
 function getAccessLevel(user) {
-  switch(user.role) {
-    case 'admin':
+  switch (user.role) {
+    case "admin":
       return { read: true, write: true, delete: true };
-    case 'editor':
+    case "editor":
       return { read: true, write: true, delete: false };
-    case 'viewer':
+    case "viewer":
       return { read: true, write: false, delete: false };
     default:
       return { read: false, write: false, delete: false };
@@ -436,17 +477,21 @@ function getAccessLevel(user) {
 
 // After
 const accessRule = {
-  conditions: [{
-    and: [{ field: 'role', operator: 'equals', value: 'admin' }],
-    result: { read: true, write: true, delete: true }
-  }, {
-    and: [{ field: 'role', operator: 'equals', value: 'editor' }],
-    result: { read: true, write: true, delete: false }
-  }, {
-    and: [{ field: 'role', operator: 'equals', value: 'viewer' }],
-    result: { read: true, write: false, delete: false }
-  }],
-  default: { read: false, write: false, delete: false }
+  conditions: [
+    {
+      and: [{ field: "role", operator: "equals", value: "admin" }],
+      result: { read: true, write: true, delete: true },
+    },
+    {
+      and: [{ field: "role", operator: "equals", value: "editor" }],
+      result: { read: true, write: true, delete: false },
+    },
+    {
+      and: [{ field: "role", operator: "equals", value: "viewer" }],
+      result: { read: true, write: false, delete: false },
+    },
+  ],
+  default: { read: false, write: false, delete: false },
 };
 
 const access = await RuleEngine.getEvaluateResult(accessRule, user);
@@ -462,11 +507,13 @@ Many rule engines don't support referencing other fields in values:
 // Using JSONPath to reference other fields
 {
   conditions: {
-    and: [{
-      field: '$.current.price',
-      operator: 'less-than',
-      value: '$.maximum.price' // Reference another field
-    }]
+    and: [
+      {
+        field: "$.current.price",
+        operator: "less-than",
+        value: "$.maximum.price", // Reference another field
+      },
+    ];
   }
 }
 ```
@@ -479,13 +526,15 @@ Convert complex boolean logic to nested conditions:
 // (A && B) || (C && D) || E
 {
   conditions: {
-    or: [{
-      and: [conditionA, conditionB]
-    }, {
-      and: [conditionC, conditionD]
-    },
-    conditionE
-    ]
+    or: [
+      {
+        and: [conditionA, conditionB],
+      },
+      {
+        and: [conditionC, conditionD],
+      },
+      conditionE,
+    ];
   }
 }
 ```
@@ -497,15 +546,18 @@ Leverage built-in array operators:
 ```javascript
 {
   conditions: {
-    and: [{
-      field: 'tags',
-      operator: 'contains-any',
-      value: ['urgent', 'critical', 'high-priority']
-    }, {
-      field: 'assignees',
-      operator: 'not-empty',
-      value: true
-    }]
+    and: [
+      {
+        field: "tags",
+        operator: "contains-any",
+        value: ["urgent", "critical", "high-priority"],
+      },
+      {
+        field: "assignees",
+        operator: "not-empty",
+        value: true,
+      },
+    ];
   }
 }
 ```
@@ -517,15 +569,18 @@ Use specialized date operators:
 ```javascript
 {
   conditions: {
-    and: [{
-      field: 'subscription.expiresAt',
-      operator: 'date-after-now',
-      value: true
-    }, {
-      field: 'lastPayment',
-      operator: 'date-between',
-      value: ['2025-01-01', '2025-12-31']
-    }]
+    and: [
+      {
+        field: "subscription.expiresAt",
+        operator: "date-after-now",
+        value: true,
+      },
+      {
+        field: "lastPayment",
+        operator: "date-between",
+        value: ["2025-01-01", "2025-12-31"],
+      },
+    ];
   }
 }
 ```
@@ -537,17 +592,21 @@ Convert validation logic to rules with messages:
 ```javascript
 {
   conditions: {
-    and: [{
-      field: 'username',
-      operator: 'matches',
-      value: '^[a-zA-Z0-9_]{3,20}$',
-      message: 'Username must be 3-20 characters, alphanumeric and underscore only'
-    }, {
-      field: 'email',
-      operator: 'email',
-      value: true,
-      message: 'Please enter a valid email address'
-    }]
+    and: [
+      {
+        field: "username",
+        operator: "matches",
+        value: "^[a-zA-Z0-9_]{3,20}$",
+        message:
+          "Username must be 3-20 characters, alphanumeric and underscore only",
+      },
+      {
+        field: "email",
+        operator: "email",
+        value: true,
+        message: "Please enter a valid email address",
+      },
+    ];
   }
 }
 ```

@@ -1,5 +1,5 @@
 {
-  "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm run build:demo",
+  "installCommand": "bun install --frozen-lockfile",
+  "buildCommand": "bun run build:demo",
   "outputDirectory": "dist-demo"
 }

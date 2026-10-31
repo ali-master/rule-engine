@@ -643,9 +643,7 @@ export function isDateEqualsOperator(left: any, right: any): boolean {
 
 export function isDateEqualsToNowOperator(dateValue: any): boolean {
   try {
-    return (
-      dateWithTzOffset(new Date(dateValue)).getTime() === new Date().getTime()
-    );
+    return dateWithTzOffset(new Date(dateValue)).getTime() === Date.now();
   } catch {
     return false;
   }

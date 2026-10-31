@@ -164,7 +164,7 @@ export function useFieldDiscovery(options: UseFieldDiscoveryOptions = {}) {
     }, 0);
 
     return () => clearTimeout(timeoutId);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
   }, []); // Run only once on mount
 
   // Get suggested fields based on input

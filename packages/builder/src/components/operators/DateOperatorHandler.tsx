@@ -58,7 +58,7 @@ const DatePicker: React.FC<{
                 setIsOpen(false);
               }
             }}
-            initialFocus
+            autoFocus
           />
         </PopoverContent>
       </Popover>
